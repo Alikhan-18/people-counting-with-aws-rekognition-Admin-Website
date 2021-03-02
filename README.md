@@ -1,100 +1,36 @@
-# Requirements
-Before you deploy, you must have the following in place:
-*  [AWS Account](https://aws.amazon.com/account/) 
-*  [GitHub Account](https://github.com/) 
-*  [Node 10 or greater](https://nodejs.org/en/download/) 
-*  [Amplify CLI installed and configured](https://aws-amplify.github.io/docs/cli-toolchain/quickstart#quickstart) 
+# L3-net Web Application
+L3-net is not simply another COVID-19 detection model. We wanted to empower medical personnel with tools that would augment their ability to make decisions involving COVID-19 patients. L3-net is a clinically relevant approach to AI in medicine and is a continually evolving project that aims to provide quantitative measurements to radiologists. The team behind L3-net has worked closely with radiologists to identify the features and characteristics in CT scans that correlate most strongly with poor outcomes in patients. Every facet of the model has grown organically from the needs of the radiologists involved with this project. please visit the [L3-net Github](https://github.com/UBC-CIC/COVID19-L3-Net) for more information about the model
 
-For prototyping, you need the following:
-*  [Python 3.7 or greater](https://realpython.com/installing-python/) 
-*  [SAM CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html) 
-*  [Docker](https://docs.docker.com/install/) 
+This repo contains the front and back-end to allow medical professionals around the world to easily upload CT-Scans and process them against the model to check opacity patterns in CT scans and receive a suggested prognostication. 
 
+## Stack
 
-# Step 1: Front-end deployment
+* **Front-end** - Vue.js as the core framework, Quasar for UI, Amplify for Auth UI component and AWS integration. Users access Amazon CloudFront to access the files, which are stored at Amazon S3.
+* **Data** - All data is saved in Amazon S3 and temporaraly at Amazon EFS. 
+* **Auth** - Cognito provides JSON Web Tokens (JWT) and along with AppSync fine-grained authorization on what data types users can access.
+* **Model** - The models were containarized and deployed to Amazon ECR public repositories. 
+* **Image** - As part of the infrastructure build, a custom AMI is created with both models deployed in it to improve effeciency. 
+* **Model Processing** - In the back-end, it was essential to create a cost-effective solution as it uses GPU machines to run the model. It is inspired by an [AWS blog post](https://aws.amazon.com/blogs/compute/running-cost-effective-queue-workers-with-amazon-sqs-and-amazon-ec2-spot-instances/), which describes how to dynamically run EC2 Spot instances in response to the SQS messages, pulling the model docker image from Amazon Elastic Container Repository.
+* **Model Visualization** - Javascript plug-in displays the CT Scan image slices with the model results overlaid on top. 
 
-1.  Clone and Fork this solution repository.
-    If you haven't configured Amplify before, configure the Amplify CLI in your terminal as follows:
-```bash
-amplify configure
-```
+## High level architecture
 
-2.  In a terminal from the project root directory, enter the following command selecting the IAM user of the AWS Account you will deploy this application from. (accept all defaults):
+<img src="./images/Architecture.png"  width="800"/>
 
-```bash
-amplify init
-```
+## User interface
 
-3.  Deploy the resourse to your AWS Account using the command:
-```bash
-amplify push
-```
+<img src="./images/UserInterface.png"  width="800"/>
 
-4.  After the Amplify deployment finishes, run the command bellow to obtain the Amazon S3 Bucket Amplify created. This information will be used later as a parameter in a clouformation
-```bash
-aws resourcegroupstaggingapi get-resources --tag-filters Key=user:Application,Values="COVID19L3NetAPP" Key=user:Stack,Values="dev" --resource-type-filters s3 --query 'ResourceTagMappingList[*].[ResourceARN]' --output text | grep -v deployment | awk -F':::' '{print $2}'
-```
+<img src="./images/CTResult.png"  width="800"/>
 
-5. Log into the AWS Management Console.
-6. Select AWS Amplify and select the COVID19L3NetApp
-7. At the *Frontend environments* tab connect to your github account poiting to the forked repo. More informatoin at https://docs.aws.amazon.com/amplify/latest/userguide/deploy-backend.html
+# Deployment
+To deploy this solution into your AWS Account please follow our [Deployment Guide](./docs/deployment_guide.md)
 
-# Step 2: Back-end deployment
+# Authors
+The key contributors to this repository are Artur Rodrigues a Senior Solutions Architect from the AWS, Tim Esler and Brian Lee of Sapien ML.
 
-In this step we will execute three Cloudformation scripts:
-* [cfn-vpc](../cfn/cfn-vpc.yaml) - This Cloudformation create the networking for the image creation EC2 instance, Lambda functions and EC2 instances that processes the model.
-* [cfn-imageBuilder](../cfn/cfn-imageBuilder.yaml) - It creates the EC2 Image Builder infrastructure that embeds the model into our custom AMI. 
-* [cfn-backend](../cfn/cfn-backend.yaml) - Responsible for the creation of the underlying infrastrucutre of the solution. It includes the EC2 Auto Scaling configuration, SQS, VPC Endpoints, EFS and CloudFront
+# Changelog
+* Jul 13, 2020: Initial release.
 
-
-## Step 2.1: VPC
-
-1. Log into the CloudFormation Management Console.
-2. Select Create stack with the With new resources option.
-3. Click Upload a template file, and then Choose file and select the **cfn-vpc.yaml** located at the /cfn directory of the repo
-4. Click Next.
-5. Give the Stack name a name (e.g. covid-19-app-vpc).
-
-## Step 2.2: EC2 Image Builder
-
-1.  You also need the latest Deep Learning Amazon Machine Image (AMI) Id in the step. Please, run the command bellow to obtain it. **Make sure run this command on the region you are executing the solution.**
-```bash
-aws ec2 describe-images \
-    --owners amazon \
-    --filters 'Name=name,Values=Deep Learning Base AMI (Amazon Linux 2)*' 'Name=state,Values=available' \
-    --query 'reverse(sort_by(Images, &CreationDate))[:1].ImageId' \
-    --output text
-```
-
-2. Log into the CloudFormation Management Console.
-3. Select Create stack with the With new resources option.
-4. Click Upload a template file, and then Choose file and select the **cfn-ImageBuilder.yaml** located at the /cfn directory of the repo
-5. Click Next.
-6. Give the Stack name a name (e.g. covid-19-app-ImageBuilder).
-7. Select a key-pair. If you don’t have any Amazon EC2 key-pair available [create-your-key-pair](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html#having-ec2-create-your-key-pair), and repeat this step.
-8. On the AmazonLinuxAMI paste the AMI ID from the command listed at begining of thid step.
-
-:warning: **Important Note**: This step takes approximatelly 40min-60min as it spins up an instance and runs all the steps to create the AMI. **Make sure it finishes succesfully to move to the next step**
-
-## Step 2.3: Backend
-
-1. Log into the CloudFormation Management Console.
-2. Select Create stack with the With new resources option.
-3. Click Upload a template file, and then Choose file and select the **cfn-backend.yaml** located at the /cfn directory of the repo
-4. Click Next.
-5. Give the Stack name a name (e.g. covid-19-app-ImageBuilder).
-6. Select a key-pair that you have defined on Step 2.1 item 7.
-7. On the S3Bucket field past the bucket name obtained on the step 1.
-
-
-# Step 3: Lambda Function
-
-## 3.1: Creating the Pydicom Layer
-When a CT-Scan is submitted to be processed, a Lambda function is triggered to make sure that all files within the ZIP file are DICOM files. For this verification we leverage [Pydicom](https://pydicom.github.io/).  The first step to get this Lambda Function implemented is to create the Layer file. 
-
-1. Go to the directory <strong>/backend/lambda</strong> and execute:
-```bash
-deploy.sh 
-```
-
-This command launches a series of action that includes running a docker to retrieve Pydicom and create the layer file to be used on the lambda function.
+# License
+This project is distributed under the  [Apache License 2.0](https://github.com/UBC-CIC/vgh-covid-19-ct-model/blob/master/LICENSE) 
