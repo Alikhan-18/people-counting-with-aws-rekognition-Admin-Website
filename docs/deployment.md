@@ -7,8 +7,7 @@ Before you deploy, you must have the following in place:
 
 For prototyping, you need the following:
 *  [Python 3.7 or greater](https://realpython.com/installing-python/) 
-*  [SAM CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html) 
-*  [Docker](https://docs.docker.com/install/) 
+*  [SAM CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html)
 
 
 # Step 1: Front-end deployment
@@ -45,36 +44,6 @@ In this step we will execute three Cloudformation scripts:
 * [cfn-vpc](../cfn/cfn-vpc.yaml) - This Cloudformation create the networking for the image creation EC2 instance, Lambda functions and EC2 instances that processes the model.
 * [cfn-imageBuilder](../cfn/cfn-imageBuilder.yaml) - It creates the EC2 Image Builder infrastructure that embeds the model into our custom AMI. 
 * [cfn-backend](../cfn/cfn-backend.yaml) - Responsible for the creation of the underlying infrastrucutre of the solution. It includes the EC2 Auto Scaling configuration, SQS, VPC Endpoints, EFS and CloudFront
-
-
-## Step 2.1: VPC
-
-1. Log into the CloudFormation Management Console.
-2. Select Create stack with the With new resources option.
-3. Click Upload a template file, and then Choose file and select the **cfn-vpc.yaml** located at the /cfn directory of the repo
-4. Click Next.
-5. Give the Stack name a name (e.g. covid-19-app-vpc).
-
-## Step 2.2: EC2 Image Builder
-
-1.  You also need the latest Deep Learning Amazon Machine Image (AMI) Id in the step. Please, run the command bellow to obtain it. **Make sure run this command on the region you are executing the solution.**
-```bash
-aws ec2 describe-images \
-    --owners amazon \
-    --filters 'Name=name,Values=Deep Learning Base AMI (Amazon Linux 2)*' 'Name=state,Values=available' \
-    --query 'reverse(sort_by(Images, &CreationDate))[:1].ImageId' \
-    --output text
-```
-
-2. Log into the CloudFormation Management Console.
-3. Select Create stack with the With new resources option.
-4. Click Upload a template file, and then Choose file and select the **cfn-ImageBuilder.yaml** located at the /cfn directory of the repo
-5. Click Next.
-6. Give the Stack name a name (e.g. covid-19-app-ImageBuilder).
-7. Select a key-pair. If you don’t have any Amazon EC2 key-pair available [create-your-key-pair](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html#having-ec2-create-your-key-pair), and repeat this step.
-8. On the AmazonLinuxAMI paste the AMI ID from the command listed at begining of thid step.
-
-:warning: **Important Note**: This step takes approximatelly 40min-60min as it spins up an instance and runs all the steps to create the AMI. **Make sure it finishes succesfully to move to the next step**
 
 ## Step 2.3: Backend
 
