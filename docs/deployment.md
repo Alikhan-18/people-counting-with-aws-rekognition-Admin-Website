@@ -86,6 +86,8 @@ aws ec2 describe-images \
 6. Select a key-pair that you have defined on Step 2.1 item 7.
 7. On the S3Bucket field past the bucket name obtained on the step 1.
 
+(Run the CDK stack that generates the RPI Image)
+(RPI setup the environment, execute bash script, run npm start)
 
 # Step 3: Lambda Function
 
