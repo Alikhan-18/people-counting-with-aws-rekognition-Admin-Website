@@ -1,0 +1,40 @@
+div.relative {
+    position: relative;
+    width: 640px;
+    height: 480px;
+    border: 3px solid #73AD21;
+}
+
+div.absoluteCanvas {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 640px;
+    height: 480px;
+}
+
+.Row {
+    display: table;
+    width: 100%; /*Optional*/
+    table-layout: fixed; /*Optional*/
+    border-spacing: 10px; /*Optional*/
+}
+.Column {
+    display: table-cell;
+}
+
+.container{
+    width: 640px;
+    float: left;
+    border: solid 1px blue;
+    text-align: center;
+}
+.container button{
+    display: inline-block;
+}
+#btn1{
+    float:left;
+}
+#btn3{
+    float:right;
+}

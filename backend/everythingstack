@@ -1,0 +1,1001 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: ''
+Parameters:
+  AmplifyUserPoolID:
+    Type: 'AWS::SSM::Parameter::Value<String>'
+    Default: adminAmplUserPoolID
+  CognitoUserEmail:
+    AllowedPattern: ^[0-9a-zA-Z-/_.@]*$
+    Default: zhakypbekov.arman@gmail.com
+    Type: String
+  PresignedURLExpirationInSeconds:
+    AllowedPattern: ^[0-9]+$
+    Default: 120
+    Type: String
+  AmplifyAdminTableName:
+    Type: 'AWS::SSM::Parameter::Value<String>'
+    Default: peopleCountingAmplifyAdminTable
+  AmplifyAdminBucketName:
+    Type: 'AWS::SSM::Parameter::Value<String>'
+    Default: controlBucketNameAmplifyAdmin
+  CameraTimezone:
+    AllowedPattern: ^[0-9a-zA-Z-/]*$
+    Default: America/Vancouver
+    Type: String
+  RekognitionBucketName:
+    AllowedPattern: ^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$
+    Default: rekognitionbucketPeopleCounting
+    Type: String
+  ImageProcessingBucketName:
+    AllowedPattern: ^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$
+    Default: imageprocessingbucketPeopleCounting
+    Type: String
+  AdminIoTTopicName:
+    AllowedPattern: '^[0-9a-zA-Z-/]*$'
+    Default: takePhoto
+    Type: String
+  GetPreSignedUrlIoTTopicName:
+    AllowedPattern: '^[0-9a-zA-Z-/]*$'
+    Default: s3-signed-url
+    Type: String
+Resources:
+  GlueTable:
+    Type: 'AWS::Glue::Table'
+    Properties:
+      DatabaseName: !Ref GlueDatabase
+      CatalogId: !Ref 'AWS::AccountId'
+      TableInput:
+        Owner: owner
+        TableType: EXTERNAL_TABLE
+        StorageDescriptor:
+          Columns:
+            - Name: id
+              Type: string
+            - Name: zone
+              Type: string
+            - Name: count
+              Type: int
+            - Name: counthour
+              Type: string
+            - Name: timestamp
+              Type: string
+          Location: !Join
+            - ''
+            - - 's3://'
+              - !Ref S3BucketAnalytics
+              - /data/
+          InputFormat: org.apache.hadoop.mapred.TextInputFormat
+          OutputFormat: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+          Compressed: false
+          NumberOfBuckets: -1
+          SerdeInfo:
+            SerializationLibrary: org.openx.data.jsonserde.JsonSerDe
+            Parameters:
+              paths: 'count,countHour,id,timestamp,zone'
+          StoredAsSubDirectories: false
+        PartitionKeys:
+          - Name: partition_0
+            Type: string
+          - Name: year
+            Type: string
+        Retention: 0
+        Name: data
+  GluePartition:
+    Type: 'AWS::Glue::Partition'
+    Properties:
+      TableName: !Ref GlueTable
+      DatabaseName: !Ref GlueDatabase
+      CatalogId: !Ref 'AWS::AccountId'
+      PartitionInput:
+        Values:
+          - partition_0
+          - year
+        Parameters: {}
+        StorageDescriptor:
+          Columns:
+            - Name: id
+              Type: string
+            - Name: zone
+              Type: string
+            - Name: count
+              Type: int
+            - Name: counthour
+              Type: string
+            - Name: timestamp
+              Type: string
+          Location: !Sub 's3://${S3BucketAnalytics}/data/raw/year=2021/'
+          InputFormat: org.apache.hadoop.mapred.TextInputFormat
+          OutputFormat: org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat
+          Compressed: false
+          NumberOfBuckets: -1
+          SerdeInfo:
+            SerializationLibrary: org.openx.data.jsonserde.JsonSerDe
+            Parameters:
+              paths: 'count,countHour,id,timestamp,zone'
+          StoredAsSubDirectories: false
+  GlueDatabase:
+    Type: 'AWS::Glue::Database'
+    Properties:
+      DatabaseInput:
+        Name: averagedb
+      CatalogId: !Ref 'AWS::AccountId'
+  KinesisStream:
+    Type: 'AWS::Kinesis::Stream'
+    Properties:
+      RetentionPeriodHours: 24
+      ShardCount: 1
+  KinesisFirehoseDeliveryStream:
+    Type: 'AWS::KinesisFirehose::DeliveryStream'
+    Properties:
+      DeliveryStreamType: KinesisStreamAsSource
+      KinesisStreamSourceConfiguration:
+        KinesisStreamARN: !GetAtt
+          - KinesisStream
+          - Arn
+        RoleARN: !GetAtt
+          - FirehoseDeliveryIAMRole
+          - Arn
+      S3DestinationConfiguration:
+        BucketARN: !GetAtt
+          - S3BucketAnalytics
+          - Arn
+        Prefix: 'data/raw/year=!{timestamp:yyyy}/'
+        ErrorOutputPrefix: 'data/raw/year=!{timestamp:yyyy}/!{firehose:error-output-type}'
+        BufferingHints:
+          SizeInMBs: 1
+          IntervalInSeconds: 60
+        CloudWatchLoggingOptions:
+          Enabled: true
+          LogGroupName: !Ref LogsLogGroup
+          LogStreamName: S3Delivery
+        CompressionFormat: UNCOMPRESSED
+        EncryptionConfiguration:
+          NoEncryptionConfig: NoEncryption
+        RoleARN: !GetAtt
+          - FirehoseDeliveryIAMRole
+          - Arn
+    DependsOn:
+      - FirehoseDeliveryIAMPolicy
+  FirehoseDeliveryIAMRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Sid: ''
+            Effect: Allow
+            Principal:
+              Service: firehose.amazonaws.com
+            Action: 'sts:AssumeRole'
+            Condition:
+              StringEquals:
+                'sts:ExternalId': !Sub '${AWS::AccountId}'
+  FirehoseDeliveryIAMPolicy:
+    Type: 'AWS::IAM::Policy'
+    Properties:
+      PolicyName: !Sub >-
+        KinesisFirehoseServicePolicy-123-firehoseSendToAnalyticsBucket-${AWS::Region}
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - 's3:AbortMultipartUpload'
+              - 's3:GetBucketLocation'
+              - 's3:GetObject'
+              - 's3:ListBucket'
+              - 's3:ListBucketMultipartUploads'
+              - 's3:PutObject'
+            Resource: !Join
+              - ''
+              - - !GetAtt
+                  - S3BucketAnalytics
+                  - Arn
+                - /*
+          - Effect: Allow
+            Action:
+              - 's3:AbortMultipartUpload'
+              - 's3:GetBucketLocation'
+              - 's3:GetObject'
+              - 's3:ListBucket'
+              - 's3:ListBucketMultipartUploads'
+              - 's3:PutObject'
+            Resource: !GetAtt
+              - S3BucketAnalytics
+              - Arn
+          - Effect: Allow
+            Action:
+              - 'kinesis:DescribeStream'
+              - 'kinesis:GetShardIterator'
+              - 'kinesis:GetRecords'
+            Resource: !GetAtt
+              - KinesisStream
+              - Arn
+      Roles:
+        - !Ref FirehoseDeliveryIAMRole
+    DependsOn:
+      - KinesisStream
+  LogsLogGroup:
+    Type: 'AWS::Logs::LogGroup'
+    Properties:
+      LogGroupName: !Sub 'logs/kinesisfirehose/${AWS::StackName}-firehoseSendToAnalyticsBucket'
+  LogsLogStream:
+    Type: 'AWS::Logs::LogStream'
+    Properties:
+      LogGroupName: !Ref LogsLogGroup
+      LogStreamName: S3Delivery
+    DependsOn:
+      - LogsLogGroup
+  AthenaWorkGroup:
+    Type: 'AWS::Athena::WorkGroup'
+    Properties:
+      Name: workgroupA
+      State: ENABLED
+      WorkGroupConfiguration:
+        EnforceWorkGroupConfiguration: true
+        PublishCloudWatchMetricsEnabled: true
+        RequesterPaysEnabled: false
+        ResultConfiguration:
+          OutputLocation: !Sub 's3://${S3BucketAnalytics}/'
+  ApiGatewayRestApiIoT:
+      Type: 'AWS::ApiGateway::RestApi'
+      Properties:
+        Name: !Sub 'ApiGatewayRestApiIoT-${AWS::StackName}'
+        ApiKeySourceType: HEADER
+        EndpointConfiguration:
+          Types:
+            - REGIONAL
+  ApiGatewayStageIoT:
+      DependsOn: ApiGatewayRestApiIoT
+      Type: 'AWS::ApiGateway::Stage'
+      Properties:
+        StageName: default
+        DeploymentId: !Ref ApiGatewayDeploymentIoT
+        RestApiId: !Ref ApiGatewayRestApiIoT
+        CacheClusterEnabled: false
+        TracingEnabled: false
+  ApiGatewayDeploymentIoT:
+      DependsOn:
+        - ApiGatewayMethodIoT1
+        - ApiGatewayMethodIoT2
+      Type: 'AWS::ApiGateway::Deployment'
+      Properties:
+        RestApiId: !Ref ApiGatewayRestApiIoT
+  ApiGatewayResourceIoT2:
+      Type: 'AWS::ApiGateway::Resource'
+      Properties:
+        RestApiId: !Ref ApiGatewayRestApiIoT
+        PathPart: sendtoiot
+        ParentId: !GetAtt ApiGatewayRestApiIoT.RootResourceId
+  ApiGatewayMethodIoT1:
+      Type: 'AWS::ApiGateway::Method'
+      Properties:
+        RestApiId: !Ref ApiGatewayRestApiIoT
+        ResourceId: !Ref ApiGatewayResourceIoT2
+        HttpMethod: ANY
+        AuthorizationType: NONE
+        ApiKeyRequired: true
+        RequestParameters: {}
+        MethodResponses:
+          - ResponseModels:
+              application/json: Empty
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Credentials: false
+              method.response.header.Access-Control-Allow-Headers: false
+              method.response.header.Access-Control-Allow-Methods: false
+              method.response.header.Access-Control-Allow-Origin: false
+            StatusCode: '200'
+          - ResponseParameters:
+              method.response.header.Access-Control-Allow-Credentials: false
+              method.response.header.Access-Control-Allow-Headers: false
+              method.response.header.Access-Control-Allow-Methods: false
+              method.response.header.Access-Control-Allow-Origin: false
+            StatusCode: '404'
+        Integration:
+          CacheNamespace: !Ref ApiGatewayResourceIoT2
+          ContentHandling: CONVERT_TO_TEXT
+          IntegrationHttpMethod: POST
+          IntegrationResponses:
+            - ResponseParameters:
+                method.response.header.Access-Control-Allow-Credentials: '''true'''
+                method.response.header.Access-Control-Allow-Headers: >-
+                  'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'
+                method.response.header.Access-Control-Allow-Methods: '''DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'''
+                method.response.header.Access-Control-Allow-Origin: '''*'''
+              ResponseTemplates: {}
+              SelectionPattern: ''
+              StatusCode: '200'
+          PassthroughBehavior: WHEN_NO_MATCH
+          TimeoutInMillis: 29000
+          Type: AWS
+          Uri: !Sub
+            - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${LambdaName}/invocations
+            - LambdaName : !Ref LambdaIoT
+  ApiGatewayMethodIoT2:
+      Type: 'AWS::ApiGateway::Method'
+      Properties:
+        RestApiId: !Ref ApiGatewayRestApiIoT
+        ResourceId: !Ref ApiGatewayResourceIoT2
+        HttpMethod: OPTIONS
+        AuthorizationType: NONE
+        ApiKeyRequired: false
+        RequestParameters: {}
+        MethodResponses:
+          - ResponseModels:
+              application/json: Empty
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Credentials: false
+              method.response.header.Access-Control-Allow-Headers: false
+              method.response.header.Access-Control-Allow-Methods: false
+              method.response.header.Access-Control-Allow-Origin: false
+            StatusCode: '200'
+          - ResponseParameters:
+              method.response.header.Access-Control-Allow-Credentials: false
+              method.response.header.Access-Control-Allow-Headers: false
+              method.response.header.Access-Control-Allow-Methods: false
+              method.response.header.Access-Control-Allow-Origin: false
+            StatusCode: '404'
+        Integration:
+          CacheNamespace: !Ref ApiGatewayResourceIoT2
+          IntegrationResponses:
+            - ResponseParameters:
+                method.response.header.Access-Control-Allow-Credentials: '''true'''
+                method.response.header.Access-Control-Allow-Headers: >-
+                  'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'
+                method.response.header.Access-Control-Allow-Methods: '''DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'''
+                method.response.header.Access-Control-Allow-Origin: '''*'''
+              ResponseTemplates: {}
+              StatusCode: '200'
+          PassthroughBehavior: WHEN_NO_MATCH
+          RequestTemplates:
+            application/json: '{"statusCode": 200}'
+          TimeoutInMillis: 29000
+          Type: MOCK
+  ApiKeyIoT:
+        Type: 'AWS::ApiGateway::ApiKey'
+        DependsOn:
+            - ApiGatewayDeploymentIoT
+            - ApiGatewayStageIoT
+        Properties:
+            Enabled: 'true'
+            StageKeys:
+                - RestApiId: !Ref ApiGatewayRestApiIoT
+                  StageName: "default"
+
+  usagePlanKeyIoT:
+        Type: 'AWS::ApiGateway::UsagePlanKey'
+        DependsOn:
+            - ApiKeyIoT
+            - ApiGatewayUsagePlanIoT
+        Properties:
+            KeyId: !Ref ApiKeyIoT
+            KeyType: API_KEY
+            UsagePlanId: !Ref ApiGatewayUsagePlanIoT
+
+  ApiGatewayUsagePlanIoT:
+        Type: "AWS::ApiGateway::UsagePlan"
+        Properties:
+            ApiStages:
+              -
+                ApiId: !Ref ApiGatewayRestApiIoT
+                Stage: !Ref ApiGatewayStageIoT
+  ApiGatewayRestApiDeveloperEndpoint:
+        Type: 'AWS::ApiGateway::RestApi'
+        Properties:
+          Name: !Sub 'ApiGatewayRestApiDeveloperEndpoint-${AWS::StackName}'
+          ApiKeySourceType: HEADER
+          EndpointConfiguration:
+            Types:
+              - REGIONAL
+  ApiGatewayStageDeveloperEndpoint:
+        DependsOn: ApiGatewayRestApiDeveloperEndpoint
+        Type: 'AWS::ApiGateway::Stage'
+        Properties:
+          StageName: default
+          DeploymentId: !Ref ApiGatewayDeploymentDeveloperEndpoint
+          RestApiId: !Ref ApiGatewayRestApiDeveloperEndpoint
+          CacheClusterEnabled: false
+          TracingEnabled: false
+  ApiGatewayDeploymentDeveloperEndpoint:
+        DependsOn:
+          - ApiGatewayMethodDeveloperEndpoint1
+          - ApiGatewayMethodDeveloperEndpoint2
+        Type: 'AWS::ApiGateway::Deployment'
+        Properties:
+          RestApiId: !Ref ApiGatewayRestApiDeveloperEndpoint
+  ApiGatewayResourceDeveloperEndpoint2:
+        Type: 'AWS::ApiGateway::Resource'
+        Properties:
+          RestApiId: !Ref ApiGatewayRestApiDeveloperEndpoint
+          PathPart: getCounts
+          ParentId: !GetAtt ApiGatewayRestApiDeveloperEndpoint.RootResourceId
+  ApiGatewayMethodDeveloperEndpoint1:
+        Type: 'AWS::ApiGateway::Method'
+        Properties:
+          RestApiId: !Ref ApiGatewayRestApiDeveloperEndpoint
+          ResourceId: !Ref ApiGatewayResourceDeveloperEndpoint2
+          HttpMethod: ANY
+          AuthorizationType: NONE
+          ApiKeyRequired: true
+          RequestParameters: {}
+          MethodResponses:
+            - ResponseModels:
+                application/json: Empty
+              ResponseParameters:
+                method.response.header.Access-Control-Allow-Credentials: false
+                method.response.header.Access-Control-Allow-Headers: false
+                method.response.header.Access-Control-Allow-Methods: false
+                method.response.header.Access-Control-Allow-Origin: false
+              StatusCode: '200'
+            - ResponseParameters:
+                method.response.header.Access-Control-Allow-Credentials: false
+                method.response.header.Access-Control-Allow-Headers: false
+                method.response.header.Access-Control-Allow-Methods: false
+                method.response.header.Access-Control-Allow-Origin: false
+              StatusCode: '404'
+          Integration:
+            CacheNamespace: !Ref ApiGatewayResourceDeveloperEndpoint2
+            ContentHandling: CONVERT_TO_TEXT
+            IntegrationHttpMethod: POST
+            IntegrationResponses:
+              - ResponseParameters:
+                  method.response.header.Access-Control-Allow-Credentials: '''true'''
+                  method.response.header.Access-Control-Allow-Headers: >-
+                    'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'
+                  method.response.header.Access-Control-Allow-Methods: '''DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'''
+                  method.response.header.Access-Control-Allow-Origin: '''*'''
+                ResponseTemplates: {}
+                SelectionPattern: ''
+                StatusCode: '200'
+            PassthroughBehavior: WHEN_NO_MATCH
+            TimeoutInMillis: 29000
+            Type: AWS
+            Uri: !Sub
+              - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${LambdaName}/invocations
+              - LambdaName : !Ref LambdaGetCounts
+  ApiGatewayMethodDeveloperEndpoint2:
+        Type: 'AWS::ApiGateway::Method'
+        Properties:
+          RestApiId: !Ref ApiGatewayRestApiDeveloperEndpoint
+          ResourceId: !Ref ApiGatewayResourceDeveloperEndpoint2
+          HttpMethod: OPTIONS
+          AuthorizationType: NONE
+          ApiKeyRequired: false
+          RequestParameters: {}
+          MethodResponses:
+            - ResponseModels:
+                application/json: Empty
+              ResponseParameters:
+                method.response.header.Access-Control-Allow-Credentials: false
+                method.response.header.Access-Control-Allow-Headers: false
+                method.response.header.Access-Control-Allow-Methods: false
+                method.response.header.Access-Control-Allow-Origin: false
+              StatusCode: '200'
+            - ResponseParameters:
+                method.response.header.Access-Control-Allow-Credentials: false
+                method.response.header.Access-Control-Allow-Headers: false
+                method.response.header.Access-Control-Allow-Methods: false
+                method.response.header.Access-Control-Allow-Origin: false
+              StatusCode: '404'
+          Integration:
+            CacheNamespace: !Ref ApiGatewayResourceDeveloperEndpoint2
+            IntegrationResponses:
+              - ResponseParameters:
+                  method.response.header.Access-Control-Allow-Credentials: '''true'''
+                  method.response.header.Access-Control-Allow-Headers: >-
+                    'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'
+                  method.response.header.Access-Control-Allow-Methods: '''DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'''
+                  method.response.header.Access-Control-Allow-Origin: '''*'''
+                ResponseTemplates: {}
+                StatusCode: '200'
+            PassthroughBehavior: WHEN_NO_MATCH
+            RequestTemplates:
+              application/json: '{"statusCode": 200}'
+            TimeoutInMillis: 29000
+            Type: MOCK
+  ApiKeyDeveloperEndpoint:
+          Type: 'AWS::ApiGateway::ApiKey'
+          DependsOn:
+              - ApiGatewayDeploymentDeveloperEndpoint
+              - ApiGatewayStageDeveloperEndpoint
+          Properties:
+              Enabled: 'true'
+              StageKeys:
+                  - RestApiId: !Ref ApiGatewayRestApiDeveloperEndpoint
+                    StageName: "default"
+
+  usagePlanKeyDeveloperEndpoint:
+          Type: 'AWS::ApiGateway::UsagePlanKey'
+          DependsOn:
+              - ApiKeyDeveloperEndpoint
+              - ApiGatewayUsagePlanDeveloperEndpoint
+          Properties:
+              KeyId: !Ref ApiKeyDeveloperEndpoint
+              KeyType: API_KEY
+              UsagePlanId: !Ref ApiGatewayUsagePlanDeveloperEndpoint
+
+  ApiGatewayUsagePlanDeveloperEndpoint:
+          Type: "AWS::ApiGateway::UsagePlan"
+          Properties:
+              ApiStages:
+                -
+                  ApiId: !Ref ApiGatewayRestApiDeveloperEndpoint
+                  Stage: !Ref ApiGatewayStageDeveloperEndpoint
+  IAMRoleAnalyticsBucket:
+      Type: 'AWS::IAM::Role'
+      Properties:
+        Path: /service-role/
+        RoleName: !Sub 'athenaLambda-role-qs8d94dz-${AWS::StackName}'
+        AssumeRolePolicyDocument: >-
+          {"Version":"2012-10-17","Statement":[{"Effect":"Allow","Principal":{"Service":"lambda.amazonaws.com"},"Action":"sts:AssumeRole"}]}
+        MaxSessionDuration: 3600
+        ManagedPolicyArns:
+          - 'arn:aws:iam::aws:policy/AmazonS3FullAccess'
+          - 'arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess'
+          - 'arn:aws:iam::aws:policy/AmazonAthenaFullAccess'
+  IAMRoleIoT:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      Path: /
+      AssumeRolePolicyDocument: >-
+        {"Version":"2012-10-17","Statement":[{"Effect":"Allow","Principal":{"Service":"lambda.amazonaws.com"},"Action":"sts:AssumeRole"}]}
+      MaxSessionDuration: 3600
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/AWSIoTFullAccess'
+        - 'arn:aws:iam::aws:policy/AmazonDynamoDBReadOnlyAccess'
+        - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
+  IAMRolePresignedURLHandler:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      Path: /
+      AssumeRolePolicyDocument: >-
+        {"Version":"2012-10-17","Statement":[{"Effect":"Allow","Principal":{"Service":"lambda.amazonaws.com"},"Action":"sts:AssumeRole"}]}
+      MaxSessionDuration: 3600
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/AmazonS3FullAccess'
+        - 'arn:aws:iam::aws:policy/AWSIoTFullAccess'
+        - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
+  IAMRoleGetCounts:
+      Type: 'AWS::IAM::Role'
+      Properties:
+        Path: /
+        AssumeRolePolicyDocument: >-
+          {"Version":"2012-10-17","Statement":[{"Effect":"Allow","Principal":{"Service":"lambda.amazonaws.com"},"Action":"sts:AssumeRole"}]}
+        MaxSessionDuration: 3600
+        ManagedPolicyArns:
+          - 'arn:aws:iam::aws:policy/AmazonDynamoDBReadOnlyAccess'
+          - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
+  IAMRoleRekognition:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      Path: /
+      AssumeRolePolicyDocument: >-
+        {"Version":"2012-10-17","Statement":[{"Effect":"Allow","Principal":{"Service":"lambda.amazonaws.com"},"Action":"sts:AssumeRole"}]}
+      MaxSessionDuration: 3600
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess'
+        - 'arn:aws:iam::aws:policy/AmazonRekognitionFullAccess'
+        - 'arn:aws:iam::aws:policy/AmazonKinesisAnalyticsFullAccess'
+        - 'arn:aws:iam::aws:policy/AmazonS3FullAccess'
+        - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
+  IAMRoleImageProcessing:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      Path: /
+      AssumeRolePolicyDocument: >-
+        {"Version":"2012-10-17","Statement":[{"Effect":"Allow","Principal":{"Service":"lambda.amazonaws.com"},"Action":"sts:AssumeRole"}]}
+      MaxSessionDuration: 3600
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/AmazonS3FullAccess'
+        - 'arn:aws:iam::aws:policy/AmazonDynamoDBReadOnlyAccess'
+        - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
+  LambdaImageProcessing:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Description: ''
+      Environment:
+          Variables:
+            ADMIN_TABLE_NAME: !Ref AmplifyAdminTableName
+            DESTINATION_BUCKET: !Sub '${AWS::StackName}-${RekognitionBucketName}'
+      FunctionName: lambda-transform-s3
+      Handler: index.handler
+      Code:
+            ZipFile: |
+                      exports.handler = async (event) => {
+                          const response = {
+                              statusCode: 200,
+                              body: JSON.stringify('Hello from Lambda!'),
+                          };
+                          return response;
+                      };
+      MemorySize: 128
+      Role: !GetAtt IAMRoleImageProcessing.Arn
+      Runtime: nodejs12.x
+      Timeout: 40
+      TracingConfig:
+        Mode: PassThrough
+  LambdaRekognition:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Description: ''
+      Environment:
+          Variables:
+            CURRENT_COUNTS_TABLE_NAME: !Ref DynamoDBTableCurrentCounts
+            ADMIN_TABLE_NAME: !Ref AmplifyAdminTableName
+            KINESIS_NAME: !Ref KinesisStream
+            CAMERA_TIMEZONE: !Ref CameraTimezone
+      FunctionName: lambda-rekognition
+      Handler: index.lambda_handler
+      Code:
+              ZipFile: |
+                        import json
+
+                        def lambda_handler(event, context):
+                            return {
+                                'statusCode': 200,
+                                'body': json.dumps('Hello from Lambda!')
+                            }
+      MemorySize: 128
+      Role: !GetAtt IAMRoleRekognition.Arn
+      Runtime: python3.8
+      Timeout: 9
+      TracingConfig:
+        Mode: PassThrough
+  LambdaGetCounts:
+      Type: 'AWS::Lambda::Function'
+      Properties:
+        Description: ''
+        Environment:
+            Variables:
+              CURRENT_COUNTS_TABLE_NAME: !Ref DynamoDBTableCurrentCounts
+              AVERAGE_COUNTS_TABLE_NAME: !Ref DynamoDBTableAnalytics
+        FunctionName: lambda-developer-endpoints
+        Handler: index.lambda_handler
+        Code:
+              ZipFile: |
+                        import json
+
+                        def lambda_handler(event, context):
+                            return {
+                                'statusCode': 200,
+                                'body': json.dumps('Hello from Lambda!')
+                            }
+        MemorySize: 128
+        Role: !GetAtt IAMRoleGetCounts.Arn
+        Runtime: python3.8
+        Timeout: 9
+        TracingConfig:
+          Mode: PassThrough
+  LambdaIoT:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Description: ''
+      Environment:
+        Variables:
+          ADMIN_TABLE_NAME: !Ref AmplifyAdminTableName
+          IOT_TOPIC: !Ref AdminIoTTopicName
+      FunctionName: lambda-iot
+      Handler: index.lambda_handler
+      Code:
+            ZipFile: |
+                      import json
+
+                      def lambda_handler(event, context):
+                          return {
+                              'statusCode': 200,
+                              'body': json.dumps('Hello from Lambda!')
+                          }
+      MemorySize: 128
+      Role: !GetAtt IAMRoleIoT.Arn
+      Runtime: python3.8
+      Timeout: 3
+      TracingConfig:
+        Mode: PassThrough
+  LambdaPresignedURLHandler:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Description: ''
+      Environment:
+        Variables:
+          IOT_TOPIC: !Ref GetPreSignedUrlIoTTopicName
+          IMAGE_CACHE_BUCKET_NAME : !Ref S3BucketImageProcessing
+          CONTROL_IMAGE_BUCKET_NAME : !Ref AmplifyAdminBucketName
+          PRESIGNED_URL_EXPIRATION_IN_SEC : !Ref PresignedURLExpirationInSeconds
+      FunctionName: lambda-presigned-url-handler
+      Handler: index.lambda_handler
+      Code:
+            ZipFile: |
+                      import json
+
+                      def lambda_handler(event, context):
+                          return {
+                              'statusCode': 200,
+                              'body': json.dumps('Hello from Lambda!')
+                          }
+      MemorySize: 128
+      Role: !GetAtt IAMRolePresignedURLHandler.Arn
+      Runtime: python3.8
+      Timeout: 3
+      TracingConfig:
+        Mode: PassThrough
+  LambdaAnalytics:
+      Type: 'AWS::Lambda::Function'
+      Properties:
+        Description: ''
+        Environment:
+          Variables:
+            TABLE: !Ref GlueTable
+            DATABASE: !Ref GlueDatabase
+            BUCKET_NAME: !Ref S3BucketAnalytics
+            DYNAMODBNAME: !Ref DynamoDBTableAnalytics
+        FunctionName: lambda-analytics
+        Handler: index.lambda_handler
+        Code:
+            ZipFile: |
+                      import json
+
+                      def lambda_handler(event, context):
+                          return {
+                              'statusCode': 200,
+                              'body': json.dumps('Hello from Lambda!')
+                          }
+        MemorySize: 128
+        Role: !GetAtt
+          - IAMRoleAnalyticsBucket
+          - Arn
+        Runtime: python3.8
+        Timeout: 12
+        TracingConfig:
+          Mode: PassThrough
+  EventsRule:
+      Type: 'AWS::Events::Rule'
+      Properties:
+        Name: analyticsLambdaRule
+        ScheduleExpression: rate(5 minutes)
+        State: ENABLED
+        Targets:
+          - Arn: !GetAtt
+              - LambdaAnalytics
+              - Arn
+            Id: Id7677634799567
+        EventBusName: default
+  LambdaPermissionAnalytics:
+      Type: 'AWS::Lambda::Permission'
+      Properties:
+        Action: 'lambda:InvokeFunction'
+        FunctionName: !GetAtt
+          - LambdaAnalytics
+          - Arn
+        Principal: events.amazonaws.com
+        SourceArn: !GetAtt
+          - EventsRule
+          - Arn
+  LambdaPermissionProcessing:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      Action: 'lambda:InvokeFunction'
+      FunctionName: !GetAtt LambdaImageProcessing.Arn
+      Principal: s3.amazonaws.com
+      SourceArn: !Sub 'arn:aws:s3:::${AWS::StackName}-${ImageProcessingBucketName}'
+      SourceAccount: !Ref AWS::AccountId
+  LambdaPermissionRekognition:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      Action: 'lambda:InvokeFunction'
+      FunctionName: !GetAtt LambdaRekognition.Arn
+      Principal: s3.amazonaws.com
+      SourceArn: !Sub 'arn:aws:s3:::${AWS::StackName}-${RekognitionBucketName}'
+      SourceAccount: !Ref AWS::AccountId
+  LambdaPermissionIoT:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      Action: 'lambda:InvokeFunction'
+      FunctionName: !GetAtt LambdaIoT.Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub 
+        - arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGatewayName}/*/*/sendtoiot
+        - ApiGatewayName : !Ref ApiGatewayRestApiIoT
+  LambdaPermissionPresignedURLHandler:
+    Type: "AWS::Lambda::Permission"
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !Sub "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${LambdaPresignedURLHandler}"
+      Principal: "iot.amazonaws.com"
+      SourceArn: !Sub "arn:aws:iot:${AWS::Region}:${AWS::AccountId}:rule/${PresignedURLHandlerTopicRule}"
+  PresignedURLHandlerTopicRule:
+    Type: 'AWS::IoT::TopicRule'
+    Properties:
+      TopicRulePayload:
+          RuleDisabled: 'false'
+          Sql: !Sub 'SELECT * FROM "${GetPreSignedUrlIoTTopicName}"'
+          Actions:
+              - Lambda:
+                    FunctionArn: !Sub "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${LambdaPresignedURLHandler}"
+          AwsIotSqlVersion: 2016-03-23
+  LambdaPermissionGetCounts:
+      Type: 'AWS::Lambda::Permission'
+      Properties:
+        Action: 'lambda:InvokeFunction'
+        FunctionName: !GetAtt LambdaGetCounts.Arn
+        Principal: apigateway.amazonaws.com
+        SourceArn: !Sub
+          - arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGatewayName}/*/*/getCounts
+          - ApiGatewayName : !Ref ApiGatewayRestApiDeveloperEndpoint
+  S3BucketImageProcessing:
+    Type: 'AWS::S3::Bucket'
+    DeletionPolicy: Delete
+    DependsOn:
+      - LambdaPermissionProcessing
+    Properties:
+      BucketName: !Sub '${AWS::StackName}-${ImageProcessingBucketName}'
+      NotificationConfiguration:
+        LambdaConfigurations:
+          - Event: s3:ObjectCreated:*
+            Function: !GetAtt LambdaImageProcessing.Arn
+      LifecycleConfiguration:
+          Rules:
+            - Id: ExpireAfterOneDay
+              Status: Enabled
+              ExpirationInDays: '1'
+      BucketEncryption:
+          ServerSideEncryptionConfiguration:
+            - ServerSideEncryptionByDefault:
+                SSEAlgorithm: AES256
+
+  S3BucketImageProcessingBucketPolicy:
+      Type: 'AWS::S3::BucketPolicy'
+      Properties:
+        Bucket: !Ref S3BucketImageProcessing
+        PolicyDocument:
+          Statement:
+            - Sid: DenyIncorrectEncryptionHeader
+              Effect: Deny
+              Principal: "*"
+              Action: s3:PutObject
+              Resource: !Join
+                          - ''
+                          - - !GetAtt
+                              - S3BucketImageProcessing
+                              - Arn
+                            - /*
+              Condition:
+                StringNotEquals:
+                  s3:x-amz-server-side-encryption: AES256
+            - Sid: DenyUnencryptedObjectUploads
+              Effect: Deny
+              Principal: "*"
+              Action: s3:PutObject
+              Resource: !Join
+                            - ''
+                            - - !GetAtt
+                                - S3BucketImageProcessing
+                                - Arn
+                              - /*
+              Condition:
+                'Null':
+                  s3:x-amz-server-side-encryption: 'true'
+
+  S3BucketRekognition:
+    Type: 'AWS::S3::Bucket'
+    DeletionPolicy: Delete
+    DependsOn:
+      - LambdaPermissionRekognition
+    Properties:
+      BucketName: !Sub '${AWS::StackName}-${RekognitionBucketName}'
+      NotificationConfiguration:
+        LambdaConfigurations:
+          - Event: s3:ObjectCreated:*
+            Function: !GetAtt LambdaRekognition.Arn
+      LifecycleConfiguration:
+        Rules:
+          - Id: ExpireAfterOneDay
+            Status: Enabled
+            ExpirationInDays: '1'
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+
+  S3BucketRekognitionBucketPolicy:
+        Type: 'AWS::S3::BucketPolicy'
+        Properties:
+          Bucket: !Ref S3BucketRekognition
+          PolicyDocument:
+            Statement:
+              - Sid: DenyIncorrectEncryptionHeader
+                Effect: Deny
+                Principal: "*"
+                Action: s3:PutObject
+                Resource: !Join
+                            - ''
+                            - - !GetAtt
+                                - S3BucketRekognition
+                                - Arn
+                              - /*
+                Condition:
+                  StringNotEquals:
+                    s3:x-amz-server-side-encryption: AES256
+              - Sid: DenyUnencryptedObjectUploads
+                Effect: Deny
+                Principal: "*"
+                Action: s3:PutObject
+                Resource: !Join
+                              - ''
+                              - - !GetAtt
+                                  - S3BucketRekognition
+                                  - Arn
+                                - /*
+                Condition:
+                  'Null':
+                    s3:x-amz-server-side-encryption: 'true'
+
+  S3BucketAnalytics:
+    Type: 'AWS::S3::Bucket'
+    DeletionPolicy: Delete
+    Properties:
+          LifecycleConfiguration:
+            Rules:
+              - Id: DeleteContentAfter1Day
+                Status: Enabled
+                ExpirationInDays: 7
+  DynamoDBTableAnalytics:
+      Type: 'AWS::DynamoDB::Table'
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: hour
+            AttributeType: S
+        TableName: !Sub 'TotalAveragesForThePastSevenDays-${AWS::StackName}'
+        KeySchema:
+          - AttributeName: hour
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+  DynamoDBTableCurrentCounts:
+      Type: "AWS::DynamoDB::Table"
+      Properties:
+          AttributeDefinitions:
+            -
+              AttributeName: "id"
+              AttributeType: "S"
+            -
+              AttributeName: "zone"
+              AttributeType: "S"
+          BillingMode: "PAY_PER_REQUEST"
+          TableName: !Sub 'CurrentCounts-${AWS::StackName}'
+          KeySchema:
+            -
+              AttributeName: "id"
+              KeyType: "HASH"
+            -
+              AttributeName: "zone"
+              KeyType: "RANGE"
+          StreamSpecification:
+              StreamViewType: "NEW_AND_OLD_IMAGES"
+
+  CognitoUserPoolUser:
+      Type: "AWS::Cognito::UserPoolUser"
+      Properties:
+          Username: "administrator"
+          UserPoolId: !Ref AmplifyUserPoolID
+          UserAttributes:
+            -
+              Name: "email_verified"
+              Value: "true"
+            -
+              Name: "email"
+              Value: !Ref CognitoUserEmail
+
+
+Outputs:
+  Region:
+    Value: !Ref "AWS::Region"
+  DeveloperEndpoint:
+    Value: !Sub "https://${ApiGatewayRestApiDeveloperEndpoint}.execute-api.${AWS::Region}.amazonaws.com/${ApiGatewayStageDeveloperEndpoint}/getCounts"
+  DeveloperEndpointAPIKeyID:
+    Value: !Ref ApiKeyDeveloperEndpoint
+  IoTEndpoint:
+    Value: !Sub "https://${ApiGatewayRestApiIoT}.execute-api.${AWS::Region}.amazonaws.com/${ApiGatewayStageIoT}/sendtoiot"
+  IoTAPIKeyID:
+    Value: !Ref ApiKeyIoT
+
