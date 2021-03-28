@@ -4,15 +4,15 @@ Before you deploy, you must have the following in place:
 *  [GitHub Account](https://github.com/) 
 *  [Node 10 or greater](https://nodejs.org/en/download/) 
 *  [Amplify CLI installed and configured](https://aws-amplify.github.io/docs/cli-toolchain/quickstart#quickstart) 
+*  [AWS CLI installed and configured](https://aws.amazon.com/cli/) 
 
 For prototyping, you need the following:
-*  [Python 3.7 or greater](https://realpython.com/installing-python/) 
-*  [SAM CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html)
+*  [Python 3.7 or greater](https://realpython.com/installing-python/)
 
 
 # Step 1: Front-end deployment
 
-1.  Clone and Fork this solution repository.
+1.  Clone this repository.
     If you haven't configured Amplify before, configure the Amplify CLI in your terminal as follows:
 ```bash
 amplify configure
@@ -29,43 +29,31 @@ amplify init
 amplify push
 ```
 
-4.  After the Amplify deployment finishes, run the command bellow to obtain the Amazon S3 Bucket Amplify created. This information will be used later as a parameter in a clouformation
+4.  After the Amplify deployment finishes, run the script which will setup the necessary parameters for the backend cloudformation stack.
 ```bash
-aws resourcegroupstaggingapi get-resources --tag-filters Key=user:Application,Values="COVID19L3NetAPP" Key=user:Stack,Values="dev" --resource-type-filters s3 --query 'ResourceTagMappingList[*].[ResourceARN]' --output text | grep -v deployment | awk -F':::' '{print $2}'
+chmod a+x ./scripts/populateParameterStore.sh \
+./populateParameterStore.sh
 ```
 
-5. Log into the AWS Management Console.
-6. Select AWS Amplify and select the COVID19L3NetApp
-7. At the *Frontend environments* tab connect to your github account poiting to the forked repo. More informatoin at https://docs.aws.amazon.com/amplify/latest/userguide/deploy-backend.html
 
 # Step 2: Back-end deployment
 
 In this step we will execute three Cloudformation scripts:
-* [cfn-vpc](../cfn/cfn-vpc.yaml) - This Cloudformation create the networking for the image creation EC2 instance, Lambda functions and EC2 instances that processes the model.
-* [cfn-imageBuilder](../cfn/cfn-imageBuilder.yaml) - It creates the EC2 Image Builder infrastructure that embeds the model into our custom AMI. 
 * [cfn-backend](../cfn/cfn-backend.yaml) - Responsible for the creation of the underlying infrastrucutre of the solution. It includes the EC2 Auto Scaling configuration, SQS, VPC Endpoints, EFS and CloudFront
 
-## Step 2.3: Backend
+
+## Step 2.1: Deploy backend cloudformation stack
 
 1. Log into the CloudFormation Management Console.
 2. Select Create stack with the With new resources option.
 3. Click Upload a template file, and then Choose file and select the **cfn-backend.yaml** located at the /cfn directory of the repo
 4. Click Next.
-5. Give the Stack name a name (e.g. covid-19-app-ImageBuilder).
-6. Select a key-pair that you have defined on Step 2.1 item 7.
-7. On the S3Bucket field past the bucket name obtained on the step 1.
+5. Name the stack (e.g. peopleCountingWithRekognition).
 
-(Run the CDK stack that generates the RPI Image)
-(RPI setup the environment, execute bash script, run npm start)
+## Step 2.2: Upload Lambda function code
 
-# Step 3: Lambda Function
-
-## 3.1: Creating the Pydicom Layer
-When a CT-Scan is submitted to be processed, a Lambda function is triggered to make sure that all files within the ZIP file are DICOM files. For this verification we leverage [Pydicom](https://pydicom.github.io/).  The first step to get this Lambda Function implemented is to create the Layer file. 
-
-1. Go to the directory <strong>/backend/lambda</strong> and execute:
+Run the script which will setup the upload the Lambda function code to AWS.
 ```bash
-deploy.sh 
+chmod a+x ./scripts/populateParameterStore.sh \
+./populateParameterStore.sh
 ```
-
-This command launches a series of action that includes running a docker to retrieve Pydicom and create the layer file to be used on the lambda function.
