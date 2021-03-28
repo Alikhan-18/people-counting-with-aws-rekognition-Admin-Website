@@ -38,9 +38,7 @@ chmod a+x ./scripts/populateParameterStore.sh \
 
 # Step 2: Back-end deployment
 
-In this step we will execute three Cloudformation scripts:
-* [cfn-backend](../cfn/cfn-backend.yaml) - Responsible for the creation of the underlying infrastrucutre of the solution. It includes the EC2 Auto Scaling configuration, SQS, VPC Endpoints, EFS and CloudFront
-
+* [cfn-backend](../backend/cfn-backend.yaml) - Responsible for the creation of the underlying infrastructure of the solution.
 
 ## Step 2.1: Deploy backend cloudformation stack
 
