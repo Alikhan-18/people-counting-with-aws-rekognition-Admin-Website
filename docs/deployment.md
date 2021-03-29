@@ -2,7 +2,7 @@
 Before you deploy, you must have the following in place:
 *  [AWS Account](https://aws.amazon.com/account/) 
 *  [GitHub Account](https://github.com/) 
-*  [Node 10 or greater and NPM](https://nodejs.org/en/download/) 
+*  [Node 12.6.0 or greater and NPM 6.14.10 or greater](https://nodejs.org/en/download/) 
 *  [Amplify CLI installed and configured](https://aws-amplify.github.io/docs/cli-toolchain/quickstart#quickstart) 
 *  [AWS CLI installed and configured](https://aws.amazon.com/cli/) 
 
@@ -56,8 +56,25 @@ email address.
 
 ## Step 2.2: Upload the code for Lambda functions
 
-Run the [uploadLambdas.sh](../scripts/populateParameterStore.sh) script which will setup the upload the Lambda function code to AWS.
+Run the [uploadLambdas.sh](../scripts/populateParameterStore.sh) script which will upload the Lambda function code to AWS.
 ```bash
 chmod a+x ./scripts/uploadLambdas.sh 
 ./scripts/uploadLambdas.sh
 ```
+## Step 3: Front-end application
+
+Select the stack that you created in Cloudformation. Click on "Resources" in the right pane :
+
+<img src="../images/sc3.png"  width="600"/>
+
+You should find clickable links for resources named "ApiGatewayRestApi" and "ApiKey". If you click on the physical ID of "ApiKey".
+
+<img src="../images/sc1.png"  width="600"/>
+
+Click on "Show". Make note of the API key that is displayed to you. Back in cloudformation, if you click on the physical ID of "ApiGatewayRestApi":
+
+<img src="../images/sc2.png"  width="600"/>
+
+Make note of the "Invoke URL" field. Replace the {stream-name} part in the url string with the name of the kinesis stream to send data to.
+
+Paste the API key and endpoint url into the appropriate fields in Constants.swift file. 
