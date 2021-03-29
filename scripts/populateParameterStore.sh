@@ -13,4 +13,5 @@ aws ssm put-parameter \
     --value "${controlBucketName}" \
     --overwrite
 echo "Parameter2 : ${controlBucketName}"
+#Create a IoT thing for the latter part of the instructions
 aws iot create-thing-type --thing-type-name "RPI"
