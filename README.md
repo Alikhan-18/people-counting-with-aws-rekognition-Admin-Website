@@ -17,6 +17,6 @@ This project is distributed under the  [Apache License 2.0](https://github.com/U
 
 ## Related Projects
 
-[The Mobile Health Monitoring Platform](https://github.com/UBC-CIC/people-counting-with-aws-rekognition-RaspberryPi-IOT)
+[People Counting with RaspberryPi](https://github.com/UBC-CIC/people-counting-with-aws-rekognition-RaspberryPi-IOT)
 
-[HealthMonitoringAppWearOS](https://github.com/UBC-CIC/people-counting-with-aws-rekognition-User-Website)
+[User Website](https://github.com/UBC-CIC/people-counting-with-aws-rekognition-User-Website)
