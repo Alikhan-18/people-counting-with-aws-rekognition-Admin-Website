@@ -57,10 +57,10 @@ email address.
 
 ## Step 2.2: Upload the code for Lambda functions
 
-Run the [uploadLambdas.sh](../scripts/populateParameterStore.sh) script which will upload the Lambda function code to AWS.
+Go to the **scripts** directory and run the [uploadLambdas.sh](../scripts/populateParameterStore.sh) script which will upload the Lambda function code to AWS.
 ```bash
-chmod a+x ./scripts/uploadLambdas.sh 
-./scripts/uploadLambdas.sh
+chmod a+x uploadLambdas.sh 
+./uploadLambdas.sh
 ```
 ## Step 3: Setting up user and admin front-end applications.
 
