@@ -63,18 +63,22 @@ chmod a+x ./scripts/uploadLambdas.sh
 ```
 ## Step 3: Front-end application
 
-Select the stack that you created in Cloudformation. Click on "Resources" in the right pane :
+In this section we will update the front-end application code to enable the communication with AWS IoT Core.
+
+1.Select the stack that you created in Cloudformation. Click on "Resources" in the right pane :
 
 <img src="../images/sc3.png"  width="600"/>
 
-You should find clickable links for resources named "ApiGatewayRestApi" and "ApiKey". If you click on the physical ID of "ApiKey".
+2.You should find clickable links for resources named "ApiKeyDeveloperEndpoint" and "ApiKeyIoT". 
 
 <img src="../images/sc1.png"  width="600"/>
 
-Click on "Show". Make note of the API key that is displayed to you. Back in cloudformation, if you click on the physical ID of "ApiGatewayRestApi":
+Click on "Show". Make note of the API key that is displayed to you. 
 
-<img src="../images/sc2.png"  width="600"/>
+3.Select outputs section of your cloudformation stack.
 
-Make note of the "Invoke URL" field. Replace the {stream-name} part in the url string with the name of the kinesis stream to send data to.
+<img src="../images/sc1.png"  width="600"/>
 
-Paste the API key and endpoint url into the appropriate fields in Constants.swift file. 
+Make note of the "IoTEndpoint" and "DeveloperEndpoint" urls.
+
+Paste the API key and endpoint url into the appropriate fields in [uploadLambdas.sh](../src/secrets.json) file. 
