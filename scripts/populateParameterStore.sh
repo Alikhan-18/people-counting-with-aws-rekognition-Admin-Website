@@ -6,7 +6,7 @@ aws ssm put-parameter \
     --type "String" \
     --value "${admintableName}" \
     --overwrite
-controlBucketName=$( aws resourcegroupstaggingapi get-resources --tag-filters Key=user:Application,Values="admintest1" Key=aws:cloudformation:logical-id,Values="DeploymentBucket" Key=user:Stack,Values="dev" --resource-type-filters s3 --query 'ResourceTagMappingList[*].[ResourceARN]' --output text | awk -F':::' '{print $2}')
+controlBucketName=$( aws resourcegroupstaggingapi get-resources --tag-filters Key=user:Application,Values="admintest1" Key=aws:cloudformation:logical-id,Values="S3Bucket" Key=user:Stack,Values="dev" --resource-type-filters s3 --query 'ResourceTagMappingList[*].[ResourceARN]' --output text | awk -F':::' '{print $2}')
 aws ssm put-parameter \
     --name "controlBucketNameAmplifyAdmin" \
     --type "String" \
