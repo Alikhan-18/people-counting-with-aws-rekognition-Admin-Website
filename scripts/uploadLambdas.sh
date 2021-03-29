@@ -1,6 +1,5 @@
-!/bin/bash
-
-cd lambda-iot
+#!/bin/bash
+cd ../backend/lambda-iot
 zip lambda-iot.zip index.py
 #Update the function code with the zip files
 aws lambda update-function-code \

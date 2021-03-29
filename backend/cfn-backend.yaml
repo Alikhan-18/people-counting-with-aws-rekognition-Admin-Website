@@ -6,7 +6,7 @@ Parameters:
     Default: adminAmplUserPoolID
   CognitoUserEmail:
     AllowedPattern: ^[0-9a-zA-Z-/_.@]*$
-    Default: zhakypbekov.arman@gmail.com
+    Default: youremail@gmail.com
     Type: String
   PresignedURLExpirationInSeconds:
     AllowedPattern: ^[0-9]+$
