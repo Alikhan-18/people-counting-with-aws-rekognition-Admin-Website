@@ -1,5 +1,7 @@
 #!/bin/bash
-cd ../backend/lambda-iot
+cd ../backend/lambda-transform-s3
+npm install
+cd ../lambda-iot
 zip lambda-iot.zip index.py
 #Update the function code with the zip files
 aws lambda update-function-code \
