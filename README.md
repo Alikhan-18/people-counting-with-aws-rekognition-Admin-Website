@@ -14,3 +14,9 @@ To deploy this solution into your AWS Account please follow our [Deployment Guid
 
 # License
 This project is distributed under the  [Apache License 2.0](https://github.com/UBC-CIC/vgh-covid-19-ct-model/blob/master/LICENSE) 
+
+## Related Projects
+
+[The Mobile Health Monitoring Platform](https://github.com/UBC-CIC/people-counting-with-aws-rekognition-RaspberryPi-IOT)
+
+[HealthMonitoringAppWearOS](https://github.com/UBC-CIC/people-counting-with-aws-rekognition-User-Website)

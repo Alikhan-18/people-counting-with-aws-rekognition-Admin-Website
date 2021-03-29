@@ -61,7 +61,7 @@ Run the [uploadLambdas.sh](../scripts/populateParameterStore.sh) script which wi
 chmod a+x ./scripts/uploadLambdas.sh 
 ./scripts/uploadLambdas.sh
 ```
-## Step 3: Front-end application
+## Step 3: Setting up user and admin front-end applications.
 
 In this section we will update the front-end application code to enable the communication with AWS IoT Core.
 
