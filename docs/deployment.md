@@ -31,7 +31,7 @@ amplify push
 chmod a+x ./populateParameterStore.sh 
 ./populateParameterStore.sh
 ```
-5. Use npm to install the dependencies.
+5. Use npm to install the dependencies and run it locally. 
 ```bash
 npm install
 ```
