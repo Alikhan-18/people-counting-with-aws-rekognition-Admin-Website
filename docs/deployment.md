@@ -44,9 +44,10 @@ chmod a+x ./scripts/populateParameterStore.sh \
 
 1. Log into the CloudFormation Management Console.
 2. Select Create stack with the With new resources option.
-3. Click Upload a template file, and then Choose file and select the **cfn-backend.yaml** located at the /cfn directory of the repo
+3. Click Upload a template file, and then Choose file and select the **cfn-backend.yaml** file
 4. Click Next.
 5. Name the stack (e.g. peopleCountingWithRekognition).
+6. Don't rename the parameters.
 
 ## Step 2.2: Upload Lambda function code
 
