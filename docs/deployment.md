@@ -77,8 +77,8 @@ Click on "Show". Make note of the API key that is displayed to you.
 
 3.Select outputs section of your cloudformation stack.
 
-<img src="../images/sc1.png"  width="600"/>
+<img src="../images/sc2.png"  width="600"/>
 
 Make note of the "IoTEndpoint" and "DeveloperEndpoint" urls.
 
-Paste the API key and endpoint url into the appropriate fields in [uploadLambdas.sh](../src/secrets.json) file. 
+Paste the API key and endpoint url into the appropriate fields in the [secrets](../src/secrets.json) file. 
