@@ -1,6 +1,8 @@
 #!/bin/bash
 cd ../backend/lambda-transform-s3
 npm install
+npm uninstall sharp
+npm install --arch=x64 --platform=linux sharp
 cd ../lambda-iot
 zip lambda-iot.zip index.py
 #Update the function code with the zip files
