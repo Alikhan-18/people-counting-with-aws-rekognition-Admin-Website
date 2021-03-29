@@ -46,7 +46,7 @@ chmod a+x ./populateParameterStore.sh
 3. Specify template section: Click Upload a template file, and then Choose file and select the **cfn-backend.yaml** file
 4. Specify stack details section: Name the stack (e.g. peopleCountingWithRekognition). Rename the parameters shown in the picture below:
 
-<img src="./images/diagram.png"  width="600"/>
+<img src="../images/deployment1.png"  width="600"/>
 
 Use a valid email address and timezone. You will receive the login credentials for the front-end application on this
 email address.

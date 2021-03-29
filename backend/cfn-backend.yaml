@@ -24,11 +24,11 @@ Parameters:
     Type: String
   RekognitionBucketName:
     AllowedPattern: ^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$
-    Default: rekognitionbucketPeopleCounting
+    Default: rekognitionbucket-people-counting
     Type: String
   ImageProcessingBucketName:
     AllowedPattern: ^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$
-    Default: imageprocessingbucketPeopleCounting
+    Default: imageprocessingbucket-people-counting
     Type: String
   AdminIoTTopicName:
     AllowedPattern: '^[0-9a-zA-Z-/]*$'
