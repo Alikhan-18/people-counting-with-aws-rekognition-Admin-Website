@@ -6,13 +6,10 @@ Before you deploy, you must have the following in place:
 *  [Amplify CLI installed and configured](https://aws-amplify.github.io/docs/cli-toolchain/quickstart#quickstart) 
 *  [AWS CLI installed and configured](https://aws.amazon.com/cli/) 
 
-For prototyping, you need the following:
-*  [Python 3.7 or greater](https://realpython.com/installing-python/)
-
 
 # Step 1: Front-end deployment
 
-1.  Clone this repository.
+1.  Clone and fork this repository.
     If you haven't configured Amplify before, configure the Amplify CLI in your terminal as follows:
 ```bash
 amplify configure
@@ -34,13 +31,15 @@ amplify push
 chmod a+x ./populateParameterStore.sh \
 ./populateParameterStore.sh
 ```
-
+5. Log into the AWS Management Console.
+6. Select AWS Amplify and select the COVID19L3NetApp
+7. At the *Frontend environments* tab connect to your github account poiting to the forked repo. More informatoin at https://docs.aws.amazon.com/amplify/latest/userguide/deploy-backend.html
 
 # Step 2: Back-end deployment
 
 * [cfn-backend](../backend/cfn-backend.yaml) - Responsible for the creation of the underlying infrastructure of the solution.
 
-## Step 2.1: Deploy backend cloudformation stack
+## Step 2.1: Deploy the back-end cloudformation stack
 
 1. Log into the CloudFormation Management Console.
 2. Select Create stack with the With new resources option.
