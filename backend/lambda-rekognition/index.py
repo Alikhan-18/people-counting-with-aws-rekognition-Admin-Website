@@ -8,6 +8,7 @@ import dateutil.tz
 
 dynamodb = boto3.resource('dynamodb')
 kinesisClient = boto3.client('kinesis')
+s3client = boto3.client('s3')
 
 CURRENT_COUNTS_TABLE_NAME = os.environ['CURRENT_COUNTS_TABLE_NAME']
 ADMIN_TABLE_NAME = os.environ['ADMIN_TABLE_NAME']
@@ -90,7 +91,7 @@ def lambda_handler(event, context):
                 return
         putItemToDB(logicalName, zone, 0, hour, timestamp)
         putIntoKinesis(logicalName, zone, 0, hour, timestamp)
-        response = client.delete_object(
+        response = s3client.delete_object(
             Bucket = bucket,
             Key = key
         )
