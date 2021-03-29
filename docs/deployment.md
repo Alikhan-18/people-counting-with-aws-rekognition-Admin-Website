@@ -26,7 +26,8 @@ amplify init
 amplify push
 ```
 
-4.  After the Amplify deployment finishes, go to the scripts directory run the [populateParameterStore.sh](../scripts/populateParameterStore.sh) script. This will setup the necessary parameters for the backend cloudformation stack.
+4.  After the Amplify deployment finishes, go to the **scripts** directory and run the [populateParameterStore.sh](../scripts/populateParameterStore.sh) script. 
+    This will setup the necessary parameters for the backend cloudformation stack:
 ```bash
 chmod a+x ./populateParameterStore.sh 
 ./populateParameterStore.sh
@@ -43,16 +44,16 @@ npm install
 
 1. Log into the AWS CloudFormation Management Console.
 2. Select Create stack with the With new resources option.
-3. Specify template section: Click Upload a template file, and then Choose file and select the **cfn-backend.yaml** file
-4. Specify stack details section: Name the stack (e.g. peopleCountingWithRekognition). Rename the parameters shown in the picture below:
+3. **Specify template section**: Click Upload a template file, and then Choose file and select the **cfn-backend.yaml** file
+4. **Specify stack details section**: Name the stack (e.g. peopleCountingWithRekognition). Rename the parameters shown in the picture below:
 
 <img src="../images/deployment1.png"  width="600"/>
 
 Use a valid email address and timezone. You will receive the login credentials for the front-end application on this
 email address.
 
-5. Configure stack options section: Click next
-6. Review section: Tick the "I acknowledge that ..." box and click "Create stack"
+5. **Configure stack options section**: Click next
+6. **Review section**: Tick the "I acknowledge that ..." box and click "Create stack"
 
 ## Step 2.2: Upload the code for Lambda functions
 
@@ -65,20 +66,20 @@ chmod a+x ./scripts/uploadLambdas.sh
 
 In this section we will update the front-end application code to enable the communication with AWS IoT Core.
 
-1.Select the stack that you created in Cloudformation. Click on "Resources" in the right pane :
+1.Select the stack that you created in Cloudformation. Click on **Resources** in the right pane :
 
 <img src="../images/sc3.png"  width="600"/>
 
-2.You should find clickable links for resources named "ApiKeyDeveloperEndpoint" and "ApiKeyIoT". 
+2.You should find clickable links for resources named **ApiKeyDeveloperEndpoint** and **ApiKeyIoT**. 
 
 <img src="../images/sc1.png"  width="600"/>
 
-Click on "Show". Make note of the API key that is displayed to you. 
+Click on **Show**. Make note of the API key that is displayed to you. 
 
 3.Select outputs section of your cloudformation stack.
 
 <img src="../images/sc2.png"  width="600"/>
 
-Make note of the "IoTEndpoint" and "DeveloperEndpoint" urls.
+Make note of the **IoTEndpoint** and **DeveloperEndpoint** urls.
 
 Paste the API key and endpoint url into the appropriate fields in the [secrets](../src/secrets.json) file. 
