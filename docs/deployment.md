@@ -28,7 +28,7 @@ amplify push
 
 4.  After the Amplify deployment finishes, go to the scripts directory run the [populateParameterStore.sh](../scripts/populateParameterStore.sh) script. This will setup the necessary parameters for the backend cloudformation stack.
 ```bash
-chmod a+x ./populateParameterStore.sh \
+chmod a+x ./populateParameterStore.sh 
 ./populateParameterStore.sh
 ```
 5. Log into the AWS Management Console.
@@ -43,15 +43,21 @@ chmod a+x ./populateParameterStore.sh \
 
 1. Log into the CloudFormation Management Console.
 2. Select Create stack with the With new resources option.
-3. Click Upload a template file, and then Choose file and select the **cfn-backend.yaml** file
-4. Click Next.
-5. Name the stack (e.g. peopleCountingWithRekognition).
-6. Don't rename the parameters.
+3. Specify template section: Click Upload a template file, and then Choose file and select the **cfn-backend.yaml** file
+4. Specify stack details section: Name the stack (e.g. peopleCountingWithRekognition). Rename the parameters shown in the picture below:
 
-## Step 2.2: Upload Lambda function code
+<img src="./images/diagram.png"  width="600"/>
+
+Use a valid email address and timezone. You will receive the login credentials for the front-end application on this
+email address.
+
+5. Configure stack options section: Click next
+6. Review section: Tick the "I acknowledge that ..." box and click "Create stack"
+
+## Step 2.2: Upload the code for Lambda functions
 
 Run the [uploadLambdas.sh](../scripts/populateParameterStore.sh) script which will setup the upload the Lambda function code to AWS.
 ```bash
-chmod a+x ./scripts/uploadLambdas.sh \
+chmod a+x ./scripts/uploadLambdas.sh 
 ./scripts/uploadLambdas.sh
 ```
