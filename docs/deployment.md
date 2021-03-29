@@ -29,9 +29,9 @@ amplify init
 amplify push
 ```
 
-4.  After the Amplify deployment finishes, run the script which will setup the necessary parameters for the backend cloudformation stack.
+4.  After the Amplify deployment finishes, go to the scripts directory run the [populateParameterStore.sh](../scripts/populateParameterStore.sh) script. This will setup the necessary parameters for the backend cloudformation stack.
 ```bash
-chmod a+x ./scripts/populateParameterStore.sh \
+chmod a+x ./populateParameterStore.sh \
 ./populateParameterStore.sh
 ```
 
@@ -51,8 +51,8 @@ chmod a+x ./scripts/populateParameterStore.sh \
 
 ## Step 2.2: Upload Lambda function code
 
-Run the script which will setup the upload the Lambda function code to AWS.
+Run the [uploadLambdas.sh](../scripts/populateParameterStore.sh) script which will setup the upload the Lambda function code to AWS.
 ```bash
-chmod a+x ./scripts/populateParameterStore.sh \
-./populateParameterStore.sh
+chmod a+x ./scripts/uploadLambdas.sh \
+./scripts/uploadLambdas.sh
 ```
