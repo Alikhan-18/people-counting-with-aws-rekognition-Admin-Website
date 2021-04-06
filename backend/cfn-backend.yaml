@@ -590,8 +590,15 @@ Resources:
         - 'arn:aws:iam::aws:policy/AmazonS3FullAccess'
         - 'arn:aws:iam::aws:policy/AmazonDynamoDBReadOnlyAccess'
         - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
+  LambdaImageProcessingLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      ContentUri: ./layers/lambda-transform-s3.zip
+      CompatibleRuntimes:
+        - nodejs12.x
+      RetentionPolicy: Delete
   LambdaImageProcessing:
-    Type: 'AWS::Lambda::Function'
+    Type: AWS::Serverless::Function
     Properties:
       CodeUri: ./lambda-transform-s3/
       Description: ''
@@ -608,7 +615,7 @@ Resources:
       TracingConfig:
         Mode: PassThrough
   LambdaRekognition:
-    Type: 'AWS::Lambda::Function'
+    Type: AWS::Serverless::Function
     Properties:
       CodeUri: ./lambda-rekognition/
       Description: ''
@@ -627,7 +634,7 @@ Resources:
       TracingConfig:
         Mode: PassThrough
   LambdaGetCounts:
-      Type: 'AWS::Lambda::Function'
+      Type: AWS::Serverless::Function
       Properties:
         CodeUri: ./lambda-developer-endpoints/
         Description: ''
@@ -644,7 +651,7 @@ Resources:
         TracingConfig:
           Mode: PassThrough
   LambdaIoT:
-    Type: 'AWS::Lambda::Function'
+    Type: AWS::Serverless::Function
     Properties:
       CodeUri: ./lambda-iot/
       Description: ''
@@ -661,7 +668,7 @@ Resources:
       TracingConfig:
         Mode: PassThrough
   LambdaPresignedURLHandler:
-    Type: 'AWS::Lambda::Function'
+    Type: AWS::Serverless::Function
     Properties:
       CodeUri: ./lambda-presigned-url-handler/
       Description: ''
@@ -680,7 +687,7 @@ Resources:
       TracingConfig:
         Mode: PassThrough
   LambdaAnalytics:
-      Type: 'AWS::Lambda::Function'
+      Type: AWS::Serverless::Function
       Properties:
         CodeUri: ./lambda-analytics/
         Description: ''

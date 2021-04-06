@@ -1,4 +1,6 @@
 #!/bin/bash
+
+# Create SSM parameters to prepare for backend deployment
 admintableName=$( aws resourcegroupstaggingapi get-resources --tag-filters Key=user:Application,Values="admintest1" Key=user:Stack,Values="dev" --resource-type-filters dynamodb --query 'ResourceTagMappingList[*].[ResourceARN]' --output text | awk -F'table/' '{print $2}')
 echo "Parameter1 : ${admintableName}"
 aws ssm put-parameter \
@@ -13,5 +15,17 @@ aws ssm put-parameter \
     --value "${controlBucketName}" \
     --overwrite
 echo "Parameter2 : ${controlBucketName}"
-#Create a IoT thing for the latter part of the instructions
+
+# Create an IoT thing for RaspberryPi deployment
 aws iot create-thing-type --thing-type-name "RPI"
+
+# Create the layer for the image processing function
+cd ../backend/lambda-transform-s3
+npm install
+npm uninstall sharp
+npm install --arch=x64 --platform=linux sharp
+zip -r Archive.zip .
+mkdir ../backend/layers
+mv ./Archive.zip ../backend/layers/lambda-transform-s3.zip
+rm -rf node_modules Archive.zip
+
