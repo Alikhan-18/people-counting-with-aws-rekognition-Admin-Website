@@ -1,8 +1,8 @@
 {
-    "identityPoolName": "admintest172822e06_identitypool_72822e06",
+    "identityPoolName": "adminDashboard72822e06_identitypool_72822e06",
     "allowUnauthenticatedIdentities": false,
     "resourceNameTruncated": "admint72822e06",
-    "userPoolName": "admintest172822e06_userpool_72822e06",
+    "userPoolName": "adminDashboard72822e06_userpool_72822e06",
     "autoVerifiedAttributes": [
         "email"
     ],
@@ -30,7 +30,7 @@
     ],
     "userpoolClientLambdaRole": "admint72822e06_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "resourceName": "admintest172822e06",
+    "resourceName": "adminDashboard72822e06",
     "authSelections": "identityPoolAndUserPool",
     "authRoleArn": {
         "Fn::GetAtt": [

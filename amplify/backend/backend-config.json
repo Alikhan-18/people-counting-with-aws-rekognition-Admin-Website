@@ -1,6 +1,6 @@
 {
   "auth": {
-    "admintest172822e06": {
+    "adminDashboard72822e06": {
       "service": "Cognito",
       "providerPlugin": "awscloudformation",
       "dependsOn": [],
@@ -17,7 +17,7 @@
           "defaultAuthentication": {
             "authenticationType": "AMAZON_COGNITO_USER_POOLS",
             "userPoolConfig": {
-              "userPoolId": "authadmintest172822e06"
+              "userPoolId": "authadminDashboard72822e06"
             }
           }
         }

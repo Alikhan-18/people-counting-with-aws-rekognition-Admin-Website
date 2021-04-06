@@ -1,14 +1,14 @@
 #!/bin/bash
 
 # Create SSM parameters to prepare for backend deployment
-admintableName=$( aws resourcegroupstaggingapi get-resources --tag-filters Key=user:Application,Values="admintest1" Key=user:Stack,Values="dev" --resource-type-filters dynamodb --query 'ResourceTagMappingList[*].[ResourceARN]' --output text | awk -F'table/' '{print $2}')
+admintableName=$( aws resourcegroupstaggingapi get-resources --tag-filters Key=user:Application,Values="adminDashboard" Key=user:Stack,Values="dev" --resource-type-filters dynamodb --query 'ResourceTagMappingList[*].[ResourceARN]' --output text | awk -F'table/' '{print $2}')
 echo "Parameter1 : ${admintableName}"
 aws ssm put-parameter \
     --name "peopleCountingAmplifyAdminTable" \
     --type "String" \
     --value "${admintableName}" \
     --overwrite
-controlBucketName=$( aws resourcegroupstaggingapi get-resources --tag-filters Key=user:Application,Values="admintest1" Key=aws:cloudformation:logical-id,Values="S3Bucket" Key=user:Stack,Values="dev" --resource-type-filters s3 --query 'ResourceTagMappingList[*].[ResourceARN]' --output text | awk -F':::' '{print $2}')
+controlBucketName=$( aws resourcegroupstaggingapi get-resources --tag-filters Key=user:Application,Values="adminDashboard" Key=aws:cloudformation:logical-id,Values="S3Bucket" Key=user:Stack,Values="dev" --resource-type-filters s3 --query 'ResourceTagMappingList[*].[ResourceARN]' --output text | awk -F':::' '{print $2}')
 aws ssm put-parameter \
     --name "controlBucketNameAmplifyAdmin" \
     --type "String" \
