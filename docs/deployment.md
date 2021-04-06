@@ -32,10 +32,13 @@ amplify push
 chmod a+x ./populateParameterStore.sh 
 ./populateParameterStore.sh
 ```
-5. Use npm to install the dependencies and run it locally. 
-```bash
-npm install
-```
+
+The **Deploy to Amplify Console** button will take you to your AWS console to deploy the front-end solution. Make sure you are connecting to the same AWS Account you deployed the backend solutio.
+
+<a href="https://console.aws.amazon.com/amplify/home#/deploy?repo=https://github.com/UBC-CIC/people-counting-with-aws-rekognition-Admin-Website">
+    <img src="https://oneclick.amplifyapp.com/button.svg" alt="Deploy to Amplify Console">
+</a>
+
 # Step 2: Back-end deployment
 
 * [cfn-backend](../backend/cfn-backend.yaml) - Responsible for the creation of the underlying infrastructure of the solution.
