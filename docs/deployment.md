@@ -5,7 +5,7 @@ Before you deploy, you must have the following in place:
 *  [Node 12.6.0 or greater and NPM 6.14.10 or greater](https://nodejs.org/en/download/) 
 *  [Amplify CLI installed and configured](https://aws-amplify.github.io/docs/cli-toolchain/quickstart#quickstart) 
 *  [AWS CLI installed and configured](https://aws.amazon.com/cli/) 
-
+*  [SAM CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html)
 
 # Step 1: Front-end deployment
 
