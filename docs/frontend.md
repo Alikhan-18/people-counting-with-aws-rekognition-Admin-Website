@@ -14,7 +14,7 @@ This part of the website allows the user to create the ‘zones’ for each wait
 
 This part of the website allows the administrator to set up and modify camera settings. The steps to setup settings for all cameras is as follows (numbers correspond to what is shown in the image): 
 
-<img src="./images/admin1.jpg"  width="600"/>
+<img src="../images/admin1.jpg"  width="600"/>
 
 1. **Set the time frame for image capture**:
 This allows the user to set the time window for monitoring. For example, Begin time can be 7:00 and End time can be 20:00. This would mean that the camera would turn off at 20:00 and no images would be captured or used between that time and 6:59.  This would allow costs to be managed (there would be no charges outside the time frame other than the electricity bill).
