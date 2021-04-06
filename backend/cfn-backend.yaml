@@ -1,4 +1,5 @@
 AWSTemplateFormatVersion: 2010-09-09
+Transform: AWS::Serverless-2016-10-31
 Description: ''
 Parameters:
   AmplifyUserPoolID:
@@ -592,6 +593,7 @@ Resources:
   LambdaImageProcessing:
     Type: 'AWS::Lambda::Function'
     Properties:
+      CodeUri: ./lambda-transform-s3/
       Description: ''
       Environment:
           Variables:
@@ -599,15 +601,6 @@ Resources:
             DESTINATION_BUCKET: !Sub '${AWS::StackName}-${RekognitionBucketName}'
       FunctionName: lambda-transform-s3
       Handler: index.handler
-      Code:
-            ZipFile: |
-                      exports.handler = async (event) => {
-                          const response = {
-                              statusCode: 200,
-                              body: JSON.stringify('Hello from Lambda!'),
-                          };
-                          return response;
-                      };
       MemorySize: 128
       Role: !GetAtt IAMRoleImageProcessing.Arn
       Runtime: nodejs12.x
@@ -617,6 +610,7 @@ Resources:
   LambdaRekognition:
     Type: 'AWS::Lambda::Function'
     Properties:
+      CodeUri: ./lambda-rekognition/
       Description: ''
       Environment:
           Variables:
@@ -626,15 +620,6 @@ Resources:
             CAMERA_TIMEZONE: !Ref CameraTimezone
       FunctionName: lambda-rekognition
       Handler: index.lambda_handler
-      Code:
-              ZipFile: |
-                        import json
-
-                        def lambda_handler(event, context):
-                            return {
-                                'statusCode': 200,
-                                'body': json.dumps('Hello from Lambda!')
-                            }
       MemorySize: 128
       Role: !GetAtt IAMRoleRekognition.Arn
       Runtime: python3.8
@@ -644,6 +629,7 @@ Resources:
   LambdaGetCounts:
       Type: 'AWS::Lambda::Function'
       Properties:
+        CodeUri: ./lambda-developer-endpoints/
         Description: ''
         Environment:
             Variables:
@@ -651,15 +637,6 @@ Resources:
               AVERAGE_COUNTS_TABLE_NAME: !Ref DynamoDBTableAnalytics
         FunctionName: lambda-developer-endpoints
         Handler: index.lambda_handler
-        Code:
-              ZipFile: |
-                        import json
-
-                        def lambda_handler(event, context):
-                            return {
-                                'statusCode': 200,
-                                'body': json.dumps('Hello from Lambda!')
-                            }
         MemorySize: 128
         Role: !GetAtt IAMRoleGetCounts.Arn
         Runtime: python3.8
@@ -669,6 +646,7 @@ Resources:
   LambdaIoT:
     Type: 'AWS::Lambda::Function'
     Properties:
+      CodeUri: ./lambda-iot/
       Description: ''
       Environment:
         Variables:
@@ -676,15 +654,6 @@ Resources:
           IOT_TOPIC: !Ref AdminIoTTopicName
       FunctionName: lambda-iot
       Handler: index.lambda_handler
-      Code:
-            ZipFile: |
-                      import json
-
-                      def lambda_handler(event, context):
-                          return {
-                              'statusCode': 200,
-                              'body': json.dumps('Hello from Lambda!')
-                          }
       MemorySize: 128
       Role: !GetAtt IAMRoleIoT.Arn
       Runtime: python3.8
@@ -694,6 +663,7 @@ Resources:
   LambdaPresignedURLHandler:
     Type: 'AWS::Lambda::Function'
     Properties:
+      CodeUri: ./lambda-presigned-url-handler/
       Description: ''
       Environment:
         Variables:
@@ -703,15 +673,6 @@ Resources:
           PRESIGNED_URL_EXPIRATION_IN_SEC : !Ref PresignedURLExpirationInSeconds
       FunctionName: lambda-presigned-url-handler
       Handler: index.lambda_handler
-      Code:
-            ZipFile: |
-                      import json
-
-                      def lambda_handler(event, context):
-                          return {
-                              'statusCode': 200,
-                              'body': json.dumps('Hello from Lambda!')
-                          }
       MemorySize: 128
       Role: !GetAtt IAMRolePresignedURLHandler.Arn
       Runtime: python3.8
@@ -721,6 +682,7 @@ Resources:
   LambdaAnalytics:
       Type: 'AWS::Lambda::Function'
       Properties:
+        CodeUri: ./lambda-analytics/
         Description: ''
         Environment:
           Variables:
@@ -730,15 +692,6 @@ Resources:
             DYNAMODBNAME: !Ref DynamoDBTableAnalytics
         FunctionName: lambda-analytics
         Handler: index.lambda_handler
-        Code:
-            ZipFile: |
-                      import json
-
-                      def lambda_handler(event, context):
-                          return {
-                              'statusCode': 200,
-                              'body': json.dumps('Hello from Lambda!')
-                          }
         MemorySize: 128
         Role: !GetAtt
           - IAMRoleAnalyticsBucket

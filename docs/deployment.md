@@ -33,7 +33,7 @@ chmod a+x ./populateParameterStore.sh
 ./populateParameterStore.sh
 ```
 
-The **Deploy to Amplify Console** button will take you to your AWS console to deploy the front-end solution. Make sure you are connecting to the same AWS Account you deployed the backend solutio.
+5. The **Deploy to Amplify Console** button will take you to your AWS console to deploy the front-end solution.
 
 <a href="https://console.aws.amazon.com/amplify/home#/deploy?repo=https://github.com/UBC-CIC/people-counting-with-aws-rekognition-Admin-Website">
     <img src="https://oneclick.amplifyapp.com/button.svg" alt="Deploy to Amplify Console">
