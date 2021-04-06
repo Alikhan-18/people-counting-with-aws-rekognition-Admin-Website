@@ -8,9 +8,9 @@ remaining part of the instructions.
 
 <img src="./images/diagram.png"  width="800"/>
 
-## User interface
+## Frontend Guide
 
-<img src="./images/UserInterface.png"  width="800"/>
+Details on how to use the administrator dashboard are provided [here](./docs/frontend.md)
 
 # Deployment
 To deploy this solution into your AWS Account please follow our [Deployment Guide](./docs/deployment.md)
