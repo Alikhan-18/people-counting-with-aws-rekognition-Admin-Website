@@ -23,11 +23,10 @@ aws iot create-thing-type --thing-type-name "RPI"
 
 # Create the layer for the image processing function
 cd ../backend/lambda-transform-s3
+mkdir -p lib/nodejs
+rm -rf node_modules lib/nodejs/node_modules
 npm install
 npm uninstall sharp
 npm install --arch=x64 --platform=linux sharp
-zip -r Archive.zip .
-mkdir ../layers
-mv ./Archive.zip ../layers/lambda-transform-s3.zip
-rm -rf node_modules Archive.zip
+mv node_modules lib/nodejs/
 
