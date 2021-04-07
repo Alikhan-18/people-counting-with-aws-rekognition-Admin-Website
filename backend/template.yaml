@@ -593,7 +593,7 @@ Resources:
   LambdaImageProcessingLayer:
     Type: AWS::Serverless::LayerVersion
     Properties:
-      ContentUri: ./lambda-transform-s3/lib/
+      ContentUri: ./layers/lambda-transform-s3-layer/lib/
       CompatibleRuntimes:
         - nodejs12.x
       RetentionPolicy: Delete
