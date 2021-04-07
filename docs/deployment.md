@@ -43,45 +43,21 @@ chmod a+x ./populateParameterStore.sh
 
 * [cfn-backend](../backend/template.yaml) - Responsible for the creation of the underlying infrastructure of the solution.
 
-## Step 2.1: Deploy the back-end cloudformation stack
-
-1. Log into the AWS CloudFormation Management Console.
-2. Select Create stack with the With new resources option.
-3. **Specify template section**: Click Upload a template file, and then Choose file and select the **cfn-backend.yaml** file
-4. **Specify stack details section**: Name the stack (e.g. peopleCountingWithRekognition). Rename the parameters shown in the picture below:
-
-<img src="../images/deployment1.png"  width="600"/>
-
 Use a valid email address and timezone. You will receive the login credentials for the front-end application on this
 email address.
 
-5. **Configure stack options section**: Click next
-6. **Review section**: Tick the "I acknowledge that ..." box and click "Create stack"
 
-## Step 2.2: Upload the code for Lambda functions
-
-Go to the **scripts** directory and run the [uploadLambdas.sh](../scripts/uploadLambdas.sh) script which will upload the Lambda function code to AWS.
-```bash
-chmod a+x uploadLambdas.sh 
-./uploadLambdas.sh
-```
 ## Step 3: Setting up user and admin front-end applications.
 
 In this section we will update the front-end application code to enable the communication with AWS IoT Core.
 
 1.Select the stack that you created in Cloudformation. Click on **Resources** in the right pane :
 
-<img src="../images/sc3.png"  width="600"/>
-
-2.You should find clickable links for resources named **ApiKeyDeveloperEndpoint** and **ApiKeyIoT**. 
-
-<img src="../images/sc1.png"  width="600"/>
+2.You should find clickable links for resources named **ApiKeyDeveloperEndpoint** and **ApiKeyIoT**.
 
 Click on **Show**. Make note of the API key that is displayed to you. 
 
 3.Select outputs section of your cloudformation stack.
-
-<img src="../images/sc2.png"  width="600"/>
 
 Make note of the **IoTEndpoint** and **DeveloperEndpoint** urls.
 
