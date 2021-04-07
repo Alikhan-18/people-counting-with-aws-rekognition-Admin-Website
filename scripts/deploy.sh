@@ -22,9 +22,8 @@ echo "Parameter2 : ${controlBucketName}"
 aws iot create-thing-type --thing-type-name "RPI"
 
 # Create the layer for the image processing function
-cd ../backend/lambda-transform-s3
+cd ../backend/layers/lambda-transform-s3-layer
 mkdir -p lib/nodejs
-cd lib
 npm install
 npm uninstall sharp
 npm install --arch=x64 --platform=linux sharp
