@@ -612,8 +612,6 @@ Resources:
       Role: !GetAtt IAMRoleImageProcessing.Arn
       Runtime: nodejs12.x
       Timeout: 40
-      TracingConfig:
-        Mode: PassThrough
   LambdaRekognition:
     Type: AWS::Serverless::Function
     Properties:
@@ -631,8 +629,6 @@ Resources:
       Role: !GetAtt IAMRoleRekognition.Arn
       Runtime: python3.8
       Timeout: 9
-      TracingConfig:
-        Mode: PassThrough
   LambdaGetCounts:
       Type: AWS::Serverless::Function
       Properties:
@@ -648,8 +644,6 @@ Resources:
         Role: !GetAtt IAMRoleGetCounts.Arn
         Runtime: python3.8
         Timeout: 9
-        TracingConfig:
-          Mode: PassThrough
   LambdaIoT:
     Type: AWS::Serverless::Function
     Properties:
@@ -665,8 +659,6 @@ Resources:
       Role: !GetAtt IAMRoleIoT.Arn
       Runtime: python3.8
       Timeout: 3
-      TracingConfig:
-        Mode: PassThrough
   LambdaPresignedURLHandler:
     Type: AWS::Serverless::Function
     Properties:
@@ -684,8 +676,6 @@ Resources:
       Role: !GetAtt IAMRolePresignedURLHandler.Arn
       Runtime: python3.8
       Timeout: 3
-      TracingConfig:
-        Mode: PassThrough
   LambdaAnalytics:
       Type: AWS::Serverless::Function
       Properties:
@@ -705,8 +695,6 @@ Resources:
           - Arn
         Runtime: python3.8
         Timeout: 12
-        TracingConfig:
-          Mode: PassThrough
   EventsRule:
       Type: 'AWS::Events::Rule'
       Properties:

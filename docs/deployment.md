@@ -41,7 +41,7 @@ chmod a+x ./populateParameterStore.sh
 
 # Step 2: Back-end deployment
 
-* [cfn-backend](../backend/cfn-backend.yaml) - Responsible for the creation of the underlying infrastructure of the solution.
+* [cfn-backend](../backend/template.yaml) - Responsible for the creation of the underlying infrastructure of the solution.
 
 ## Step 2.1: Deploy the back-end cloudformation stack
 
