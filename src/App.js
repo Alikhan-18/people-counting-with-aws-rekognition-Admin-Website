@@ -31,7 +31,6 @@ function App() {
     const [coords, setCoords] = useState([...Array(MAX_CAMERAS)].map(e => Array(MAX_ZONES)))
     const [deviceData, setDeviceData] = useState([...Array(MAX_CAMERAS)].map(e => Array(3)))
     const [sleepTimeFrame, setSleepTimeFrame] = useState({beginHour : 8, endHour : 22})
-    const [price, setPrice] = useState(0)
     const [imageNames, setImageNames] = useState([])
     useEffect(() => {
         fetchImages()
@@ -99,7 +98,6 @@ function App() {
             }
         })
         console.log(images)
-        setPrice(20)
     }
     async function loadControlImages() {
         let config = {
@@ -230,7 +228,6 @@ function App() {
             <h3>Camera configuration table</h3>
             <EditableTable getCurrentData={() => listCurrentDevices()} onTableUpdate={onTableUpdate}/>
             <button onClick={() => {updateDeviceShadows()}}>Update device configurations</button>
-            <div>{`Price per month based on provided configuration : $${price}`}</div>
             <h2>Select zones</h2>
             <button onClick={() => {loadControlImages()}}>Load control images</button>
 
