@@ -29,6 +29,6 @@ npm uninstall sharp
 npm install --arch=x64 --platform=linux sharp
 mv ./node_modules lib/nodejs
 
-cd ../backend
+cd ../..
 sam build
 sam deploy -g --capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM

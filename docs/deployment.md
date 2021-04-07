@@ -26,14 +26,7 @@ amplify init
 amplify push
 ```
 
-4.  After the Amplify deployment finishes, go to the **scripts** directory and run the [populateParameterStore.sh](../scripts/populateParameterStore.sh) script. 
-    This will setup the necessary parameters for the backend cloudformation stack:
-```bash
-chmod a+x ./populateParameterStore.sh 
-./populateParameterStore.sh
-```
-
-5. The **Deploy to Amplify Console** button will take you to your AWS console to deploy the front-end solution.
+4. The **Deploy to Amplify Console** button will take you to your AWS console to deploy the front-end solution.
 
 <a href="https://console.aws.amazon.com/amplify/home#/deploy?repo=https://github.com/UBC-CIC/people-counting-with-aws-rekognition-Admin-Website">
     <img src="https://oneclick.amplifyapp.com/button.svg" alt="Deploy to Amplify Console">
@@ -43,8 +36,45 @@ chmod a+x ./populateParameterStore.sh
 
 * [cfn-backend](../backend/template.yaml) - Responsible for the creation of the underlying infrastructure of the solution.
 
-Use a valid email address and timezone. You will receive the login credentials for the front-end application on this
+Go to the **scripts** directory and run the [deploy.sh](../scripts/deploy.sh) script.
+This will setup the necessary parameters for the backend cloudformation stack:
+
+```bash
+chmod a+x ./deploy.sh 
+./deploy.sh
+```
+
+You will see this prompt. Use a valid email address and timezone. You will receive the login credentials for the front-end application on this
 email address.
+```bash
+Configuring SAM deploy
+======================
+
+        Looking for config file [samconfig.toml] :  Not found
+
+        Setting default arguments for 'sam deploy'
+        =========================================
+        Stack Name [sam-app]: yourstackname
+        AWS Region [us-east-1]: 
+        Parameter AmplifyUserPoolID [adminAmplUserPoolID]: 
+        Parameter CognitoUserEmail [youremail@gmail.com]: 
+        Parameter PresignedURLExpirationInSeconds [120]: 
+        Parameter AmplifyAdminTableName [peopleCountingAmplifyAdminTable]: 
+        Parameter AmplifyAdminBucketName [controlBucketNameAmplifyAdmin]: 
+        Parameter CameraTimezone [America/Vancouver]: 
+        Parameter RekognitionBucketName [rekognitionbucket-people-counting]: 
+        Parameter ImageProcessingBucketName [imageprocessingbucket-people-counting]: 
+        Parameter AdminIoTTopicName [takePhoto]: 
+        Parameter GetPreSignedUrlIoTTopicName [s3-signed-url]: 
+        #Shows you resources changes to be deployed and require a 'Y' to initiate deploy
+        Confirm changes before deploy [y/N]:  
+        #SAM needs permission to be able to create roles to connect to the resources in your template
+        Allow SAM CLI IAM role creation [Y/n]: 
+        Save arguments to configuration file [Y/n]: 
+        SAM configuration file [samconfig.toml]: 
+        SAM configuration environment [default]: 
+```
+
 
 
 ## Step 3: Setting up user and admin front-end applications.
