@@ -25,11 +25,11 @@ aws iot create-thing-type --thing-type-name "RPI"
 cd ../backend/lambda-transform-s3
 mkdir -p lib/nodejs
 cd lib
-rm -rf node_modules nodejs/node_modules
 npm install
 npm uninstall sharp
 npm install --arch=x64 --platform=linux sharp
+mv ./node_modules lib/nodejs
 
-cd ..
-sam build
-sam deploy --capabilities CAPABILITY_NAMED_IAM
+#cd ../backend
+#sam build
+#sam deploy --capabilities CAPABILITY_NAMED_IAM
