@@ -86,6 +86,7 @@ class EditableTable extends React.Component {
                     ]}
                     defaultPageSize={5}
                     className="-striped -highlight"
+                    style={{maxHeight: "300px", overflowY: "auto"}}
                 >
                     {(state, makeTable, instance) => {
                         console.log('UPDATE');

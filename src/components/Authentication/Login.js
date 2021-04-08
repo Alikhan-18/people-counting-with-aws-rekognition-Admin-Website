@@ -68,7 +68,6 @@ function Login(props) {
             updateLoginState("signedIn");
             setLoading(false);
         } catch (e) {
-            console.log("error setting new password: ", e);
             setLoading(false);
         }
     }
@@ -303,6 +302,13 @@ function Login(props) {
                                                                         <Button.Content hidden>
                                                                             <Icon name={"arrow right"} />
                                                                         </Button.Content>
+                                                                    </Button>
+                                                                </Grid.Column>
+                                                            </Grid.Row>
+                                                            <Grid.Row style={{paddingBottom: "0px", paddingTop: "0px"}}>
+                                                                <Grid.Column verticalAlign={"middle"} textAlign={"left"}>
+                                                                    <Button icon onClick={() => updateLoginState("signIn")} style={{backgroundColor: "transparent"}} size={"big"}>
+                                                                        <Icon name={"left arrow"} /> Back
                                                                     </Button>
                                                                 </Grid.Column>
                                                             </Grid.Row>

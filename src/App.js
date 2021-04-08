@@ -1,6 +1,6 @@
 // src/App.js
 import React, { useState, useEffect } from 'react';
-import {Grid} from "semantic-ui-react";
+import {Grid, Icon, Input, Button} from "semantic-ui-react";
 import {API, Auth, Storage, Hub} from 'aws-amplify';
 import { v4 as uuid } from 'uuid';
 import { connect } from "react-redux";
@@ -15,6 +15,7 @@ import axios from 'axios';
 import EditableTable from "./components/EditableTable";
 import {updateLoginState} from "./actions/loginActions";
 import secrets from "./secrets.json";
+import "./App.css";
 
 const MAX_ZONES = 2
 const MAX_CAMERAS = 10
@@ -124,7 +125,7 @@ function App(props) {
                 updateDeviceConfiguration(item)
             }
         })
-        console.log(images)
+        console.log("images", images);
         setPrice(20)
     }
     async function loadControlImages() {
@@ -233,6 +234,7 @@ function App(props) {
         }
         console.log(sleepTimeFrame)
     };
+
     return (
         <Grid>
             <Grid.Row>
@@ -253,36 +255,89 @@ function App(props) {
             }
             {
                 currentLoginState === "signedIn" && (
-                    <Grid>
+                    <Grid style={{backgroundColor: "whitesmoke"}}>
                         <Grid.Row>
                             <Grid.Column verticalAlign={"middle"} textAlign={"center"}>
                                 <Navbar />
                             </Grid.Column>
                         </Grid.Row>
                         <Grid.Row>
-                            <Grid.Column width={5}>
-                                <h2>Camera Settings</h2>
-                                <h3>Time frame</h3>
-                                <input
-                                    placeholder="Begin time"
-                                    name="beginTime"
-                                    type="text"
-                                    onChange={textFieldOnChange}
-                                />
-                                <input
-                                    placeholder="End time"
-                                    name="endTime"
-                                    type="text"
-                                    onChange={textFieldOnChange}
-                                />
-                            </Grid.Column>
-                            <Grid.Column width={11}>
-                                <h3>Camera configuration table</h3>
-                                <EditableTable getCurrentData={() => listCurrentDevices()} onTableUpdate={onTableUpdate}/>
-                                <button onClick={() => {updateDeviceShadows()}}>Update device configurations</button>
-                                <div>{`Price per month based on provided configuration : $${price}`}</div>
+                            <Grid.Column>
+                                <Grid className={"camera-box"}>
+                                    <Grid.Row>
+                                        <Grid.Column textAlign={"start"} verticalAlign={"middle"}>
+                                            <h2>Camera Settings</h2>
+                                        </Grid.Column>
+                                    </Grid.Row>
+                                    <Grid.Row>
+                                        <Grid.Column width={10} verticalAlign={"middle"} textAlign={"center"}>
+                                            <h3>Camera configuration table</h3>
+                                            <EditableTable getCurrentData={() => listCurrentDevices()} onTableUpdate={onTableUpdate}/>
+                                            <Button onClick={() => {updateDeviceShadows()}}>Update device configurations</Button>
+                                        </Grid.Column>
+                                        <Grid.Column width={6} verticalAlign={"top"} textAlign={"center"}>
+                                            <Grid stackable>
+                                                <Grid.Row style={{paddingBottom: "0px"}}>
+                                                    <Grid.Column>
+                                                        <h3>Time frame</h3>
+                                                    </Grid.Column>
+                                                </Grid.Row>
+                                                <Grid.Row columns={2}>
+                                                    <Grid.Column>
+                                                        <Input
+                                                            placeholder="Begin time"
+                                                            name="beginTime"
+                                                            type="text"
+                                                            onChange={textFieldOnChange}
+                                                            fluid
+                                                        />
+                                                    </Grid.Column>
+                                                    <Grid.Column>
+                                                        <Input
+                                                            placeholder="End time"
+                                                            name="endTime"
+                                                            type="text"
+                                                            onChange={textFieldOnChange}
+                                                            fluid
+                                                        />
+                                                    </Grid.Column>
+                                                </Grid.Row>
+                                                <Grid.Row>
+
+                                                </Grid.Row>
+                                                <Grid.Row>
+                                                    <Grid.Column width={5} />
+                                                    <Grid.Column width={10} textAlign={"center"} verticalAlign={"middle"}>
+                                                        <div className={"price-box"}>
+                                                            <Grid>
+                                                                <Grid.Row>
+                                                                    <Grid.Column>
+                                                                        <Grid>
+                                                                            <Grid.Row style={{paddingBottom: "0px", paddingTop: "25px"}}>
+                                                                                <Grid.Column>
+                                                                                    <Icon name={"chart line"} style={{color: "green", fontSize: "40px", marginLeft: "8px"}} />
+                                                                                </Grid.Column>
+                                                                            </Grid.Row>
+                                                                            <Grid.Row style={{paddingTop: "0px"}}>
+                                                                                <Grid.Column>
+                                                                                    <span>Monthly cost based on provided configuration : <strong>${price}</strong></span>
+                                                                                </Grid.Column>
+                                                                            </Grid.Row>
+                                                                        </Grid>
+                                                                    </Grid.Column>
+                                                                </Grid.Row>
+                                                            </Grid>
+                                                        </div>
+                                                    </Grid.Column>
+                                                    <Grid.Column width={1} />
+                                                </Grid.Row>
+                                            </Grid>
+                                        </Grid.Column>
+                                    </Grid.Row>
+                                </Grid>
                             </Grid.Column>
                         </Grid.Row>
+
                        <Grid.Row>
                            <Grid.Column>
                                <h2>Select zones</h2>
