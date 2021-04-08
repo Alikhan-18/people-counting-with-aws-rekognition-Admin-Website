@@ -86,7 +86,7 @@ Edit your schema at /Users/arman/Desktop/people-counting-with-aws-rekognition-Ad
 
 # Step 2: Back-end deployment
 
-* [cfn-backend](../backend/template.yaml) - Responsible for the creation of the underlying infrastructure of the solution.
+* [template.yaml](../backend/template.yaml) - Responsible for the creation of the underlying infrastructure of the solution.
 
 Go to the **scripts** directory and run the [deploy.sh](../scripts/deploy.sh) script.
 
@@ -95,8 +95,9 @@ chmod a+x ./deploy.sh
 ./deploy.sh
 ```
 
-You will see this prompt. Use a valid email address and timezone. You will receive the login credentials for the front-end application on this
+You will see the prompt shown below. Use a valid email address and timezone. You will receive the login credentials for the front-end application on this
 email address.
+
 ```bash
 Configuring SAM deploy
 ======================
