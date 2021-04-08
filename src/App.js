@@ -255,13 +255,13 @@ function App(props) {
             }
             {
                 currentLoginState === "signedIn" && (
-                    <Grid style={{backgroundColor: "whitesmoke"}}>
+                    <Grid style={{backgroundColor: "#ebebeb"}}>
                         <Grid.Row>
                             <Grid.Column verticalAlign={"middle"} textAlign={"center"}>
                                 <Navbar />
                             </Grid.Column>
                         </Grid.Row>
-                        <Grid.Row style={{paddingBottom: "0px"}}>
+                        <Grid.Row style={{paddingBottom: "0px", paddingTop: "0px"}}>
                             <Grid.Column>
                                 <Grid className={"box"}>
                                     <Grid.Row>
@@ -338,7 +338,7 @@ function App(props) {
                             </Grid.Column>
                         </Grid.Row>
 
-                       <Grid.Row style={{paddingTop: "0px"}}>
+                       <Grid.Row style={{paddingTop: "0px", paddingBottom: "0px", marginTop: "-5px"}}>
                            <Grid.Column>
                                <Grid className={"box"}>
                                    <Grid.Row>
@@ -359,7 +359,7 @@ function App(props) {
                                    </Grid.Row>
                                    <Grid.Row style={{paddingTop: "0px"}}>
                                        <Grid.Column verticalAlign={"middle"} textAlign={"center"}>
-                                           <div style={{display: "inline-block"}}>
+                                           <div className={"image-box"} style={{display: "inline-block"}}>
                                                <div id="rector" className="relative">
                                                    <div className="absoluteCanvas">
                                                        <img id="image1" src={images[i-1]} style={{

@@ -4,6 +4,8 @@
 
 import React from "react";
 import { makeData, Logo, Tips } from "./Utils";
+import {Input} from "semantic-ui-react";
+
 
 // Import React Table
 import ReactTable from "react-table";
@@ -51,12 +53,15 @@ class EditableTable extends React.Component {
         const cellValue = this.state.data[cellInfo.index][cellInfo.column.id];
 
         return (
-            <input
+            <Input
                 placeholder="type here"
                 name="input"
                 type="text"
                 onChange={this.handleInputChange.bind(null, cellInfo)}
                 value={cellValue}
+                size={"small"}
+                transparent
+                fluid
             />
         );
     };
@@ -86,7 +91,7 @@ class EditableTable extends React.Component {
                     ]}
                     defaultPageSize={5}
                     className="-striped -highlight"
-                    style={{maxHeight: "300px", overflowY: "auto"}}
+                    style={{maxHeight: "240px", overflowY: "auto"}}
                 >
                     {(state, makeTable, instance) => {
                         console.log('UPDATE');

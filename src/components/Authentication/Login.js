@@ -1,4 +1,4 @@
-import {Grid, Button, Input, Image, Divider, Icon} from "semantic-ui-react";
+import {Grid, Button, Input, Image, Icon} from "semantic-ui-react";
 import {Auth} from "aws-amplify";
 import React, {useState, useEffect} from "react";
 import { connect } from "react-redux";
@@ -104,8 +104,8 @@ function Login(props) {
             <Grid.Row style={{width: "100vw", height: "100vh"}}>
                 {/*  An example image is provided. Please use a royalty-free photo, a photo owned by you, or a photo owned by the CIC */}
                 <Grid.Column width={9} style={
-                    (type === "image")? (themeColor === "standard")? { backgroundColor: "#012144", backgroundImage: "url(./Assets/Images/background.jpg)", backgroundSize: "cover", backgroundRepeat: "no", width: "100%", height: "100vh"} :
-                        { backgroundColor: themeColor, backgroundImage: "url(./Assets/Images/background.jpg)", backgroundSize: "cover", backgroundRepeat: "no", width: "100%", height: "100vh"} :
+                    (type === "image")? (themeColor === "standard")? { backgroundColor: "#012144", backgroundImage: "linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url(./Assets/Images/background.jpg)", backgroundSize: "cover", backgroundRepeat: "no", width: "100%", height: "100vh"} :
+                        { backgroundColor: themeColor, backgroundImage: "linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url(./Assets/Images/background.jpg)", backgroundSize: "cover", backgroundRepeat: "no", width: "100%", height: "100vh"} :
                     (themeColor === "standard")? { backgroundColor: "#012144", width: "100%", height: "100vh"} : { backgroundColor: themeColor, width: "100%", height: "100vh"}
                 }>
                     {/* Please use a royalty free video or a video that you or the CIC owns */}
