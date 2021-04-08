@@ -11,6 +11,7 @@ Before you deploy, you must have the following in place:
 
 1.  Fork and clone this repository.
     If you haven't configured Amplify before, configure the Amplify CLI in your terminal as follows:
+    
 ```bash
 amplify configure
 ```
@@ -44,7 +45,8 @@ https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-profiles.html
 ? Please choose the profile you want to use default
 ```
 3.  Deploy the resource to your AWS Account using the command:
-```
+
+```bash
 amplify push
 ```
 
@@ -88,11 +90,15 @@ chmod a+x ./deploy.sh
 ./deploy.sh nameOfYourAmplifyEnvironment
 ```
 
-You will see the prompt shown below.
+You will see the prompt shown below:
+
     1. **Stack Name**, **AWS Region**: choose the stack name and the region you want to deploy in. 
+
     2. **CognitoUserEmail** : use a valid email address. You will receive the login credentials for the front-end application on this
 email address.
+
     3. **CameraTimezone** : Select the timezone for your solution. 
+
     4. Select all defaults for everything else.
 
 ```bash
