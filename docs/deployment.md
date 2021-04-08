@@ -20,7 +20,7 @@ amplify configure
 ```bash
 amplify init
 ```
-Select the name of your environment and select default for everything else. You will see the following:
+Select the name of your environment and select the aws profile you configured in the previous step. Select default for everything else. You will see the following:
 
 ```bash
 amplify init
@@ -63,11 +63,6 @@ Current Environment: prod
 | Storage  | s357dec08a         | Create    | awscloudformation |
 ? Are you sure you want to continue? Yes
 
-The following types do not have '@auth' enabled. Consider using @auth with @model
-         - Camera
-Learn more about @auth here: https://docs.amplify.aws/cli/graphql-transformer/directives#auth
-
-
 GraphQL schema compiled successfully.
 
 Edit your schema at /Users/arman/Desktop/people-counting-with-aws-rekognition-Admin-Website/amplify/backend/api/adminapi1/schema.graphql or place .graphql files in a directory at /Users/arman/Desktop/people-counting-with-aws-rekognition-Admin-Website/amplify/backend/api/adminapi1/schema
@@ -86,17 +81,19 @@ Edit your schema at /Users/arman/Desktop/people-counting-with-aws-rekognition-Ad
 
 # Step 2: Back-end deployment
 
-* [template.yaml](../backend/template.yaml) - Responsible for the creation of the underlying infrastructure of the solution.
-
-Go to the **scripts** directory and run the [deploy.sh](../scripts/deploy.sh) script.
+Go to the **scripts** directory and run the [deploy.sh](../scripts/deploy.sh) script with the name of the amplify environment you defined (in step 1.2) as a parameter.
 
 ```bash
 chmod a+x ./deploy.sh 
-./deploy.sh
+./deploy.sh nameOfYourAmplifyEnvironment
 ```
 
-You will see the prompt shown below. Use a valid email address and timezone. You will receive the login credentials for the front-end application on this
+You will see the prompt shown below.
+    1. **Stack Name**, **AWS Region**: choose the stack name and the region you want to deploy in. 
+    2. **CognitoUserEmail** : use a valid email address. You will receive the login credentials for the front-end application on this
 email address.
+    3. **CameraTimezone** : Select the timezone for your solution. 
+    4. Select all defaults for everything else.
 
 ```bash
 Configuring SAM deploy
