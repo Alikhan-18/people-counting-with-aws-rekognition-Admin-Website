@@ -92,14 +92,14 @@ chmod a+x ./deploy.sh
 
 You will see the prompt shown below:
 
-    1. **Stack Name**, **AWS Region**: choose the stack name and the region you want to deploy in. 
-
-    2. **CognitoUserEmail** : use a valid email address. You will receive the login credentials for the front-end application on this
+1. **Stack Name**, **AWS Region**: choose the stack name and the region you want to deploy in. 
+    
+2. **CognitoUserEmail** : use a valid email address. You will receive the login credentials for the front-end application on this
 email address.
-
-    3. **CameraTimezone** : Select the timezone for your solution. 
-
-    4. Select all defaults for everything else.
+    
+3. **CameraTimezone** : Select the timezone for your solution. 
+    
+4. Select all defaults for everything else.
 
 ```bash
 Configuring SAM deploy
