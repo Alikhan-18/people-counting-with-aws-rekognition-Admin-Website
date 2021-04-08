@@ -16,12 +16,13 @@ Before you deploy, you must have the following in place:
 amplify configure
 ```
 
-2.  In a terminal from the project root directory, enter the following command selecting the IAM user of the AWS Account you will deploy this application from. (accept all defaults):
+2.  In a terminal from the project root directory, select the name of your environment and the aws profile you configured in the previous step. Select default for everything else.
 
 ```bash
 amplify init
 ```
-Select the name of your environment and select the aws profile you configured in the previous step. Select default for everything else. You will see the following:
+
+You will see this prompt:
 
 ```bash
 amplify init
@@ -44,7 +45,7 @@ https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-profiles.html
 ? Do you want to use an AWS profile? Yes
 ? Please choose the profile you want to use default
 ```
-3.  Deploy the resource to your AWS Account using the command:
+3.  Deploy the resource to your AWS Account using the following command:
 
 ```bash
 amplify push
@@ -87,13 +88,13 @@ Edit your schema at /Users/arman/Desktop/people-counting-with-aws-rekognition-Ad
 Go to the **scripts** directory and run the [deploy.sh](../scripts/deploy.sh) script with the name of the amplify environment you defined (in step 1.2) as a parameter.
 
 ```bash
-chmod a+x ./deploy.sh 
+chmod a+x deploy.sh 
 ./deploy.sh nameOfYourAmplifyEnvironment
 ```
 
 You will see the prompt shown below. Here are the instructions on what you should enter:
 
-1. **Stack Name**, **AWS Region**: choose the stack name and the region you want to deploy in. 
+1. **Stack Name**, **AWS Region**: choose the stack name and the region you want to deploy in. You should use the same region you deployed the front-end in **Step 1** of the instructions.
     
 2. **CognitoUserEmail** : use a valid email address. You will receive the login credentials for the front-end application on this
 email address.
