@@ -75,11 +75,12 @@ Edit your schema at /Users/arman/Desktop/people-counting-with-aws-rekognition-Ad
 ? Enter maximum statement depth [increase from default if your schema is deeply nested] 2
 ```
 
-4. The **Deploy to Amplify Console** button will take you to your AWS console to deploy the front-end solution.
+4. Log into the AWS Management Console.
+   
+5. Select AWS Amplify and select the admintest1
 
-<a href="https://console.aws.amazon.com/amplify/home#/deploy?repo=https://github.com/UBC-CIC/people-counting-with-aws-rekognition-Admin-Website">
-    <img src="https://oneclick.amplifyapp.com/button.svg" alt="Deploy to Amplify Console">
-</a>
+6. At the Frontend environments tab connect to your github account pointing to the forked repo. 
+   More information is available at https://docs.aws.amazon.com/amplify/latest/userguide/deploy-backend.html.
 
 # Step 2: Back-end deployment
 
