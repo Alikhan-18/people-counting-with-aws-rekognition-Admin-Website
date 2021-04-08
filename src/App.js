@@ -261,9 +261,9 @@ function App(props) {
                                 <Navbar />
                             </Grid.Column>
                         </Grid.Row>
-                        <Grid.Row>
+                        <Grid.Row style={{paddingBottom: "0px"}}>
                             <Grid.Column>
-                                <Grid className={"camera-box"}>
+                                <Grid className={"box"}>
                                     <Grid.Row>
                                         <Grid.Column textAlign={"start"} verticalAlign={"middle"}>
                                             <h2>Camera Settings</h2>
@@ -273,7 +273,7 @@ function App(props) {
                                         <Grid.Column width={10} verticalAlign={"middle"} textAlign={"center"}>
                                             <h3>Camera configuration table</h3>
                                             <EditableTable getCurrentData={() => listCurrentDevices()} onTableUpdate={onTableUpdate}/>
-                                            <Button onClick={() => {updateDeviceShadows()}}>Update device configurations</Button>
+                                            <Button color={"grey"} onClick={() => {updateDeviceShadows()}}>Update device configurations</Button>
                                         </Grid.Column>
                                         <Grid.Column width={6} verticalAlign={"top"} textAlign={"center"}>
                                             <Grid stackable>
@@ -338,44 +338,62 @@ function App(props) {
                             </Grid.Column>
                         </Grid.Row>
 
-                       <Grid.Row>
+                       <Grid.Row style={{paddingTop: "0px"}}>
                            <Grid.Column>
-                               <h2>Select zones</h2>
-                               <button onClick={() => {loadControlImages()}}>Load control images</button>
-                               <div>
-                                   <div><p>{imageNames[i-1]} Zone {j}</p></div>
-                                   <button onClick={() => {updateDB()}}>Update DB</button>
-                                   <div id="rector" className="relative">
-                                       <div className="absoluteCanvas">
-                                           <img id="image1" src={images[i-1]} style={{
-                                               width: "640",
-                                               height: "480",
-                                           }}/>
-                                       </div>
-                                       <Rector width="640" height="480" onSelected={onRectSelected}/>
-                                   </div>
-                                   <div>
-                                       <div className='container' >
-                                           <button id="btn1" onClick={() => {
-                                               if(i > 1)
-                                                   setI(i - 1)}
-                                           }>Prev Camera</button>
-                                           <button id="btn2" onClick={() => {
-                                               if(j > 1)
-                                                   setJ(j - 1)}
-                                           }>Prev zone</button>
-                                           <button id="btn4" onClick={() => {
-                                               if(j < MAX_ZONES)
-                                                   setJ(j + 1)}
-                                           }>Next zone</button>
-                                           <button id="btn3" onClick={() => {
-                                               if(i < images.length - 1)
-                                                   setI(i + 1)
-                                           }
-                                           }>Next camera</button>
-                                       </div>
-                                   </div>
-                               </div>
+                               <Grid className={"box"}>
+                                   <Grid.Row>
+                                       <Grid.Column textAlign={"start"} verticalAlign={"middle"}>
+                                           <h2>Select zones</h2>
+                                       </Grid.Column>
+                                   </Grid.Row>
+                                   <Grid.Row>
+                                       <Grid.Column>
+                                           <Button size={"tiny"} onClick={() => {loadControlImages()}}>Load control images</Button>
+                                       </Grid.Column>
+                                   </Grid.Row>
+                                   <Grid.Row style={{paddingTop: "0px"}}>
+                                       <Grid.Column verticalAlign={"middle"} textAlign={"center"}>
+                                           <div><p><h3>{imageNames[i-1]} Zone {j}</h3></p></div>
+                                           <Button color={"grey"} onClick={() => {updateDB()}}>Update DB</Button>
+                                       </Grid.Column>
+                                   </Grid.Row>
+                                   <Grid.Row style={{paddingTop: "0px"}}>
+                                       <Grid.Column verticalAlign={"middle"} textAlign={"center"}>
+                                           <div style={{display: "inline-block"}}>
+                                               <div id="rector" className="relative">
+                                                   <div className="absoluteCanvas">
+                                                       <img id="image1" src={images[i-1]} style={{
+                                                           width: "640",
+                                                           height: "480",
+                                                       }}/>
+                                                   </div>
+                                                   <Rector width="640" height="480" onSelected={onRectSelected}/>
+                                               </div>
+                                               <div>
+                                                   <div className='container' >
+                                                       <button id="btn1" onClick={() => {
+                                                           if(i > 1)
+                                                               setI(i - 1)}
+                                                       }>Prev Camera</button>
+                                                       <button id="btn2" onClick={() => {
+                                                           if(j > 1)
+                                                               setJ(j - 1)}
+                                                       }>Prev zone</button>
+                                                       <button id="btn4" onClick={() => {
+                                                           if(j < MAX_ZONES)
+                                                               setJ(j + 1)}
+                                                       }>Next zone</button>
+                                                       <button id="btn3" onClick={() => {
+                                                           if(i < images.length - 1)
+                                                               setI(i + 1)
+                                                       }
+                                                       }>Next camera</button>
+                                                   </div>
+                                               </div>
+                                           </div>
+                                       </Grid.Column>
+                                   </Grid.Row>
+                               </Grid>
                            </Grid.Column>
                        </Grid.Row>
 
