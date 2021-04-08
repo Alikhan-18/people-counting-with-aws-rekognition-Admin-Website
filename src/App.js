@@ -338,7 +338,7 @@ function App(props) {
                             </Grid.Column>
                         </Grid.Row>
 
-                       <Grid.Row style={{paddingTop: "0px", paddingBottom: "0px", marginTop: "-5px"}}>
+                       <Grid.Row style={{paddingTop: "0px", paddingBottom: "5px", marginTop: "-5px"}}>
                            <Grid.Column>
                                <Grid className={"box"}>
                                    <Grid.Row>
