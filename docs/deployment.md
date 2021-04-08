@@ -20,8 +20,28 @@ amplify configure
 ```bash
 amplify init
 ```
+```bash
+amplify init
 
-3.  Deploy the resourse to your AWS Account using the command:
+╭─────────────────────────────────────────────╮
+│                                             │
+│      Update available 4.41.0 → 4.46.1       │
+│   Run npm i -g @aws-amplify/cli to update   │
+│                                             │
+╰─────────────────────────────────────────────╯
+
+Note: It is recommended to run this command from the root of your app directory
+? Enter a name for the environment prod
+? Choose your default editor: Visual Studio Code
+Using default provider  awscloudformation
+
+For more information on AWS Profiles, see:
+https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-profiles.html
+
+? Do you want to use an AWS profile? Yes
+? Please choose the profile you want to use default
+```
+3.  Deploy the resource to your AWS Account using the command:
 ```bash
 amplify push
 ```
@@ -37,7 +57,6 @@ amplify push
 * [cfn-backend](../backend/template.yaml) - Responsible for the creation of the underlying infrastructure of the solution.
 
 Go to the **scripts** directory and run the [deploy.sh](../scripts/deploy.sh) script.
-This will setup the necessary parameters for the backend cloudformation stack:
 
 ```bash
 chmod a+x ./deploy.sh 
@@ -74,21 +93,3 @@ Configuring SAM deploy
         SAM configuration file [samconfig.toml]: 
         SAM configuration environment [default]: 
 ```
-
-
-
-## Step 3: Setting up user and admin front-end applications.
-
-In this section we will update the front-end application code to enable the communication with AWS IoT Core.
-
-1.Select the stack that you created in Cloudformation. Click on **Resources** in the right pane :
-
-2.You should find clickable links for resources named **ApiKeyDeveloperEndpoint** and **ApiKeyIoT**.
-
-Click on **Show**. Make note of the API key that is displayed to you. 
-
-3.Select outputs section of your cloudformation stack.
-
-Make note of the **IoTEndpoint** and **DeveloperEndpoint** urls.
-
-Paste the API key and endpoint url into the appropriate fields in the [secrets](../src/secrets.json) file. 

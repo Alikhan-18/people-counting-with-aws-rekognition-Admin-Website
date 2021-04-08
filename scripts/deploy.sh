@@ -1,8 +1,11 @@
 #!/bin/bash
 
+# The name of the environment you chose during amplify deployment
 envName=$1
 echo "envName : ${envName}"
+
 # Create SSM parameters to prepare for backend deployment
+# These parameters are necessary for the backend stack
 admintableName=$( aws resourcegroupstaggingapi get-resources --tag-filters Key=user:Application,Values="admintest1" Key=user:Stack,Values=${envName} --resource-type-filters dynamodb --query 'ResourceTagMappingList[*].[ResourceARN]' --output text | awk -F'table/' '{print $2}')
 echo "Parameter1 : ${admintableName}"
 aws ssm put-parameter \
@@ -29,6 +32,7 @@ npm uninstall sharp
 npm install --arch=x64 --platform=linux sharp
 mv ./node_modules lib/nodejs
 
+# Deploy the stack using sam
 cd ../..
 sam build
 sam deploy -g --capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM
