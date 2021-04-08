@@ -20,6 +20,8 @@ amplify configure
 ```bash
 amplify init
 ```
+Select the name of your environment and select default for everything else. You will see the following:
+
 ```bash
 amplify init
 
@@ -42,8 +44,14 @@ https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-profiles.html
 ? Please choose the profile you want to use default
 ```
 3.  Deploy the resource to your AWS Account using the command:
-```bash
+```
 amplify push
+```
+
+Select all defaults. You will see the following:
+
+```bash
+
 ✔ Successfully pulled backend environment prod from the cloud.
 
 Current Environment: prod
