@@ -10,13 +10,40 @@ Before you deploy, you must have the following in place:
 # Step 1: Front-end deployment
 
 1.  Fork and clone this repository.
-    If you haven't configured Amplify before, configure the Amplify CLI in your terminal as follows:
+    If you haven't configured Amplify before, configure the Amplify CLI in your terminal as follows. Choose the region you want to deploy the solution in:
     
 ```bash
 amplify configure
 ```
 
-2.  In a terminal from the project root directory, select the name of your environment and the aws profile you configured in the previous step. Select default for everything else.
+You will see the following prompt: 
+
+```bash
+amplify configure
+Follow these steps to set up access to your AWS account:
+
+Sign in to your AWS administrator account:
+https://console.aws.amazon.com/
+Press Enter to continue
+
+Specify the AWS Region
+? region:  us-west-2
+Specify the username of the new IAM user:
+? user name:  yourusername
+Complete the user creation using the AWS console
+https://console.aws.amazon.com/iam/home?region=us-west-2#/users$new?step=final&accessKey&userNames=yourusername&permissionType=policies&policies=arn:aws:iam::aws:policy%2FAdministratorAccess
+Press Enter to continue
+
+Enter the access key of the newly created user:
+? accessKeyId:  ****************
+? secretAccessKey:  *******************************
+This would update/create the AWS Profile in your local machine
+? Profile Name:  yourprofilename
+
+Successfully set up the new user.
+```
+
+2.  In a terminal from the project root directory, select the name of your environment and the name of the IAM user you configured in the previous step. Select default for everything else.
 
 ```bash
 amplify init
