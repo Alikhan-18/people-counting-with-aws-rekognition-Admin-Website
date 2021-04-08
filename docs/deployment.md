@@ -90,7 +90,7 @@ chmod a+x ./deploy.sh
 ./deploy.sh nameOfYourAmplifyEnvironment
 ```
 
-You will see the prompt shown below:
+You will see the prompt shown below. Here are the instructions on what you should enter:
 
 1. **Stack Name**, **AWS Region**: choose the stack name and the region you want to deploy in. 
     
@@ -99,7 +99,7 @@ email address.
     
 3. **CameraTimezone** : Select the timezone for your solution. 
     
-4. Select all defaults for everything else.
+4. Select all defaults for everything else (Press enter to select default).
 
 ```bash
 Configuring SAM deploy
