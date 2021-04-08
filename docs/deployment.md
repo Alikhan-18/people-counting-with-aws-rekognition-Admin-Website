@@ -44,6 +44,30 @@ https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-profiles.html
 3.  Deploy the resource to your AWS Account using the command:
 ```bash
 amplify push
+✔ Successfully pulled backend environment prod from the cloud.
+
+Current Environment: prod
+
+| Category | Resource name      | Operation | Provider plugin   |
+| -------- | ------------------ | --------- | ----------------- |
+| Auth     | admintest172822e06 | Create    | awscloudformation |
+| Api      | adminapi1          | Create    | awscloudformation |
+| Storage  | s357dec08a         | Create    | awscloudformation |
+? Are you sure you want to continue? Yes
+
+The following types do not have '@auth' enabled. Consider using @auth with @model
+         - Camera
+Learn more about @auth here: https://docs.amplify.aws/cli/graphql-transformer/directives#auth
+
+
+GraphQL schema compiled successfully.
+
+Edit your schema at /Users/arman/Desktop/people-counting-with-aws-rekognition-Admin-Website/amplify/backend/api/adminapi1/schema.graphql or place .graphql files in a directory at /Users/arman/Desktop/people-counting-with-aws-rekognition-Admin-Website/amplify/backend/api/adminapi1/schema
+? Do you want to generate code for your newly created GraphQL API Yes
+? Choose the code generation language target javascript
+? Enter the file name pattern of graphql queries, mutations and subscriptions src/graphql/**/*.js
+? Do you want to generate/update all possible GraphQL operations - queries, mutations and subscriptions Yes
+? Enter maximum statement depth [increase from default if your schema is deeply nested] 2
 ```
 
 4. The **Deploy to Amplify Console** button will take you to your AWS console to deploy the front-end solution.
