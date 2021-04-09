@@ -14,13 +14,16 @@ import * as mutations from './graphql/mutations';
 import axios from 'axios';
 import EditableTable from "./components/EditableTable";
 import {updateLoginState} from "./actions/loginActions";
-import secrets from "./secrets.json";
 import "./App.css";
+import { SecretsManagerClient, GetSecretValueCommand } from "@aws-sdk/client-secrets-manager";r
 
 const MAX_ZONES = 2
 const MAX_CAMERAS = 10
 
+const client = new SecretsManagerClient({ region: awsconfig.aws_cognito_region});
+
 Auth.configure(awsconfig)
+
 function App(props) {
     const {loginState, updateLoginState} = props;
 
@@ -47,7 +50,6 @@ function App(props) {
         })
     }
 
-
     const [images, setImages] = useState([])
     const [x, setX] = useState(-1)
     const [y, setY] = useState(-1)
@@ -60,9 +62,34 @@ function App(props) {
     const [sleepTimeFrame, setSleepTimeFrame] = useState({beginHour : 8, endHour : 22})
     const [price, setPrice] = useState(0)
     const [imageNames, setImageNames] = useState([])
+
     useEffect(() => {
         fetchImages()
     }, [])
+
+
+    var iotEndpointUrl = ""
+    var iotEndpointApiKey = ""
+
+    useEffect(() => {
+        getSecrets()
+    }, []);
+
+    function getSecrets() {
+        const params = {
+            /** input parameters */
+        };
+        const command = new GetSecretValueCommand(params);
+        client.send(command).then(
+            (data) => {
+                console.log(data)
+            },
+            (error) => {
+                console.log(error)
+            }
+        );
+    }
+
     async function fetchImages() {
         // Fetch list of images from S3
         Storage.list('', { level: 'private' })
@@ -96,10 +123,10 @@ function App(props) {
         }
         let config = {
             headers: {
-                'x-api-key': secrets.IoTAPIKey
+                'x-api-key': iotEndpointApiKey
             },
         }
-        const response = await axios.post(secrets.IoTURL, {
+        const response = await axios.post(iotEndpointUrl, {
             changeDeviceShadow : true,
             state : desiredDeviceState,
             thingName: item["deviceID"]
@@ -109,10 +136,10 @@ function App(props) {
     async function listCurrentDevices() {
         let config = {
             headers: {
-                'x-api-key': secrets.IoTAPIKey
+                'x-api-key': iotEndpointApiKey
             }
         }
-        const response = await axios.post(secrets.IoTURL, {
+        const response = await axios.post(iotEndpointUrl, {
             listCurrentDevices : true,
         }, config)
         console.log("listCurrentDevices", response)
@@ -131,10 +158,10 @@ function App(props) {
     async function loadControlImages() {
         let config = {
             headers: {
-                'x-api-key': secrets.IoTAPIKey
+                'x-api-key': iotEndpointApiKey
             }
         }
-        const response = await axios.post(secrets.IoTURL, {
+        const response = await axios.post(iotEndpointUrl, {
             takePhoto : true
         }, config)
         console.log(response)
