@@ -35,4 +35,11 @@ mv ./node_modules lib/nodejs
 # Deploy the stack using sam
 cd ../..
 sam build
-sam deploy -g --capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM
+sam deploy -g --capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM --tags tagkey=tagtest
+
+# Get the api keys and the urls for admin and user websites
+stackName = $(aws resourcegroupstaggingapi get-resources --tag-filters Key=tagkey,Values="tagtest" --query 'ResourceTagMappingList[*].[ResourceARN]' --output text | awk -F':::' '{print $2}')
+aws cloudformation describe-stacks --stack-name stackName
+aws secretsmanager create-secret --name secrettest1 \
+    --description "testsecret" \
+    --secret-string secretString

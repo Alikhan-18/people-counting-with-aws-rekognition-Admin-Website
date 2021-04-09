@@ -112,23 +112,23 @@ Edit your schema at /Users/arman/Desktop/people-counting-with-aws-rekognition-Ad
 
 # Step 2: Back-end deployment
 
-Go to the **scripts** directory and run the [deploy.sh](../scripts/deploy.sh) script with the name of the amplify environment you defined (in step 1.2) as a parameter.
+1. Go to the **scripts** directory and run the [deploy.sh](../scripts/deploy.sh) script with the name of the amplify environment you defined (in step 1.2) as a parameter.
 
 ```bash
 chmod a+x deploy.sh 
 ./deploy.sh nameOfYourAmplifyEnvironment
 ```
 
-You will see the prompt shown below. Here are the instructions on what you should enter:
+2. You will see the prompt shown below. Here are the instructions on what you should enter:
 
-1. **Stack Name**, **AWS Region**: choose the stack name and the region you want to deploy in. You should use the same region you deployed the front-end in **Step 1** of the instructions.
+* **Stack Name**, **AWS Region**: choose the stack name and the region you want to deploy in. You should use the same region you deployed the front-end in **Step 1** of the instructions.
     
-2. **CognitoUserEmail** : use a valid email address. You will receive the login credentials for the front-end application on this
+* **CognitoUserEmail** : use a valid email address. You will receive the login credentials for the front-end application on this
 email address.
     
-3. **CameraTimezone** : Select the timezone for your solution. 
+* **CameraTimezone** : Select the timezone for your solution. 
     
-4. Select all defaults for everything else (Press enter to select default).
+* Select all defaults for everything else (Press enter to select default).
 
 ```bash
 Configuring SAM deploy
@@ -158,3 +158,8 @@ Configuring SAM deploy
         SAM configuration file [samconfig.toml]: 
         SAM configuration environment [default]: 
 ```
+
+3. The terminal output will have the Api Key and Endpoint URL which you will use to connect the user frontend to the backend. 
+   No further action is required for the administrator website since it gets connected to the backend automatically.
+   
+Include screenshot
