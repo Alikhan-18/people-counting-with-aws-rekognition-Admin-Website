@@ -43,7 +43,7 @@ This would update/create the AWS Profile in your local machine
 Successfully set up the new user.
 ```
 
-2.  In a terminal from the project root directory, select the name of your environment and the name of the IAM user you configured in the previous step. Select default for everything else.
+2.  In a terminal from the project root directory, select the name of your environment and the **profile name** for the IAM user you configured in the previous step. Select default for everything else.
 
 ```bash
 amplify init
@@ -70,7 +70,7 @@ For more information on AWS Profiles, see:
 https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-profiles.html
 
 ? Do you want to use an AWS profile? Yes
-? Please choose the profile you want to use default
+? Please choose the profile you want to use yourprofilename
 ```
 3.  Deploy the resource to your AWS Account using the following command:
 
