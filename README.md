@@ -6,7 +6,7 @@ remaining part of the instructions.
 
 ## High level architecture
 
-<img src="./images/diagram.png"  width="800"/>
+<img src="./images/diagram.png"  width="600"/>
 
 ## Frontend Guide
 

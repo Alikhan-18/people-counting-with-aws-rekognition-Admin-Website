@@ -1,33 +1,40 @@
 {
   "auth": {
-    "adminDashboard72822e06": {
+    "peoplecounteradmin4021e22a": {
       "service": "Cognito",
       "providerPlugin": "awscloudformation",
       "dependsOn": [],
       "customAuth": false
     }
   },
+  "storage": {
+    "controlBucket": {
+      "service": "S3",
+      "providerPlugin": "awscloudformation"
+    }
+  },
   "api": {
-    "adminapi1": {
+    "peoplecounteradmin": {
       "service": "AppSync",
       "providerPlugin": "awscloudformation",
       "output": {
         "authConfig": {
-          "additionalAuthenticationProviders": [],
           "defaultAuthentication": {
             "authenticationType": "AMAZON_COGNITO_USER_POOLS",
             "userPoolConfig": {
-              "userPoolId": "authadminDashboard72822e06"
+              "userPoolId": "authpeoplecounteradmin4021e22a"
             }
-          }
+          },
+          "additionalAuthenticationProviders": []
         }
       }
     }
   },
-  "storage": {
-    "s357dec08a": {
-      "service": "S3",
-      "providerPlugin": "awscloudformation"
+  "function": {
+    "peopleCounterAdminGetSecrets": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
     }
   }
 }

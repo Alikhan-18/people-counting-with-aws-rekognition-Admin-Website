@@ -1,0 +1,31 @@
+schema {
+    query:Query
+}
+
+type Camera @model {
+  id: ID!
+  H: Int
+  W: Int
+  logicalName: String
+  zones: [Zone]
+}
+
+type Zone {
+  id: ID!
+  name: String!
+  zoneNumber: String!
+  X1: Int
+  Y1: Int
+  X2: Int
+  Y2: Int
+}
+
+input ZoneInput {
+  id: ID!
+  name: String!
+  zoneNumber: String!
+  X1: Int
+  Y1: Int
+  X2: Int
+  Y2: Int
+}
