@@ -105,7 +105,7 @@ Edit your schema at /Users/arman/Desktop/people-counting-with-aws-rekognition-Ad
 
 4. Log into the AWS Management Console.
    
-5. Select AWS Amplify and select the admintest1 project.
+5. Select AWS Amplify and select the peopleCounterAdmin project.
 
 6. At the Frontend environments tab connect to your github account pointing to the forked repo. 
    More information is available at https://docs.aws.amazon.com/amplify/latest/userguide/deploy-backend.html.

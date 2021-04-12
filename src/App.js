@@ -15,7 +15,7 @@ import axios from 'axios';
 import EditableTable from "./components/EditableTable";
 import {updateLoginState} from "./actions/loginActions";
 import "./App.css";
-import { SecretsManagerClient, GetSecretValueCommand } from "@aws-sdk/client-secrets-manager";r
+import { SecretsManagerClient, GetSecretValueCommand } from "@aws-sdk/client-secrets-manager";
 
 const MAX_ZONES = 2
 const MAX_CAMERAS = 10

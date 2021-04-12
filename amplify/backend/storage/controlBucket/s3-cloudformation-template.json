@@ -163,7 +163,7 @@
 		"S3Bucket": {
 			"Type": "AWS::S3::Bucket",
 		    
-			"DeletionPolicy" : "Retain",
+			"DeletionPolicy" : "Delete",
 			"Properties": {
 				"BucketName": {
                     "Fn::If": [
@@ -271,6 +271,69 @@
 									]
 								}
 							]
+						}
+					]
+				}
+			}
+		},
+		"S3BucketBucketPolicy": {
+			"Type": "AWS::S3::BucketPolicy",
+			"DependsOn": [
+				"S3Bucket"
+			],
+			"Properties": {
+				"Bucket":  {"Ref" : "S3Bucket"},
+				"PolicyDocument": {
+					"Statement": [
+						{
+							"Sid": "DenyIncorrectEncryptionHeader",
+							"Effect": "Deny",
+							"Principal": "*",
+							"Action": "s3:PutObject",
+							"Resource": {
+								"Fn::Join": [
+									"",
+									[
+										{
+											"Fn::GetAtt": [
+												"S3Bucket",
+												"Arn"
+											]
+										},
+										"/*"
+									]
+								]
+							},
+							"Condition": {
+								"StringNotEquals": {
+									"s3:x-amz-server-side-encryption": "AES256"
+								}
+							}
+						},
+						{
+							"Sid": "DenyUnencryptedObjectUploads",
+							"Effect": "Deny",
+							"Principal": "*",
+							"Action": "s3:PutObject",
+							"Resource": {
+								"Fn::Join": [
+									"",
+									[
+										{
+											"Fn::GetAtt": [
+												"S3Bucket",
+												"Arn"
+											]
+										},
+										"/*"
+									]
+								]
+							},
+							"Condition": {
+								"Null": {
+									"s3:x-amz-server-side-encryption": "true"
+								}
+							}
 						}
 					]
 				}

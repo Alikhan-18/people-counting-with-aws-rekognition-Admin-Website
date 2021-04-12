@@ -173,8 +173,8 @@ Resources:
     UpdateReplacePolicy: Retain
     Properties:
       UserPoolName: !If [ShouldNotCreateEnvResources, !Ref userPoolName, !Join ['',[!Ref userPoolName, '-', !Ref env]]]
-      
-      
+      AdminCreateUserConfig:
+        AllowAdminCreateUserOnly: True
       UsernameConfiguration:
         CaseSensitive: false
       
@@ -374,7 +374,14 @@ Resources:
           unauthenticated: !Ref unauthRoleArn
           authenticated: !Ref authRoleArn
     DependsOn: IdentityPool
-  
+
+
+  Parameter:
+    Type: 'AWS::SSM::Parameter'
+    Properties:
+      Name: adminAmplUserPoolID
+      Type: String
+      Value: !Ref UserPool
 
 Outputs :
   
