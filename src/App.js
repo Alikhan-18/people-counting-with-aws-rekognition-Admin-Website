@@ -76,6 +76,7 @@ function App(props) {
     }, []);
 
     async function getSecrets() {
+        console.log("getSecrets")
         Auth.currentCredentials()
             .then(credentials => {
                 const lambda = new Lambda({
