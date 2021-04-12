@@ -1,3 +1,7 @@
+/**
+ * Credits to https://codepen.io/giladaya/pen/QdGLmZ
+ */
+
 import React from 'react';
 import './RectCanvas.css';
 

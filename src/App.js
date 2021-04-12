@@ -15,7 +15,7 @@ import axios from 'axios';
 import EditableTable from "./components/EditableTable";
 import {updateLoginState} from "./actions/loginActions";
 import "./App.css";
-import { SecretsManagerClient, GetSecretValueCommand } from "@aws-sdk/client-secrets-manager";
+import Lambda from 'aws-sdk/clients/lambda';
 
 const MAX_ZONES = 2
 const MAX_CAMERAS = 10
@@ -23,6 +23,17 @@ const MAX_CAMERAS = 10
 const client = new SecretsManagerClient({ region: awsconfig.aws_cognito_region});
 
 Auth.configure(awsconfig)
+
+Auth.currentCredentials()
+    .then(credentials => {
+        const lambda = new Lambda({
+            credentials: Auth.essentialCredentials(credentials)
+        });
+        return lambda.invoke({
+            FunctionName: 'peopleCounterAdminGetSecrets',
+            Payload: JSON.stringify({ hello: world }),
+        });
+    })
 
 function App(props) {
     const {loginState, updateLoginState} = props;
