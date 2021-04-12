@@ -110,6 +110,7 @@ Edit your schema at /Users/arman/Desktop/people-counting-with-aws-rekognition-Ad
 6. At the Frontend environments tab connect to your github account pointing to the forked repo. 
    More information is available at https://docs.aws.amazon.com/amplify/latest/userguide/deploy-backend.html.
 
+Include screenshot
 # Step 2: Back-end deployment
 
 1. Go to the **scripts** directory and run the [deploy.sh](../scripts/deploy.sh) script with the name of the amplify environment you defined (in step 1.2) as a parameter.

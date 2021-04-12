@@ -20,20 +20,13 @@ import Lambda from 'aws-sdk/clients/lambda';
 const MAX_ZONES = 2
 const MAX_CAMERAS = 10
 
-const client = new SecretsManagerClient({ region: awsconfig.aws_cognito_region});
-
 Auth.configure(awsconfig)
 
-Auth.currentCredentials()
-    .then(credentials => {
-        const lambda = new Lambda({
-            credentials: Auth.essentialCredentials(credentials)
-        });
-        return lambda.invoke({
-            FunctionName: 'peopleCounterAdminGetSecrets',
-            Payload: JSON.stringify({ hello: world }),
-        });
-    })
+const split = awsconfig.aws_user_files_s3_bucket.split("-")
+const lambdaName = 'peopleCounterAdminGetSecrets' + split[split.length - 1]
+
+var iotEndpointUrl = ""
+var iotEndpointApiKey = ""
 
 function App(props) {
     const {loginState, updateLoginState} = props;
@@ -78,27 +71,24 @@ function App(props) {
         fetchImages()
     }, [])
 
-
-    var iotEndpointUrl = ""
-    var iotEndpointApiKey = ""
-
     useEffect(() => {
         getSecrets()
     }, []);
 
-    function getSecrets() {
-        const params = {
-            /** input parameters */
-        };
-        const command = new GetSecretValueCommand(params);
-        client.send(command).then(
-            (data) => {
-                console.log(data)
-            },
-            (error) => {
-                console.log(error)
-            }
-        );
+    async function getSecrets() {
+        Auth.currentCredentials()
+            .then(credentials => {
+                const lambda = new Lambda({
+                    credentials: Auth.essentialCredentials(credentials)
+                });
+                return lambda.invoke({
+                    FunctionName: lambdaName,
+                    Payload: JSON.stringify({ hello: "world"}),
+                });
+            })
+            .then(response => {
+                console.log("AWSRESPONSE", response)
+            })
     }
 
     async function fetchImages() {
