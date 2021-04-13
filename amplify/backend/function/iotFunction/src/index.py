@@ -1,6 +1,11 @@
 def handler(event, context):
   print('received event:')
   print(event)
-  return {
-    'message': 'Hello from your new Amplify Python lambda!'
-  }
+  response = {
+          'statusCode': 200,
+          'headers': {
+              'Access-Control-Allow-Origin': '*'
+          },
+          'body': json.dumps({'message': 'CORS enabled')
+      }
+  return response
