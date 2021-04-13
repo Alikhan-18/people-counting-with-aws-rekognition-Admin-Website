@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import {Grid, Icon, Input, Button} from "semantic-ui-react";
+import {Grid, Icon, Button, Label} from "semantic-ui-react";
+import TextField from '@material-ui/core/TextField';
 import {API, Auth, Storage} from 'aws-amplify';
 import { v4 as uuid } from 'uuid';
 import Navbar from "../components/Navbar/Navbar";
@@ -34,7 +35,7 @@ function Dashboard(props) {
     const [j, setJ] = useState(1)
     const [coords, setCoords] = useState([...Array(MAX_CAMERAS)].map(e => Array(MAX_ZONES)))
     const [deviceData, setDeviceData] = useState([...Array(MAX_CAMERAS)].map(e => Array(3)))
-    const [sleepTimeFrame, setSleepTimeFrame] = useState({beginHour : 8, endHour : 22})
+    const [sleepTimeFrame, setSleepTimeFrame] = useState({beginHour : 8, endHour : 22});
     const [price, setPrice] = useState(0)
     const [imageNames, setImageNames] = useState([])
 
@@ -220,6 +221,7 @@ function Dashboard(props) {
 
     }
 
+
     const textFieldOnChange = (event) => {
         if(event.target.name === "endTime"){
             setSleepTimeFrame({
@@ -265,21 +267,35 @@ function Dashboard(props) {
                                                         </Grid.Row>
                                                         <Grid.Row columns={2}>
                                                             <Grid.Column>
-                                                                <Input
-                                                                    placeholder="Begin time"
-                                                                    name="beginTime"
-                                                                    type="text"
-                                                                    onChange={textFieldOnChange}
-                                                                    fluid
-                                                                />
+                                                                <Label pointing={"right"}>Begin time</Label>
+                                                                    <TextField
+                                                                        id={"beginTime"}
+                                                                        name={"beginTime"}
+                                                                        type={"time"}
+                                                                        defaultValue={"08:00"}
+                                                                        onChange={textFieldOnChange}
+                                                                        InputLabelProps={{
+                                                                            shrink: true,
+                                                                        }}
+                                                                        inputProps={{
+                                                                            step: 300, // 5 min
+                                                                        }}
+                                                                    />
                                                             </Grid.Column>
                                                             <Grid.Column>
-                                                                <Input
-                                                                    placeholder="End time"
-                                                                    name="endTime"
-                                                                    type="text"
+                                                                <Label pointing={"right"}>End time</Label>
+                                                                <TextField
+                                                                    id={"endTime"}
+                                                                    name={"endTime"}
+                                                                    type={"time"}
+                                                                    defaultValue={"22:00"}
                                                                     onChange={textFieldOnChange}
-                                                                    fluid
+                                                                    InputLabelProps={{
+                                                                        shrink: true,
+                                                                    }}
+                                                                    inputProps={{
+                                                                        step: 300, // 5 min
+                                                                    }}
                                                                 />
                                                             </Grid.Column>
                                                         </Grid.Row>

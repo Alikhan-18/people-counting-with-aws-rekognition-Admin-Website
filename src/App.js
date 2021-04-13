@@ -27,7 +27,8 @@ function App(props) {
                     * [themeColor: "standard", "#012144" (color hex value in quotes) ]
                     *  Suggested alternative theme colors: #037dad, #5f8696, #495c4e, #4f2828, #ba8106, #965f94
                     * */
-                    <Login logo={"custom"} type={"image"} themeColor={"standard"} animateTitle={false} title={"Orchard Commons"} darkMode={true} />
+                    <Login logo={"custom"} type={"image"} themeColor={"standard"} animateTitle={false}
+                           title={"Orchard Commons"} darkMode={true} />
                 )
             }
             {
