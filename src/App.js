@@ -126,9 +126,10 @@ function App(props) {
         console.log("listCurrentDevices", response)
         return response
     }
+
     async function sendRequest() {
         const apiName = awsconfig.aws_cloud_logic_custom[0].name;
-        const path = '/';
+        const path = '/items/{proxy+}';
         const myInit = { // OPTIONAL
             headers: {}, // OPTIONAL
             response: true, // OPTIONAL (return the entire Axios response object instead of only response.data)
@@ -136,7 +137,7 @@ function App(props) {
                 name: 'param',
             },
         };
-
+        console.log("sendRequest")
         API
             .get(apiName, path, myInit)
             .then(response => {
@@ -146,6 +147,7 @@ function App(props) {
                 console.log(error.response);
             });
     }
+
     async function updateDeviceShadows() {
         await sendRequest()
         deviceData.map((item, index) => {

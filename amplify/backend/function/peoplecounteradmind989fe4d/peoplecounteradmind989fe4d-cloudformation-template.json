@@ -69,7 +69,7 @@
         "Timeout": "25",
         "Code": {
           "S3Bucket": "amplify-peoplecounteradmin-prod-100104-deployment",
-          "S3Key": "amplify-builds/peoplecounteradmind989fe4d-502f6b58616c772f2b41-build.zip"
+          "S3Key": "amplify-builds/peoplecounteradmind989fe4d-6876624f4d7476525737-build.zip"
         }
       }
     },
