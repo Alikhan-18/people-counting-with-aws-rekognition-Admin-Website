@@ -1,0 +1,42 @@
+{
+    "paths": [
+        {
+            "name": "/items",
+            "lambdaFunction": "peoplecounteradmind989fe4d",
+            "privacy": {
+                "private": true,
+                "auth": [
+                    "/POST",
+                    "/GET",
+                    "/PUT",
+                    "/PATCH",
+                    "/DELETE"
+                ]
+            },
+            "policyResourceName": "/items"
+        }
+    ],
+    "resourceName": "iotAPI",
+    "apiName": "iotAPI",
+    "functionArns": [
+        {
+            "lambdaFunction": "peoplecounteradmind989fe4d"
+        }
+    ],
+    "privacy": {
+        "auth": 1,
+        "unauth": 0,
+        "authRoleName": "amplify-peoplecounteradmin-prod-100104-authRole",
+        "unAuthRoleName": "amplify-peoplecounteradmin-prod-100104-unauthRole"
+    },
+    "dependsOn": [
+        {
+            "category": "function",
+            "resourceName": "peoplecounteradmind989fe4d",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
+        }
+    ]
+}

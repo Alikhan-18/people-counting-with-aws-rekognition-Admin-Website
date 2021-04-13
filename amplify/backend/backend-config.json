@@ -28,7 +28,27 @@
           "additionalAuthenticationProviders": []
         }
       }
+    },
+    "iotAPI": {
+      "service": "API Gateway",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [
+        {
+          "category": "function",
+          "resourceName": "peoplecounteradmind989fe4d",
+          "attributes": [
+            "Name",
+            "Arn"
+          ]
+        }
+      ]
     }
   },
-  "function": {}
+  "function": {
+    "peoplecounteradmind989fe4d": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    }
+  }
 }
