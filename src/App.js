@@ -71,27 +71,6 @@ function App(props) {
         fetchImages()
     }, [])
 
-    useEffect(() => {
-        getSecrets()
-    }, []);
-
-    async function getSecrets() {
-        console.log("getSecrets")
-        Auth.currentCredentials()
-            .then(credentials => {
-                const lambda = new Lambda({
-                    credentials: Auth.essentialCredentials(credentials)
-                });
-                return lambda.invoke({
-                    FunctionName: lambdaName,
-                    Payload: JSON.stringify({ hello: "world"}),
-                });
-            })
-            .then(response => {
-                console.log("AWSRESPONSE", response)
-            })
-    }
-
     async function fetchImages() {
         // Fetch list of images from S3
         Storage.list('', { level: 'private' })
@@ -147,7 +126,28 @@ function App(props) {
         console.log("listCurrentDevices", response)
         return response
     }
+    async function sendRequest() {
+        const apiName = awsconfig.aws_cloud_logic_custom[0].name;
+        const path = '/';
+        const myInit = { // OPTIONAL
+            headers: {}, // OPTIONAL
+            response: true, // OPTIONAL (return the entire Axios response object instead of only response.data)
+            queryStringParameters: {  // OPTIONAL
+                name: 'param',
+            },
+        };
+
+        API
+            .get(apiName, path, myInit)
+            .then(response => {
+                console.log("AWSRESPONSE", response)
+            })
+            .catch(error => {
+                console.log(error.response);
+            });
+    }
     async function updateDeviceShadows() {
+        await sendRequest()
         deviceData.map((item, index) => {
             if(item["stationName"] !== "" && item["deviceID"] !== "" && item["samplingRate"] !== ""){
                 console.log(item)
