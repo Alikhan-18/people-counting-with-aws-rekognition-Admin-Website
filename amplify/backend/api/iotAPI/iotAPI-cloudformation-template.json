@@ -14,15 +14,15 @@
         },
     
     
-          "functionpeoplecounteradmind989fe4dName": {
+          "functioniotFunctionName": {
             "Type": "String",
-            "Default": "functionpeoplecounteradmind989fe4dName"
+            "Default": "functioniotFunctionName"
           },
         
           
-          "functionpeoplecounteradmind989fe4dArn": {
+          "functioniotFunctionArn": {
             "Type": "String",
-            "Default": "functionpeoplecounteradmind989fe4dArn"
+            "Default": "functioniotFunctionArn"
           }
         
           
@@ -542,7 +542,7 @@
                             
                             {
                                 
-                                "Ref": "functionpeoplecounteradmind989fe4dArn"
+                                "Ref": "functioniotFunctionArn"
                             },
                             
                             "/invocations"
@@ -647,7 +647,7 @@
                           
                           {
                             
-                            "Ref": "functionpeoplecounteradmind989fe4dArn"
+                            "Ref": "functioniotFunctionArn"
                           },
                           
                           "/invocations"
@@ -704,12 +704,12 @@
                   
         
         
-        "functionpeoplecounteradmind989fe4dPermissioniotAPI": {
+        "functioniotFunctionPermissioniotAPI": {
             "Type": "AWS::Lambda::Permission",
             "Properties": {
                 "FunctionName": 
                     {
-                        "Ref":  "functionpeoplecounteradmind989fe4dName"
+                        "Ref":  "functioniotFunctionName"
                     },
                     
                     "Action": "lambda:InvokeFunction",

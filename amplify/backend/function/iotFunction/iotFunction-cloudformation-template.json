@@ -33,12 +33,12 @@
         "FunctionName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "peoplecounteradmind989fe4d",
+            "iotFunction",
             {
               "Fn::Join": [
                 "",
                 [
-                  "peoplecounteradmind989fe4d",
+                  "iotFunction",
                   "-",
                   {
                     "Ref": "env"
@@ -64,12 +64,12 @@
             "Arn"
           ]
         },
-        "Runtime": "nodejs12.x",
+        "Runtime": "python3.8",
         "Layers": [],
         "Timeout": "25",
         "Code": {
           "S3Bucket": "amplify-peoplecounteradmin-prod-100104-deployment",
-          "S3Key": "amplify-builds/peoplecounteradmind989fe4d-6876624f4d7476525737-build.zip"
+          "S3Key": "amplify-builds/iotFunction-70567368556f615a4e52-build.zip"
         }
       }
     },
@@ -79,12 +79,12 @@
         "RoleName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "peoplecounteradminLambdaRole388101a5",
+            "peoplecounteradminLambdaRole5010635e",
             {
               "Fn::Join": [
                 "",
                 [
-                  "peoplecounteradminLambdaRole388101a5",
+                  "peoplecounteradminLambdaRole5010635e",
                   "-",
                   {
                     "Ref": "env"

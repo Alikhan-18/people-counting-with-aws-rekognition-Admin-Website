@@ -2,7 +2,7 @@
     "paths": [
         {
             "name": "/items",
-            "lambdaFunction": "peoplecounteradmind989fe4d",
+            "lambdaFunction": "iotFunction",
             "privacy": {
                 "private": true,
                 "auth": [
@@ -20,7 +20,7 @@
     "apiName": "iotAPI",
     "functionArns": [
         {
-            "lambdaFunction": "peoplecounteradmind989fe4d"
+            "lambdaFunction": "iotFunction"
         }
     ],
     "privacy": {
@@ -32,7 +32,7 @@
     "dependsOn": [
         {
             "category": "function",
-            "resourceName": "peoplecounteradmind989fe4d",
+            "resourceName": "iotFunction",
             "attributes": [
                 "Name",
                 "Arn"

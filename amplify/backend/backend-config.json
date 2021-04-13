@@ -35,7 +35,7 @@
       "dependsOn": [
         {
           "category": "function",
-          "resourceName": "peoplecounteradmind989fe4d",
+          "resourceName": "iotFunction",
           "attributes": [
             "Name",
             "Arn"
@@ -45,7 +45,7 @@
     }
   },
   "function": {
-    "peoplecounteradmind989fe4d": {
+    "iotFunction": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
