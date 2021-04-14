@@ -79,6 +79,10 @@ def handler(event, context):
         response = listCurrentDevices()
         return {
             'statusCode': 200,
+            "headers": {
+                "Access-Control-Allow-Credentials": True,
+                "Access-Control-Allow-Origin": "*",
+             },
             'body': response
         }
     if "takePhoto" in event:

@@ -69,7 +69,7 @@
         "Timeout": "25",
         "Code": {
           "S3Bucket": "amplify-peoplecounteradmin-prod-100104-deployment",
-          "S3Key": "amplify-builds/iotFunction-4e776d566d647744434e-build.zip"
+          "S3Key": "amplify-builds/iotFunction-324e637472772b616c79-build.zip"
         }
       }
     },
@@ -83,7 +83,7 @@
           "arn:aws:iam::aws:policy/AWSIoTFullAccess",
           "arn:aws:iam::aws:policy/AmazonDynamoDBReadOnlyAccess",
           "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
-          "arn:aws:iam::aws:policy/service-role/AmazonSSMReadOnlyAccess"
+          "arn:aws:iam::aws:policy/AmazonSSMReadOnlyAccess"
         ]
       }
     }
