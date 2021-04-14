@@ -436,7 +436,7 @@ Resources:
       Description: ''
       Environment:
           Variables:
-            ADMIN_TABLE_NAME: '{{resolve:ssm:peopleCountingAmplifyAdminTable}}'
+            ADMIN_TABLE_NAME: '{{resolve:ssm:peopleCountingAmplifyAdminTable:1}}'
             DESTINATION_BUCKET: !Sub '${AWS::StackName}-${RekognitionBucketName}'
       FunctionName: lambda-transform-s3
       Handler: index.handler
@@ -452,7 +452,7 @@ Resources:
       Environment:
           Variables:
             CURRENT_COUNTS_TABLE_NAME: !Ref DynamoDBTableCurrentCounts
-            ADMIN_TABLE_NAME: '{{resolve:ssm:peopleCountingAmplifyAdminTable}}'
+            ADMIN_TABLE_NAME: '{{resolve:ssm:peopleCountingAmplifyAdminTable:1}}'
             KINESIS_NAME: !Ref KinesisStream
             CAMERA_TIMEZONE: !Ref CameraTimezone
       FunctionName: lambda-rekognition
@@ -485,7 +485,7 @@ Resources:
         Variables:
           IOT_TOPIC: !Ref GetPreSignedUrlIoTTopicName
           IMAGE_CACHE_BUCKET_NAME : !Ref S3BucketImageProcessing
-          CONTROL_IMAGE_BUCKET_NAME : '{{resolve:ssm:controlBucketNameAmplifyAdmin}}'
+          CONTROL_IMAGE_BUCKET_NAME : '{{resolve:ssm:controlBucketNameAmplifyAdmin:1}}'
           PRESIGNED_URL_EXPIRATION_IN_SEC : '120'
       FunctionName: lambda-presigned-url-handler
       Handler: index.lambda_handler
@@ -733,7 +733,7 @@ Resources:
       Type: "AWS::Cognito::UserPoolUser"
       Properties:
           Username: "administrator"
-          UserPoolId: !Ref '{{resolve:ssm:adminAmplUserPoolID}}'
+          UserPoolId: '{{resolve:ssm:adminAmplUserPoolID:1}}'
           UserAttributes:
             -
               Name: "email_verified"

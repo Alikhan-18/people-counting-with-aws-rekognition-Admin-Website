@@ -69,7 +69,7 @@
         "Timeout": "25",
         "Code": {
           "S3Bucket": "amplify-peoplecounteradmin-prod-100104-deployment",
-          "S3Key": "amplify-builds/iotFunction-324e637472772b616c79-build.zip"
+          "S3Key": "amplify-builds/iotFunction-57303774465466416f65-build.zip"
         }
       }
     },

@@ -11,14 +11,12 @@ echo "Parameter1 : ${admintableName}"
 aws ssm put-parameter \
     --name "peopleCountingAmplifyAdminTable" \
     --type "String" \
-    --value "${admintableName}" \
-    --overwrite
+    --value "${admintableName}"
 controlBucketName=$( aws resourcegroupstaggingapi get-resources --tag-filters Key=user:Application,Values="peopleCounterAdmin" Key=aws:cloudformation:logical-id,Values="S3Bucket" Key=user:Stack,Values=${envName} --resource-type-filters s3 --query 'ResourceTagMappingList[*].[ResourceARN]' --output text | awk -F':::' '{print $2}')
 aws ssm put-parameter \
     --name "controlBucketNameAmplifyAdmin" \
     --type "String" \
-    --value "${controlBucketName}" \
-    --overwrite
+    --value "${controlBucketName}" 
 echo "Parameter2 : ${controlBucketName}"
 
 # Create an IoT thing for RaspberryPi deployment
