@@ -90,6 +90,7 @@ function App(props) {
         const apiName = awsconfig.aws_cloud_logic_custom[0].name;
         const path = '/items/{proxy+}';
         const myInit = {
+            response: true,
             body: requestBody,
             headers: {}
         };

@@ -5,11 +5,11 @@ import os
 AWS_REGION = os.environ['AWS_REGION']
 
 iotdataclient = boto3.client('iot-data', AWS_REGION)
-client = boto3.client('iot')
+iotclient = boto3.client('iot')
 dynamodb = boto3.resource('dynamodb')
-client = boto3.client('ssm')
+ssmclient = boto3.client('ssm')
 
-ssmresponse = client.get_parameter(
+ssmresponse = ssmclient.get_parameter(
     Name='peopleCountingAmplifyAdminTable'
 )
 
@@ -59,7 +59,7 @@ def getLogicalName(id):
     return response["Item"]["logicalName"]
 
 def listCurrentDevices():
-    response = client.list_things(
+    response = iotclient.list_things(
         maxResults=100,
         thingTypeName='RPI'
     )
@@ -75,7 +75,8 @@ def listCurrentDevices():
     return thingStates
 
 def handler(event, context):
-    if "listCurrentDevices" in event:
+    if "listCurrentDevices" in event["body"]:
+        print("HERE")
         response = listCurrentDevices()
         return {
             'statusCode': 200,
@@ -83,17 +84,19 @@ def handler(event, context):
                 "Access-Control-Allow-Credentials": True,
                 "Access-Control-Allow-Origin": "*",
              },
-            'body': response
+            'isBase64Encoded': False,
+            'body': json.dumps(response)
         }
-    if "takePhoto" in event:
+    if "takePhoto" in event["body"]:
         takePhoto()
-    if "changeDeviceShadow" in event:
-        update_shadow(event)
+    if "changeDeviceShadow" in event["body"]:
+        update_shadow(event["body"])
     return {
         'statusCode': 200,
         "headers": {
             "Access-Control-Allow-Credentials": True,
             "Access-Control-Allow-Origin": "*",
         },
-        'body': json.dumps(event)
+        'isBase64Encoded': False,
+        'body': json.dumps(event["body"])
     }
