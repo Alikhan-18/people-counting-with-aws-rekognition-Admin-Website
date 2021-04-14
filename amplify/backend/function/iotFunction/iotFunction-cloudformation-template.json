@@ -22,7 +22,7 @@
     }
   },
   "Resources": {
-    "LambdaFunction": {
+    "LambdaIoTFunction": {
       "Type": "AWS::Lambda::Function",
       "Metadata": {
         "aws:asset:path": "./src",
@@ -82,7 +82,8 @@
         "ManagedPolicyArns": [
           "arn:aws:iam::aws:policy/AWSIoTFullAccess",
           "arn:aws:iam::aws:policy/AmazonDynamoDBReadOnlyAccess",
-          "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+          "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+          "arn:aws:iam::aws:policy/service-role/AmazonSSMReadOnlyAccess"
         ]
       }
     }
@@ -90,13 +91,13 @@
   "Outputs": {
     "Name": {
       "Value": {
-        "Ref": "LambdaFunction"
+        "Ref": "LambdaIoTFunction"
       }
     },
     "Arn": {
       "Value": {
         "Fn::GetAtt": [
-          "LambdaFunction",
+          "LambdaIoTFunction",
           "Arn"
         ]
       }

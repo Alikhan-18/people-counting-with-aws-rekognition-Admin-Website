@@ -2,12 +2,19 @@ import json
 import boto3
 import os
 
-ADMIN_TABLE_NAME = os.environ['ADMIN_TABLE_NAME']
 AWS_REGION = os.environ['AWS_REGION']
 
 iotdataclient = boto3.client('iot-data', AWS_REGION)
 client = boto3.client('iot')
 dynamodb = boto3.resource('dynamodb')
+client = boto3.client('ssm')
+
+ssmresponse = client.get_parameter(
+    Name='peopleCountingAmplifyAdminTable'
+)
+
+ADMIN_TABLE_NAME = ssmresponse["Parameter"]["Value"]
+
 
 def update_shadow(event):
     payload_dict = {
@@ -67,7 +74,7 @@ def listCurrentDevices():
         thingStates.append(thingState)
     return thingStates
 
-def lambda_handler(event, context):
+def handler(event, context):
     if "listCurrentDevices" in event:
         response = listCurrentDevices()
         return {
