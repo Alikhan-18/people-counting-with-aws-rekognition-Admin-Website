@@ -22,7 +22,7 @@
     }
   },
   "Resources": {
-    "LambdaIoTFunction": {
+    "LambdaFunction": {
       "Type": "AWS::Lambda::Function",
       "Metadata": {
         "aws:asset:path": "./src",
@@ -91,13 +91,13 @@
   "Outputs": {
     "Name": {
       "Value": {
-        "Ref": "LambdaIoTFunction"
+        "Ref": "LambdaFunction"
       }
     },
     "Arn": {
       "Value": {
         "Fn::GetAtt": [
-          "LambdaIoTFunction",
+          "LambdaFunction",
           "Arn"
         ]
       }
