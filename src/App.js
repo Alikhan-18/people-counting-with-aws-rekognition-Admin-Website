@@ -11,22 +11,14 @@ import Rector from './components/RectCanvas';
 import './components/RectCanvas.css';
 import * as queries from './graphql/queries';
 import * as mutations from './graphql/mutations';
-import axios from 'axios';
 import EditableTable from "./components/EditableTable";
 import {updateLoginState} from "./actions/loginActions";
 import "./App.css";
-import Lambda from 'aws-sdk/clients/lambda';
 
 const MAX_ZONES = 2
 const MAX_CAMERAS = 10
 
 Auth.configure(awsconfig)
-
-const split = awsconfig.aws_user_files_s3_bucket.split("-")
-const lambdaName = 'peopleCounterAdminGetSecrets' + split[split.length - 1]
-
-var iotEndpointUrl = ""
-var iotEndpointApiKey = ""
 
 function App(props) {
     const {loginState, updateLoginState} = props;
@@ -94,52 +86,16 @@ function App(props) {
 
     }
 
-    async function updateDeviceConfiguration(item) {
-        let desiredDeviceState = {
-            "samplingRate": item["samplingRate"],
-            "photoWidth": 640,
-            "photoHeight": 480,
-            "beginHour": sleepTimeFrame.beginHour,
-            "endHour": sleepTimeFrame.endHour
-        }
-        let config = {
-            headers: {
-                'x-api-key': iotEndpointApiKey
-            },
-        }
-        const response = await axios.post(iotEndpointUrl, {
-            changeDeviceShadow : true,
-            state : desiredDeviceState,
-            thingName: item["deviceID"]
-        }, config)
-        console.log(response)
-    }
-    async function listCurrentDevices() {
-        let config = {
-            headers: {
-                'x-api-key': iotEndpointApiKey
-            }
-        }
-        const response = await axios.post(iotEndpointUrl, {
-            listCurrentDevices : true,
-        }, config)
-        console.log("listCurrentDevices", response)
-        return response
-    }
-
-    async function sendRequest() {
+    async function sendRequest(requestBody) {
         const apiName = awsconfig.aws_cloud_logic_custom[0].name;
-        const path = '/items/{proxy+}';
-        const myInit = { // OPTIONAL
-            headers: {}, // OPTIONAL
-            response: true, // OPTIONAL (return the entire Axios response object instead of only response.data)
-            queryStringParameters: {  // OPTIONAL
-                name: 'param',
-            },
+        const path = '/';
+        const myInit = {
+            body: requestBody,
+            headers: {}
         };
         console.log("sendRequest")
         API
-            .get(apiName, path, myInit)
+            .post(apiName, path, myInit)
             .then(response => {
                 console.log("AWSRESPONSE", response)
             })
@@ -148,8 +104,31 @@ function App(props) {
             });
     }
 
+    async function updateDeviceConfiguration(item) {
+        let desiredDeviceState = {
+            "samplingRate": item["samplingRate"],
+            "photoWidth": 640,
+            "photoHeight": 480,
+            "beginHour": sleepTimeFrame.beginHour,
+            "endHour": sleepTimeFrame.endHour
+        }
+        const response = await sendRequest({
+            changeDeviceShadow : true,
+            state : desiredDeviceState,
+            thingName: item["deviceID"]
+        })
+        console.log(response)
+    }
+
+    async function listCurrentDevices() {
+        const response = await sendRequest({
+            listCurrentDevices : true,
+        })
+        console.log("listCurrentDevices", response)
+        return response
+    }
+
     async function updateDeviceShadows() {
-        await sendRequest()
         deviceData.map((item, index) => {
             if(item["stationName"] !== "" && item["deviceID"] !== "" && item["samplingRate"] !== ""){
                 console.log(item)
@@ -159,15 +138,11 @@ function App(props) {
         console.log("images", images);
         setPrice(20)
     }
+
     async function loadControlImages() {
-        let config = {
-            headers: {
-                'x-api-key': iotEndpointApiKey
-            }
-        }
-        const response = await axios.post(iotEndpointUrl, {
+        const response = await sendRequest({
             takePhoto : true
-        }, config)
+        })
         console.log(response)
     }
 
