@@ -2,23 +2,10 @@ AWSTemplateFormatVersion: 2010-09-09
 Transform: AWS::Serverless-2016-10-31
 Description: ''
 Parameters:
-  AmplifyUserPoolID:
-    Type: 'AWS::SSM::Parameter::Value<String>'
-    Default: adminAmplUserPoolID
   CognitoUserEmail:
     AllowedPattern: ^[0-9a-zA-Z-/_.@]*$
     Default: youremail@gmail.com
     Type: String
-  PresignedURLExpirationInSeconds:
-    AllowedPattern: ^[0-9]+$
-    Default: 120
-    Type: String
-  AmplifyAdminTableName:
-    Type: 'AWS::SSM::Parameter::Value<String>'
-    Default: peopleCountingAmplifyAdminTable
-  AmplifyAdminBucketName:
-    Type: 'AWS::SSM::Parameter::Value<String>'
-    Default: controlBucketNameAmplifyAdmin
   CameraTimezone:
     AllowedPattern: ^[0-9a-zA-Z-/]*$
     Default: America/Vancouver
@@ -449,7 +436,7 @@ Resources:
       Description: ''
       Environment:
           Variables:
-            ADMIN_TABLE_NAME: !Ref AmplifyAdminTableName
+            ADMIN_TABLE_NAME: '{{resolve:ssm:peopleCountingAmplifyAdminTable}}'
             DESTINATION_BUCKET: !Sub '${AWS::StackName}-${RekognitionBucketName}'
       FunctionName: lambda-transform-s3
       Handler: index.handler
@@ -465,7 +452,7 @@ Resources:
       Environment:
           Variables:
             CURRENT_COUNTS_TABLE_NAME: !Ref DynamoDBTableCurrentCounts
-            ADMIN_TABLE_NAME: !Ref AmplifyAdminTableName
+            ADMIN_TABLE_NAME: '{{resolve:ssm:peopleCountingAmplifyAdminTable}}'
             KINESIS_NAME: !Ref KinesisStream
             CAMERA_TIMEZONE: !Ref CameraTimezone
       FunctionName: lambda-rekognition
@@ -498,8 +485,8 @@ Resources:
         Variables:
           IOT_TOPIC: !Ref GetPreSignedUrlIoTTopicName
           IMAGE_CACHE_BUCKET_NAME : !Ref S3BucketImageProcessing
-          CONTROL_IMAGE_BUCKET_NAME : !Ref AmplifyAdminBucketName
-          PRESIGNED_URL_EXPIRATION_IN_SEC : !Ref PresignedURLExpirationInSeconds
+          CONTROL_IMAGE_BUCKET_NAME : '{{resolve:ssm:controlBucketNameAmplifyAdmin}}'
+          PRESIGNED_URL_EXPIRATION_IN_SEC : '120'
       FunctionName: lambda-presigned-url-handler
       Handler: index.lambda_handler
       MemorySize: 128
@@ -746,7 +733,7 @@ Resources:
       Type: "AWS::Cognito::UserPoolUser"
       Properties:
           Username: "administrator"
-          UserPoolId: !Ref AmplifyUserPoolID
+          UserPoolId: !Ref '{{resolve:ssm:adminAmplUserPoolID}}'
           UserAttributes:
             -
               Name: "email_verified"
