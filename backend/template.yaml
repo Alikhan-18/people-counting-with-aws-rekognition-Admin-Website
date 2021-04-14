@@ -744,8 +744,6 @@ Resources:
 
 
 Outputs:
-  Region:
-    Value: !Ref "AWS::Region"
   DeveloperEndpoint:
     Value: !Sub "https://${ApiGatewayRestApiDeveloperEndpoint}.execute-api.${AWS::Region}.amazonaws.com/${ApiGatewayStageDeveloperEndpoint}/getCounts"
   DeveloperEndpointAPIKeyID:
