@@ -60,7 +60,7 @@
         },
         "Role": {
           "Fn::GetAtt": [
-            "LambdaExecutionRole",
+            "IAMRoleIoT",
             "Arn"
           ]
         },
@@ -73,86 +73,17 @@
         }
       }
     },
-    "LambdaExecutionRole": {
+    "IAMRoleIoT": {
       "Type": "AWS::IAM::Role",
       "Properties": {
-        "RoleName": {
-          "Fn::If": [
-            "ShouldNotCreateEnvResources",
-            "peoplecounteradminLambdaRole5010635e",
-            {
-              "Fn::Join": [
-                "",
-                [
-                  "peoplecounteradminLambdaRole5010635e",
-                  "-",
-                  {
-                    "Ref": "env"
-                  }
-                ]
-              ]
-            }
-          ]
-        },
-        "AssumeRolePolicyDocument": {
-          "Version": "2012-10-17",
-          "Statement": [
-            {
-              "Effect": "Allow",
-              "Principal": {
-                "Service": [
-                  "lambda.amazonaws.com"
-                ]
-              },
-              "Action": [
-                "sts:AssumeRole"
-              ]
-            }
-          ]
-        }
-      }
-    },
-    "lambdaexecutionpolicy": {
-      "DependsOn": [
-        "LambdaExecutionRole"
-      ],
-      "Type": "AWS::IAM::Policy",
-      "Properties": {
-        "PolicyName": "lambda-execution-policy",
-        "Roles": [
-          {
-            "Ref": "LambdaExecutionRole"
-          }
-        ],
-        "PolicyDocument": {
-          "Version": "2012-10-17",
-          "Statement": [
-            {
-              "Effect": "Allow",
-              "Action": [
-                "logs:CreateLogGroup",
-                "logs:CreateLogStream",
-                "logs:PutLogEvents"
-              ],
-              "Resource": {
-                "Fn::Sub": [
-                  "arn:aws:logs:${region}:${account}:log-group:/aws/lambda/${lambda}:log-stream:*",
-                  {
-                    "region": {
-                      "Ref": "AWS::Region"
-                    },
-                    "account": {
-                      "Ref": "AWS::AccountId"
-                    },
-                    "lambda": {
-                      "Ref": "LambdaFunction"
-                    }
-                  }
-                ]
-              }
-            }
-          ]
-        }
+        "Path": "/",
+        "AssumeRolePolicyDocument": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"lambda.amazonaws.com\"},\"Action\":\"sts:AssumeRole\"}]}",
+        "MaxSessionDuration": 3600,
+        "ManagedPolicyArns": [
+          "arn:aws:iam::aws:policy/AWSIoTFullAccess",
+          "arn:aws:iam::aws:policy/AmazonDynamoDBReadOnlyAccess",
+          "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+        ]
       }
     }
   },
@@ -177,7 +108,7 @@
     },
     "LambdaExecutionRole": {
       "Value": {
-        "Ref": "LambdaExecutionRole"
+        "Ref": "IAMRoleIoT"
       }
     }
   }

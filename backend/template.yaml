@@ -31,10 +31,6 @@ Parameters:
     AllowedPattern: ^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$
     Default: imageprocessingbucket-people-counting
     Type: String
-  AdminIoTTopicName:
-    AllowedPattern: '^[0-9a-zA-Z-/]*$'
-    Default: takePhoto
-    Type: String
   GetPreSignedUrlIoTTopicName:
     AllowedPattern: '^[0-9a-zA-Z-/]*$'
     Default: s3-signed-url
@@ -238,148 +234,6 @@ Resources:
         RequesterPaysEnabled: false
         ResultConfiguration:
           OutputLocation: !Sub 's3://${S3BucketAnalytics}/'
-  ApiGatewayRestApiIoT:
-      Type: 'AWS::ApiGateway::RestApi'
-      Properties:
-        Name: !Sub 'ApiGatewayRestApiIoT-${AWS::StackName}'
-        ApiKeySourceType: HEADER
-        EndpointConfiguration:
-          Types:
-            - REGIONAL
-  ApiGatewayStageIoT:
-      DependsOn: ApiGatewayRestApiIoT
-      Type: 'AWS::ApiGateway::Stage'
-      Properties:
-        StageName: default
-        DeploymentId: !Ref ApiGatewayDeploymentIoT
-        RestApiId: !Ref ApiGatewayRestApiIoT
-        CacheClusterEnabled: false
-        TracingEnabled: false
-  ApiGatewayDeploymentIoT:
-      DependsOn:
-        - ApiGatewayMethodIoT1
-        - ApiGatewayMethodIoT2
-      Type: 'AWS::ApiGateway::Deployment'
-      Properties:
-        RestApiId: !Ref ApiGatewayRestApiIoT
-  ApiGatewayResourceIoT2:
-      Type: 'AWS::ApiGateway::Resource'
-      Properties:
-        RestApiId: !Ref ApiGatewayRestApiIoT
-        PathPart: sendtoiot
-        ParentId: !GetAtt ApiGatewayRestApiIoT.RootResourceId
-  ApiGatewayMethodIoT1:
-      Type: 'AWS::ApiGateway::Method'
-      Properties:
-        RestApiId: !Ref ApiGatewayRestApiIoT
-        ResourceId: !Ref ApiGatewayResourceIoT2
-        HttpMethod: ANY
-        AuthorizationType: NONE
-        ApiKeyRequired: true
-        RequestParameters: {}
-        MethodResponses:
-          - ResponseModels:
-              application/json: Empty
-            ResponseParameters:
-              method.response.header.Access-Control-Allow-Credentials: false
-              method.response.header.Access-Control-Allow-Headers: false
-              method.response.header.Access-Control-Allow-Methods: false
-              method.response.header.Access-Control-Allow-Origin: false
-            StatusCode: '200'
-          - ResponseParameters:
-              method.response.header.Access-Control-Allow-Credentials: false
-              method.response.header.Access-Control-Allow-Headers: false
-              method.response.header.Access-Control-Allow-Methods: false
-              method.response.header.Access-Control-Allow-Origin: false
-            StatusCode: '404'
-        Integration:
-          CacheNamespace: !Ref ApiGatewayResourceIoT2
-          ContentHandling: CONVERT_TO_TEXT
-          IntegrationHttpMethod: POST
-          IntegrationResponses:
-            - ResponseParameters:
-                method.response.header.Access-Control-Allow-Credentials: '''true'''
-                method.response.header.Access-Control-Allow-Headers: >-
-                  'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'
-                method.response.header.Access-Control-Allow-Methods: '''DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'''
-                method.response.header.Access-Control-Allow-Origin: '''*'''
-              ResponseTemplates: {}
-              SelectionPattern: ''
-              StatusCode: '200'
-          PassthroughBehavior: WHEN_NO_MATCH
-          TimeoutInMillis: 29000
-          Type: AWS
-          Uri: !Sub
-            - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${LambdaName}/invocations
-            - LambdaName : !Ref LambdaIoT
-  ApiGatewayMethodIoT2:
-      Type: 'AWS::ApiGateway::Method'
-      Properties:
-        RestApiId: !Ref ApiGatewayRestApiIoT
-        ResourceId: !Ref ApiGatewayResourceIoT2
-        HttpMethod: OPTIONS
-        AuthorizationType: NONE
-        ApiKeyRequired: false
-        RequestParameters: {}
-        MethodResponses:
-          - ResponseModels:
-              application/json: Empty
-            ResponseParameters:
-              method.response.header.Access-Control-Allow-Credentials: false
-              method.response.header.Access-Control-Allow-Headers: false
-              method.response.header.Access-Control-Allow-Methods: false
-              method.response.header.Access-Control-Allow-Origin: false
-            StatusCode: '200'
-          - ResponseParameters:
-              method.response.header.Access-Control-Allow-Credentials: false
-              method.response.header.Access-Control-Allow-Headers: false
-              method.response.header.Access-Control-Allow-Methods: false
-              method.response.header.Access-Control-Allow-Origin: false
-            StatusCode: '404'
-        Integration:
-          CacheNamespace: !Ref ApiGatewayResourceIoT2
-          IntegrationResponses:
-            - ResponseParameters:
-                method.response.header.Access-Control-Allow-Credentials: '''true'''
-                method.response.header.Access-Control-Allow-Headers: >-
-                  'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'
-                method.response.header.Access-Control-Allow-Methods: '''DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'''
-                method.response.header.Access-Control-Allow-Origin: '''*'''
-              ResponseTemplates: {}
-              StatusCode: '200'
-          PassthroughBehavior: WHEN_NO_MATCH
-          RequestTemplates:
-            application/json: '{"statusCode": 200}'
-          TimeoutInMillis: 29000
-          Type: MOCK
-  ApiKeyIoT:
-        Type: 'AWS::ApiGateway::ApiKey'
-        DependsOn:
-            - ApiGatewayDeploymentIoT
-            - ApiGatewayStageIoT
-        Properties:
-            Enabled: 'true'
-            StageKeys:
-                - RestApiId: !Ref ApiGatewayRestApiIoT
-                  StageName: "default"
-
-  usagePlanKeyIoT:
-        Type: 'AWS::ApiGateway::UsagePlanKey'
-        DependsOn:
-            - ApiKeyIoT
-            - ApiGatewayUsagePlanIoT
-        Properties:
-            KeyId: !Ref ApiKeyIoT
-            KeyType: API_KEY
-            UsagePlanId: !Ref ApiGatewayUsagePlanIoT
-
-  ApiGatewayUsagePlanIoT:
-        Type: "AWS::ApiGateway::UsagePlan"
-        Properties:
-            ApiStages:
-              -
-                ApiId: !Ref ApiGatewayRestApiIoT
-                Stage: !Ref ApiGatewayStageIoT
   ApiGatewayRestApiDeveloperEndpoint:
         Type: 'AWS::ApiGateway::RestApi'
         Properties:
@@ -534,17 +388,6 @@ Resources:
           - 'arn:aws:iam::aws:policy/AmazonS3FullAccess'
           - 'arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess'
           - 'arn:aws:iam::aws:policy/AmazonAthenaFullAccess'
-  IAMRoleIoT:
-    Type: 'AWS::IAM::Role'
-    Properties:
-      Path: /
-      AssumeRolePolicyDocument: >-
-        {"Version":"2012-10-17","Statement":[{"Effect":"Allow","Principal":{"Service":"lambda.amazonaws.com"},"Action":"sts:AssumeRole"}]}
-      MaxSessionDuration: 3600
-      ManagedPolicyArns:
-        - 'arn:aws:iam::aws:policy/AWSIoTFullAccess'
-        - 'arn:aws:iam::aws:policy/AmazonDynamoDBReadOnlyAccess'
-        - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
   IAMRolePresignedURLHandler:
     Type: 'AWS::IAM::Role'
     Properties:
@@ -646,21 +489,6 @@ Resources:
         Role: !GetAtt IAMRoleGetCounts.Arn
         Runtime: python3.8
         Timeout: 9
-  LambdaIoT:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: ./lambda-iot/
-      Description: ''
-      Environment:
-        Variables:
-          ADMIN_TABLE_NAME: !Ref AmplifyAdminTableName
-          IOT_TOPIC: !Ref AdminIoTTopicName
-      FunctionName: lambda-iot
-      Handler: index.lambda_handler
-      MemorySize: 128
-      Role: !GetAtt IAMRoleIoT.Arn
-      Runtime: python3.8
-      Timeout: 3
   LambdaPresignedURLHandler:
     Type: AWS::Serverless::Function
     Properties:
@@ -736,15 +564,6 @@ Resources:
       Principal: s3.amazonaws.com
       SourceArn: !Sub 'arn:aws:s3:::${AWS::StackName}-${RekognitionBucketName}'
       SourceAccount: !Ref AWS::AccountId
-  LambdaPermissionIoT:
-    Type: 'AWS::Lambda::Permission'
-    Properties:
-      Action: 'lambda:InvokeFunction'
-      FunctionName: !GetAtt LambdaIoT.Arn
-      Principal: apigateway.amazonaws.com
-      SourceArn: !Sub 
-        - arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGatewayName}/*/*/sendtoiot
-        - ApiGatewayName : !Ref ApiGatewayRestApiIoT
   LambdaPermissionPresignedURLHandler:
     Type: "AWS::Lambda::Permission"
     Properties:
@@ -944,8 +763,4 @@ Outputs:
     Value: !Sub "https://${ApiGatewayRestApiDeveloperEndpoint}.execute-api.${AWS::Region}.amazonaws.com/${ApiGatewayStageDeveloperEndpoint}/getCounts"
   DeveloperEndpointAPIKeyID:
     Value: !Ref ApiKeyDeveloperEndpoint
-  IoTEndpoint:
-    Value: !Sub "https://${ApiGatewayRestApiIoT}.execute-api.${AWS::Region}.amazonaws.com/${ApiGatewayStageIoT}/sendtoiot"
-  IoTAPIKeyID:
-    Value: !Ref ApiKeyIoT
 
