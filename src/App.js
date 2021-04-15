@@ -95,14 +95,7 @@ function App(props) {
             headers: {}
         };
         console.log("sendRequest")
-        API
-            .post(apiName, path, myInit)
-            .then(response => {
-                console.log("AWSRESPONSE", response)
-            })
-            .catch(error => {
-                console.log(error.response);
-            });
+        return await API.put(apiName, path, myInit);
     }
 
     async function updateDeviceConfiguration(item) {

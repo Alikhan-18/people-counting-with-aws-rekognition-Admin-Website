@@ -90,7 +90,7 @@ def handler(event, context):
     if "takePhoto" in event["body"]:
         takePhoto()
     if "changeDeviceShadow" in event["body"]:
-        update_shadow(event["body"])
+        update_shadow(json.loads(event["body"]))
     return {
         'statusCode': 200,
         "headers": {

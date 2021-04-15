@@ -28,10 +28,10 @@ class EditableTable extends React.Component {
     };
 
     async componentDidMount(props) {
-        console.log(this.props)
+        console.log("componentDidMount", this.props)
         const response = await this.props.getCurrentData()
-        console.log(response["data"]["body"])
-        const arr = response["data"]["body"]
+        console.log("componentDidMount", response["data"])
+        const arr = response["data"]
         if(arr === undefined){
             return
         }
