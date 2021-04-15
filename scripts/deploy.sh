@@ -40,3 +40,7 @@ stackName=$( aws resourcegroupstaggingapi get-resources --tag-filters Key=stackN
 echo "stackName : ${stackName}"
 endpoint=$(aws cloudformation describe-stacks --stack-name "${stackName}" | awk '"OutputValue": "https:')
 apikey=$(aws cloudformation describe-stacks --stack-name "${stackName}" | awk '/tom|jerry|vivek/')
+
+echo "endpoint : ${endpoint}"
+echo "apikey : ${apikey}"
+
