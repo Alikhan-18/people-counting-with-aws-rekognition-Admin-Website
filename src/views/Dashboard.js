@@ -317,7 +317,7 @@ function Dashboard(props) {
                                                                                     </Grid.Row>
                                                                                     <Grid.Row style={{paddingTop: "0px"}}>
                                                                                         <Grid.Column>
-                                                                                            <span>Monthly cost based on provided configuration : <strong>${price}</strong></span>
+                                                                                            <span style={{fontSize: "85%"}}>Estimated monthly cost based on provided configuration : <strong>${price}</strong></span>
                                                                                         </Grid.Column>
                                                                                     </Grid.Row>
                                                                                 </Grid>
