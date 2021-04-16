@@ -16,7 +16,11 @@ The **Deploy to Amplify Console** button will take you to your AWS console to de
     <img src="https://oneclick.amplifyapp.com/button.svg" alt="Deploy to Amplify Console">
 </a>
 
-Include screenshots
+1. <img src="../images/deployment2.png"  width="500"/>
+   
+2. <img src="../images/deployment3.png"  width="500"/>
+   
+3. <img src="../images/deployment1.png"  width="500"/>
 
 # Step 2: Back-end deployment
 
