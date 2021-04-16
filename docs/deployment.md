@@ -64,7 +64,7 @@ Configuring SAM deploy
         SAM configuration environment [default]:
 ```
 
-3. The terminal output will have the Api Key and Endpoint URL which you will use to connect the user frontend to the backend. 
+3. The terminal output will have the Api Key and HTTP Endpoint URL which you will use to connect the user frontend to the backend. 
    No further action is required for the administrator website since it gets connected to the backend automatically.
    
 ```bash

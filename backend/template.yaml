@@ -724,7 +724,7 @@ Resources:
   CognitoUserPoolUser:
       Type: "AWS::Cognito::UserPoolUser"
       Properties:
-          Username: "administrator"
+          Username: !Ref CognitoUserEmail
           UserPoolId: '{{resolve:ssm:adminAmplUserPoolID:1}}'
           UserAttributes:
             -
