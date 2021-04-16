@@ -1,18 +1,14 @@
 #!/bin/bash
 
-# The name of the environment you chose during amplify deployment
-envName=$1
-echo "envName : ${envName}"
-
 # Create SSM parameters to prepare for backend deployment
 # These parameters are necessary for the backend stack
-admintableName=$( aws resourcegroupstaggingapi get-resources --tag-filters Key=user:Application,Values="peopleCounterAdmin" Key=user:Stack,Values=${envName} --resource-type-filters dynamodb --query 'ResourceTagMappingList[*].[ResourceARN]' --output text | awk -F'table/' '{print $2}')
+admintableName=$( aws resourcegroupstaggingapi get-resources --tag-filters Key=user:Application,Values="peopleCounterAdmin" --resource-type-filters dynamodb --query 'ResourceTagMappingList[*].[ResourceARN]' --output text | awk -F'table/' '{print $2}')
 echo "Parameter1 : ${admintableName}"
 aws ssm put-parameter \
     --name "peopleCountingAmplifyAdminTable" \
     --type "String" \
     --value "${admintableName}"
-controlBucketName=$( aws resourcegroupstaggingapi get-resources --tag-filters Key=user:Application,Values="peopleCounterAdmin" Key=aws:cloudformation:logical-id,Values="S3Bucket" Key=user:Stack,Values=${envName} --resource-type-filters s3 --query 'ResourceTagMappingList[*].[ResourceARN]' --output text | awk -F':::' '{print $2}')
+controlBucketName=$( aws resourcegroupstaggingapi get-resources --tag-filters Key=user:Application,Values="peopleCounterAdmin" Key=aws:cloudformation:logical-id,Values="S3Bucket" --resource-type-filters s3 --query 'ResourceTagMappingList[*].[ResourceARN]' --output text | awk -F':::' '{print $2}')
 aws ssm put-parameter \
     --name "controlBucketNameAmplifyAdmin" \
     --type "String" \
