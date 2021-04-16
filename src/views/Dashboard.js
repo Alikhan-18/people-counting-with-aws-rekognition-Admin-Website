@@ -13,15 +13,11 @@ import EditableTable from "../components/EditableTable";
 import "../App.css";
 
 const MAX_ZONES = 2
-const MAX_CAMERAS = 10
+const MAX_CAMERAS = 15
 
 function Dashboard(props) {
 
     const [images, setImages] = useState([])
-    const [x, setX] = useState(-1)
-    const [y, setY] = useState(-1)
-    const [curX, setCurX] = useState(-1)
-    const [curY, setCurY] = useState(-1)
     const [i, setI] = useState(1)
     const [j, setJ] = useState(1)
     const [coords, setCoords] = useState([...Array(MAX_CAMERAS)].map(e => Array(MAX_ZONES)))
@@ -112,32 +108,24 @@ function Dashboard(props) {
     }
 
     const onRectSelected = (rect) => {
-        setX(rect.x)
-        setY(rect.y)
-        setCurX(rect.xCur)
-        setCurY(rect.yCur)
         setCoords(coords.map((item, index) => {
             if(index === (i-1))
                 item[j-1] = [rect.x,rect.y,rect.xCur,rect.yCur]
             console.log("here", item)
             return item
         }))
-        console.log(coords[0][0])
+        console.log("onRectSelected : ", coords[0][0])
     };
 
     const onTableUpdate = (tableData) => {
+        return 
         setDeviceData(tableData)
         console.log("updated Device Stata matrix")
     }
 
-    async function updateDB() {
-        let img = document.getElementById('image1');
-        let width = img.clientWidth;
-        let height = img.clientHeight;
-        console.log(width, height)
+    function updateZoneChoices() {
         let zoneChoices = []
-        if(imageNames.length !== 0)
-            zoneChoices = [imageNames.length - 1].map(e => Array(MAX_ZONES))
+        zoneChoices = [imageNames.length - 1].map(e => Array(MAX_ZONES))
         coords.map((item, index) => {
             item.map((it, ind) => {
                 zoneChoices[index][ind] = {
@@ -151,9 +139,16 @@ function Dashboard(props) {
                 }
             })
         })
+        return zoneChoices
+    }
+
+    async function updateCameraChoices(zoneChoices) {
+        let img = document.getElementById('image1');
+        let width = img.clientWidth;
+        let height = img.clientHeight;
+        console.log(width, height)
         let cameraChoices = []
-        if(imageNames.length !== 0)
-            cameraChoices = new Array(imageNames.length - 1)
+        cameraChoices = new Array(imageNames.length - 1)
         await Promise.all(zoneChoices.map(async (item,index) => {
             let logicalName = ""
             deviceData.map((item,index) => {
@@ -188,7 +183,13 @@ function Dashboard(props) {
             }
         }))
         console.log(cameraChoices)
+    }
 
+    async function updateDB() {
+        if(imageNames.length !== 0)
+            return
+        let zoneChoices = updateZoneChoices()
+        await updateCameraChoices(zoneChoices)
     }
 
     const textFieldOnChange = (event) => {
@@ -203,7 +204,7 @@ function Dashboard(props) {
                 endHour : sleepTimeFrame.endHour
             })
         }
-        console.log(sleepTimeFrame)
+        console.log("sleepTimeFrame : ", sleepTimeFrame)
     };
 
     return (
