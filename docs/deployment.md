@@ -9,13 +9,15 @@ Before you deploy, you must have the following in place:
 
 # Step 1: Front-end deployment
 
-The **Deploy to Amplify Console** button will take you to your AWS console to deploy the front-end solution. Make sure you are connecting to the same AWS Account you deployed the backend solutio.
+The **Deploy to Amplify Console** button will take you to your AWS console to deploy the front-end solution.
 
 <a href="https://console.aws.amazon.com/amplify/home#/deploy?repo=https://github.com/UBC-CIC/people-counting-with-aws-rekognition-Admin-Website">
     <img src="https://oneclick.amplifyapp.com/button.svg" alt="Deploy to Amplify Console">
 </a>
 
 # Step 2: Back-end deployment
+
+Make sure to deploy the backend in the same account as the front-end from the previous step.
 
 1. Go to the **scripts** directory and run the [deploy.sh](../scripts/deploy.sh) script with the name of the amplify environment you defined (in step 1.2) as a parameter.
 
