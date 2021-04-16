@@ -6,6 +6,7 @@ Before you deploy, you must have the following in place:
 *  [Amplify CLI installed and configured](https://aws-amplify.github.io/docs/cli-toolchain/quickstart#quickstart) 
 *  [AWS CLI installed and configured](https://aws.amazon.com/cli/) 
 *  [SAM CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html)
+*  [Python 3.6 or greater](https://www.python.org/downloads/)
 
 # Step 1: Front-end deployment
 
