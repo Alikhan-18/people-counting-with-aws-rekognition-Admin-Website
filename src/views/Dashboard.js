@@ -89,10 +89,29 @@ function Dashboard(props) {
         return response
     }
 
-    async function updateDeviceShadows() {
+    function calculateCost() {
+        let cost = 11.16 //fixed cost from kinesis
+        sleepTimeFrame
         deviceData.map((item, index) => {
             if(
                 item !== {}
+                && item !== undefined
+                && item["stationName"] !== ""
+                && item["deviceID"] !== ""
+                && item["samplingRate"] !== ""
+            ) {
+                cost += (60 / item["samplingRate"]) *  * 60 * 0.001 * 31 * 2 // most of the cost comes from AWS Rekognition
+            }
+        })
+        setPrice(Math.round(cost))
+    }
+
+    async function updateDeviceShadows() {
+        console.log(deviceData)
+        deviceData.map((item, index) => {
+            if(
+                item !== {}
+                && item !== undefined
                 && item["stationName"] !== ""
                 && item["deviceID"] !== ""
                 && item["samplingRate"] !== ""
@@ -102,8 +121,10 @@ function Dashboard(props) {
             }
         })
         console.log("images", images);
-        setPrice(20)
+        calculateCost()
     }
+
+
 
     async function loadControlImages() {
         const response = await sendRequest({
@@ -123,7 +144,6 @@ function Dashboard(props) {
     };
 
     const onTableUpdate = (tableData) => {
-        return
         setDeviceData(tableData)
         console.log("updated Device Stata matrix")
     }
@@ -152,8 +172,9 @@ function Dashboard(props) {
         let width = img.clientWidth;
         let height = img.clientHeight;
         console.log(width, height)
+        console.log(imageNames.length)
         let cameraChoices = []
-        cameraChoices = new Array(imageNames.length - 1)
+        cameraChoices = [imageNames.length - 1]
         await Promise.all(zoneChoices.map(async (item,index) => {
             let logicalName = ""
             deviceData.map((item,index) => {
@@ -191,7 +212,7 @@ function Dashboard(props) {
     }
 
     async function updateDB() {
-        if(imageNames.length !== 0)
+        if(imageNames.length === 0)
             return
         let zoneChoices = updateZoneChoices()
         await updateCameraChoices(zoneChoices)
@@ -292,7 +313,7 @@ function Dashboard(props) {
                                                                                     </Grid.Row>
                                                                                     <Grid.Row style={{paddingTop: "0px"}}>
                                                                                         <Grid.Column>
-                                                                                            <span style={{fontSize: "85%"}}>Estimated monthly cost based on provided configuration : <strong>${price}</strong></span>
+                                                                                            <span style={{fontSize: "85%"}}>Estimated monthly cost based on provided configuration : <strong>{price} USD</strong></span>
                                                                                         </Grid.Column>
                                                                                     </Grid.Row>
                                                                                 </Grid>
