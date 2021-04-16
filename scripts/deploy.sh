@@ -46,7 +46,7 @@ stackName=$( aws resourcegroupstaggingapi get-resources --tag-filters Key=stackN
 echo "stackName : ${stackName}"
 
 printf "\n\n"
-echo "------------------------ Outputs ------------------------"
+echo "------------------------ Use The Outputs Below ------------------------"
 aws cloudformation describe-stacks --stack-name "${stackName}" |python3 -c "
 class bcolors:
     OKCYAN = '\033[96m'
@@ -55,8 +55,23 @@ import sys,json;
 jsonObj = json.load(sys.stdin)
 print(bcolors.OKCYAN + jsonObj['Stacks'][0]['Outputs'][0]['OutputKey']
 + \" : \" + jsonObj['Stacks'][0]['Outputs'][0]['OutputValue'] + bcolors.ENDC)
-print(bcolors.OKCYAN + jsonObj['Stacks'][0]['Outputs'][1]['OutputKey'] +
-\" : \" + jsonObj['Stacks'][0]['Outputs'][1]['OutputValue'] + bcolors.ENDC)
+"
+apikeyID=$(aws cloudformation describe-stacks --stack-name "${stackName}" |python3 -c "
+class bcolors:
+    OKCYAN = '\033[96m'
+    ENDC = '\033[0m'
+import sys,json;
+jsonObj = json.load(sys.stdin)
+print(jsonObj['Stacks'][0]['Outputs'][1]['OutputValue'])
+"
+)
+aws apigateway get-api-key --api-key "${apikeyID}" --include-value |python3 -c "
+class bcolors:
+    OKCYAN = '\033[96m'
+    ENDC = '\033[0m'
+import sys,json;
+jsonObj = json.load(sys.stdin)
+print(bcolors.OKCYAN + \"HTTPEndpointAPIKey : \" + jsonObj['value'] + bcolors.ENDC)
 "
 printf "\n\n"
 

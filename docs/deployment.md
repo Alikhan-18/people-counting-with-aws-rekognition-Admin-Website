@@ -17,6 +17,7 @@ The **Deploy to Amplify Console** button will take you to your AWS console to de
 </a>
 
 Include screenshots
+
 # Step 2: Back-end deployment
 
 Make sure to deploy the backend in the same account as the front-end from the previous step.
@@ -62,4 +63,8 @@ Configuring SAM deploy
 3. The terminal output will have the Api Key and Endpoint URL which you will use to connect the user frontend to the backend. 
    No further action is required for the administrator website since it gets connected to the backend automatically.
    
-Include screenshot
+```bash
+------------------------ Use The Outputs Below ------------------------
+HTTPEndpointURL : yourendpointURL
+HTTPEndpointAPIKey : yourAPIKey
+```
