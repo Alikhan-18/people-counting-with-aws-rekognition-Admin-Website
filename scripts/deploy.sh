@@ -46,7 +46,7 @@ stackName=$( aws resourcegroupstaggingapi get-resources --tag-filters Key=stackN
 echo "stackName : ${stackName}"
 
 printf "\n\n"
-echo "------------------------ Use The Outputs Below ------------------------"
+echo "------------------------ Use The Following Values To Get Counts ------------------------"
 aws cloudformation describe-stacks --stack-name "${stackName}" |python3 -c "
 class bcolors:
     OKCYAN = '\033[96m'

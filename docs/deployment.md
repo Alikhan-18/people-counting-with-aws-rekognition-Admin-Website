@@ -64,7 +64,7 @@ Configuring SAM deploy
    No further action is required for the administrator website since it gets connected to the backend automatically.
    
 ```bash
------------------------- Use The Outputs Below ------------------------
+------------------------ Use The Following Values To Get Counts ------------------------
 HTTPEndpointURL : yourendpointURL
 HTTPEndpointAPIKey : yourAPIKey
 ```
