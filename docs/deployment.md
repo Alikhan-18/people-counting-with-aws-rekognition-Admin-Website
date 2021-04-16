@@ -9,108 +9,12 @@ Before you deploy, you must have the following in place:
 
 # Step 1: Front-end deployment
 
-1.  Fork and clone this repository.
-    If you haven't configured Amplify before, configure the Amplify CLI in your terminal as follows. Choose the region you want to deploy the solution in:
-    
-```bash
-amplify configure
-```
+The **Deploy to Amplify Console** button will take you to your AWS console to deploy the front-end solution. Make sure you are connecting to the same AWS Account you deployed the backend solutio.
 
-You will see the following prompt: 
+<a href="https://console.aws.amazon.com/amplify/home#/deploy?repo=https://github.com/UBC-CIC/people-counting-with-aws-rekognition-Admin-Website">
+    <img src="https://oneclick.amplifyapp.com/button.svg" alt="Deploy to Amplify Console">
+</a>
 
-```bash
-amplify configure
-Follow these steps to set up access to your AWS account:
-
-Sign in to your AWS administrator account:
-https://console.aws.amazon.com/
-Press Enter to continue
-
-Specify the AWS Region
-? region:  us-west-2
-Specify the username of the new IAM user:
-? user name:  yourusername
-Complete the user creation using the AWS console
-https://console.aws.amazon.com/iam/home?region=us-west-2#/users$new?step=final&accessKey&userNames=yourusername&permissionType=policies&policies=arn:aws:iam::aws:policy%2FAdministratorAccess
-Press Enter to continue
-
-Enter the access key of the newly created user:
-? accessKeyId:  ****************
-? secretAccessKey:  *******************************
-This would update/create the AWS Profile in your local machine
-? Profile Name:  yourprofilename
-
-Successfully set up the new user.
-```
-
-2.  In a terminal from the project root directory, select the name of your environment and the **profile name** for the IAM user you configured in the previous step. Select default for everything else.
-
-```bash
-amplify init
-```
-
-You will see this prompt:
-
-```bash
-amplify init
-
-╭─────────────────────────────────────────────╮
-│                                             │
-│      Update available 4.41.0 → 4.46.1       │
-│   Run npm i -g @aws-amplify/cli to update   │
-│                                             │
-╰─────────────────────────────────────────────╯
-
-Note: It is recommended to run this command from the root of your app directory
-? Enter a name for the environment prod
-? Choose your default editor: Visual Studio Code
-Using default provider  awscloudformation
-
-For more information on AWS Profiles, see:
-https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-profiles.html
-
-? Do you want to use an AWS profile? Yes
-? Please choose the profile you want to use yourprofilename
-```
-3.  Deploy the resource to your AWS Account using the following command:
-
-```bash
-amplify push
-```
-
-Select all defaults. You will see the following:
-
-```bash
-
-✔ Successfully pulled backend environment prod from the cloud.
-
-Current Environment: prod
-
-| Category | Resource name      | Operation | Provider plugin   |
-| -------- | ------------------ | --------- | ----------------- |
-| Auth     | admintest172822e06 | Create    | awscloudformation |
-| Api      | adminapi1          | Create    | awscloudformation |
-| Storage  | s357dec08a         | Create    | awscloudformation |
-? Are you sure you want to continue? Yes
-
-GraphQL schema compiled successfully.
-
-Edit your schema at /Users/arman/Desktop/people-counting-with-aws-rekognition-Admin-Website/amplify/backend/api/adminapi1/schema.graphql or place .graphql files in a directory at /Users/arman/Desktop/people-counting-with-aws-rekognition-Admin-Website/amplify/backend/api/adminapi1/schema
-? Do you want to generate code for your newly created GraphQL API Yes
-? Choose the code generation language target javascript
-? Enter the file name pattern of graphql queries, mutations and subscriptions src/graphql/**/*.js
-? Do you want to generate/update all possible GraphQL operations - queries, mutations and subscriptions Yes
-? Enter maximum statement depth [increase from default if your schema is deeply nested] 2
-```
-
-4. Log into the AWS Management Console.
-   
-5. Select AWS Amplify and select the peopleCounterAdmin project.
-
-6. At the Frontend environments tab connect to your github account pointing to the forked repo. 
-   More information is available at https://docs.aws.amazon.com/amplify/latest/userguide/deploy-backend.html.
-
-Include screenshot
 # Step 2: Back-end deployment
 
 1. Go to the **scripts** directory and run the [deploy.sh](../scripts/deploy.sh) script with the name of the amplify environment you defined (in step 1.2) as a parameter.
