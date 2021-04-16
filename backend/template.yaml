@@ -736,8 +736,8 @@ Resources:
 
 
 Outputs:
-  DeveloperEndpoint:
+  HTTPEndpointURL:
     Value: !Sub "https://${ApiGatewayRestApiDeveloperEndpoint}.execute-api.${AWS::Region}.amazonaws.com/${ApiGatewayStageDeveloperEndpoint}/getCounts"
-  DeveloperEndpointAPIKeyID:
+  HTTPEndpointAPIKeyID:
     Value: !Ref ApiKeyDeveloperEndpoint
 
