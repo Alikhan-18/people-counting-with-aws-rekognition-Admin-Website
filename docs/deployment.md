@@ -15,6 +15,7 @@ The **Deploy to Amplify Console** button will take you to your AWS console to de
     <img src="https://oneclick.amplifyapp.com/button.svg" alt="Deploy to Amplify Console">
 </a>
 
+Include screenshots
 # Step 2: Back-end deployment
 
 Make sure to deploy the backend in the same account as the front-end from the previous step.
@@ -32,9 +33,7 @@ chmod a+x deploy.sh
     
 * **CognitoUserEmail** : use a valid email address. You will receive the login credentials for the front-end application on this
 email address.
-    
-* **CameraTimezone** : Select the timezone for your solution. 
-    
+  
 * Select all defaults for everything else (Press enter to select default).
 
 ```bash
@@ -46,24 +45,17 @@ Configuring SAM deploy
         Setting default arguments for 'sam deploy'
         =========================================
         Stack Name [sam-app]: yourstackname
-        AWS Region [us-east-1]: 
-        Parameter AmplifyUserPoolID [adminAmplUserPoolID]: 
+        AWS Region [us-west-2]: 
         Parameter CognitoUserEmail [youremail@gmail.com]: 
-        Parameter PresignedURLExpirationInSeconds [120]: 
-        Parameter AmplifyAdminTableName [peopleCountingAmplifyAdminTable]: 
-        Parameter AmplifyAdminBucketName [controlBucketNameAmplifyAdmin]: 
-        Parameter CameraTimezone [America/Vancouver]: 
         Parameter RekognitionBucketName [rekognitionbucket-people-counting]: 
         Parameter ImageProcessingBucketName [imageprocessingbucket-people-counting]: 
-        Parameter AdminIoTTopicName [takePhoto]: 
-        Parameter GetPreSignedUrlIoTTopicName [s3-signed-url]: 
         #Shows you resources changes to be deployed and require a 'Y' to initiate deploy
-        Confirm changes before deploy [y/N]:  
+        Confirm changes before deploy [y/N]: 
         #SAM needs permission to be able to create roles to connect to the resources in your template
         Allow SAM CLI IAM role creation [Y/n]: 
         Save arguments to configuration file [Y/n]: 
         SAM configuration file [samconfig.toml]: 
-        SAM configuration environment [default]: 
+        SAM configuration environment [default]:
 ```
 
 3. The terminal output will have the Api Key and Endpoint URL which you will use to connect the user frontend to the backend. 
