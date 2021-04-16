@@ -41,7 +41,7 @@ cd ../..
 sam build
 sam deploy -g --capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM --tags stackName=peopleCountingStack
 
-# Get the api keys and the urls for admin and user websites
+# Get the api key and the url to access the backend
 stackName=$( aws resourcegroupstaggingapi get-resources --tag-filters Key=stackName,Values="peopleCountingStack" --resource-type-filters cloudformation --query 'ResourceTagMappingList[*].[ResourceARN]' --output text)
 echo "stackName : ${stackName}"
 
