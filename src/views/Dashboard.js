@@ -21,7 +21,7 @@ function Dashboard(props) {
     const [i, setI] = useState(1)
     const [j, setJ] = useState(1)
     const [coords, setCoords] = useState([...Array(MAX_CAMERAS)].map(e => Array(MAX_ZONES)))
-    const [deviceData, setDeviceData] = useState([...Array(MAX_CAMERAS)].map(e => Array(3)))
+    const [deviceData, setDeviceData] = useState([...Array(MAX_CAMERAS)].map(e => {}))
     const [sleepTimeFrame, setSleepTimeFrame] = useState({beginHour : 8, endHour : 22});
     const [price, setPrice] = useState(0)
     const [imageNames, setImageNames] = useState([])
@@ -91,7 +91,12 @@ function Dashboard(props) {
 
     async function updateDeviceShadows() {
         deviceData.map((item, index) => {
-            if(item["stationName"] !== "" && item["deviceID"] !== "" && item["samplingRate"] !== ""){
+            if(
+                item !== {}
+                && item["stationName"] !== ""
+                && item["deviceID"] !== ""
+                && item["samplingRate"] !== ""
+            ) {
                 console.log(item)
                 updateDeviceConfiguration(item)
             }
@@ -118,7 +123,7 @@ function Dashboard(props) {
     };
 
     const onTableUpdate = (tableData) => {
-        return 
+        return
         setDeviceData(tableData)
         console.log("updated Device Stata matrix")
     }
