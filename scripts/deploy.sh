@@ -8,12 +8,22 @@ aws ssm put-parameter \
     --name "peopleCountingAmplifyAdminTable" \
     --type "String" \
     --value "${admintableName}"
+
 controlBucketName=$( aws resourcegroupstaggingapi get-resources --tag-filters Key=user:Application,Values="peopleCounterAdmin" Key=aws:cloudformation:logical-id,Values="S3Bucket" --resource-type-filters s3 --query 'ResourceTagMappingList[*].[ResourceARN]' --output text | awk -F':::' '{print $2}')
+echo "Parameter2 : ${controlBucketName}"
 aws ssm put-parameter \
     --name "controlBucketNameAmplifyAdmin" \
     --type "String" \
     --value "${controlBucketName}"
-echo "Parameter2 : ${controlBucketName}"
+
+
+timezone=$(curl https://ipapi.co/timezone)
+echo "Parameter3 : ${timezone}"
+aws ssm put-parameter \
+    --name "peopleCountingTimezone" \
+    --type "String" \
+    --value "${timezone}"
+
 
 # Create an IoT thing for RaspberryPi deployment
 aws iot create-thing-type --thing-type-name "RPI"

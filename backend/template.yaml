@@ -6,10 +6,6 @@ Parameters:
     AllowedPattern: ^[0-9a-zA-Z-/_.@]*$
     Default: youremail@gmail.com
     Type: String
-  CameraTimezone:
-    AllowedPattern: ^[0-9a-zA-Z-/]*$
-    Default: America/Vancouver
-    Type: String
   RekognitionBucketName:
     AllowedPattern: ^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$
     Default: rekognitionbucket-people-counting
@@ -17,10 +13,6 @@ Parameters:
   ImageProcessingBucketName:
     AllowedPattern: ^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$
     Default: imageprocessingbucket-people-counting
-    Type: String
-  GetPreSignedUrlIoTTopicName:
-    AllowedPattern: '^[0-9a-zA-Z-/]*$'
-    Default: s3-signed-url
     Type: String
 Resources:
   GlueTable:
@@ -454,7 +446,7 @@ Resources:
             CURRENT_COUNTS_TABLE_NAME: !Ref DynamoDBTableCurrentCounts
             ADMIN_TABLE_NAME: '{{resolve:ssm:peopleCountingAmplifyAdminTable:1}}'
             KINESIS_NAME: !Ref KinesisStream
-            CAMERA_TIMEZONE: !Ref CameraTimezone
+            CAMERA_TIMEZONE: '{{resolve:ssm:peopleCountingTimezone:1}}'
       FunctionName: lambda-rekognition
       Handler: index.lambda_handler
       MemorySize: 128
@@ -483,7 +475,7 @@ Resources:
       Description: ''
       Environment:
         Variables:
-          IOT_TOPIC: !Ref GetPreSignedUrlIoTTopicName
+          IOT_TOPIC: s3-signed-url
           IMAGE_CACHE_BUCKET_NAME : !Ref S3BucketImageProcessing
           CONTROL_IMAGE_BUCKET_NAME : '{{resolve:ssm:controlBucketNameAmplifyAdmin:1}}'
           PRESIGNED_URL_EXPIRATION_IN_SEC : '120'
@@ -563,7 +555,7 @@ Resources:
     Properties:
       TopicRulePayload:
           RuleDisabled: 'false'
-          Sql: !Sub 'SELECT * FROM "${GetPreSignedUrlIoTTopicName}"'
+          Sql: SELECT * FROM 's3-signed-url'
           Actions:
               - Lambda:
                     FunctionArn: !Sub "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${LambdaPresignedURLHandler}"

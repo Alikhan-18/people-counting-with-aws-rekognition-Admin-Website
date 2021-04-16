@@ -19,11 +19,11 @@ The **Deploy to Amplify Console** button will take you to your AWS console to de
 
 Make sure to deploy the backend in the same account as the front-end from the previous step.
 
-1. Go to the **scripts** directory and run the [deploy.sh](../scripts/deploy.sh) script with the name of the amplify environment you defined (in step 1.2) as a parameter.
+1. Go to the **scripts** directory and run the [deploy.sh](../scripts/deploy.sh) script.
 
 ```bash
 chmod a+x deploy.sh 
-./deploy.sh nameOfYourAmplifyEnvironment
+./deploy.sh
 ```
 
 2. You will see the prompt shown below. Here are the instructions on what you should enter:
