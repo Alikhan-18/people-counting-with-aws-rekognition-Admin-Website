@@ -18,7 +18,7 @@ const MAX_CAMERAS = 15
 function Dashboard(props) {
 
     const [images, setImages] = useState([])
-    const [i, setI] = useState(1)
+    const [i, setI] = useState(0)
     const [j, setJ] = useState(1)
     const [coords, setCoords] = useState([...Array(MAX_CAMERAS)].map(e => Array(MAX_ZONES)))
     const [deviceData, setDeviceData] = useState([...Array(MAX_CAMERAS)].map(e => {}))
@@ -163,7 +163,7 @@ function Dashboard(props) {
 
     const onRectSelected = (rect) => {
         setCoords(coords.map((item, index) => {
-            if(index === (i-1))
+            if(index === i)
                 item[j-1] = [rect.x,rect.y,rect.xCur,rect.yCur]
             console.log("here", item)
             return item
@@ -374,7 +374,7 @@ function Dashboard(props) {
                                             </Grid.Row>
                                             <Grid.Row style={{paddingTop: "0px"}}>
                                                 <Grid.Column verticalAlign={"middle"} textAlign={"center"}>
-                                                    <div><p><h3>{imageNames[i-1]} Zone {j}</h3></p></div>
+                                                    <div><p><h3>{imageNames[i]} Zone {j}</h3></p></div>
                                                     <Button color={"grey"} onClick={() => {updateDB()}}>Update DB</Button>
                                                 </Grid.Column>
                                             </Grid.Row>
@@ -383,7 +383,7 @@ function Dashboard(props) {
                                                     <div className={"image-box"} style={{display: "inline-block"}}>
                                                         <div id="rector" className="relative">
                                                             <div className="absoluteCanvas">
-                                                                <img id="image1" src={images[i-1]} style={{
+                                                                <img id="image1" src={images[i]} style={{
                                                                     width: "640",
                                                                     height: "480",
                                                                 }}/>
@@ -393,7 +393,7 @@ function Dashboard(props) {
                                                         <div>
                                                             <div className='container' >
                                                                 <button id="btn1" onClick={() => {
-                                                                    if(i > 1)
+                                                                    if(i > 0)
                                                                         setI(i - 1)}
                                                                 }>Prev Camera</button>
                                                                 <button id="btn2" onClick={() => {
