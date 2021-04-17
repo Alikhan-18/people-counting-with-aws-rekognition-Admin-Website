@@ -29,7 +29,10 @@ def update_shadow(event):
     print(res_payload)
 
 def get_thing_state(thingName):
-    response = iotdataclient.get_thing_shadow(thingName=thingName)
+    try:
+        response = iotdataclient.get_thing_shadow(thingName=thingName)
+    except:
+        return {}
     streamingBody = response["payload"]
     jsonState = json.loads(streamingBody.read())
     if "reported" not in jsonState["state"]:
