@@ -172,16 +172,17 @@ function Dashboard(props) {
 
     const onTableUpdate = (tableData) => {
         setDeviceData(tableData)
-        console.log("updated Device Stata matrix")
+        console.log("onTableUpdate", tableData)
     }
 
     function updateZoneChoices() {
         let zoneChoices = []
-        zoneChoices = [imageNames.length - 1].map(e => Array(MAX_ZONES))
+        zoneChoices = [imageNames.length].map(e => Array(MAX_ZONES))
         console.log("updateZoneChoices",coords)
         coords.map((item, index) => {
             console.log("updateZoneChoices",item,index)
             if(index < imageNames.length) {
+                console.log("updateZoneChoices1",item,index)
                 item.map((it, ind) => {
                     zoneChoices[index][ind] = {
                         X1: it[0],
@@ -209,6 +210,7 @@ function Dashboard(props) {
         await Promise.all(zoneChoices.map(async (item,index) => {
             let logicalName = ""
             deviceData.map((item,index) => {
+                console.log("updateCameraChoices", item, imageNames[index])
                 if(item["deviceID"] === imageNames[index]){
                     logicalName = item["stationName"]
                 }
