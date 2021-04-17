@@ -22,7 +22,7 @@ function Dashboard(props) {
     const [j, setJ] = useState(1)
     const [coords, setCoords] = useState([...Array(MAX_CAMERAS)].map(e => Array(MAX_ZONES)))
     const [deviceData, setDeviceData] = useState([...Array(MAX_CAMERAS)].map(e => {}))
-    const [sleepTimeFrame, setSleepTimeFrame] = useState({beginHour : 8, endHour : 22});
+    const [sleepTimeFrame, setSleepTimeFrame] = useState({beginTime : "08:00", endTime : "22:00"});
     const [price, setPrice] = useState(0)
     const [imageNames, setImageNames] = useState([])
 
@@ -70,8 +70,8 @@ function Dashboard(props) {
             "samplingRate": item["samplingRate"],
             "photoWidth": 640,
             "photoHeight": 480,
-            "beginHour": sleepTimeFrame.beginHour,
-            "endHour": sleepTimeFrame.endHour
+            "beginHour": sleepTimeFrame.beginTime,
+            "endHour": sleepTimeFrame.endTime
         }
         const response = await sendRequest({
             changeDeviceShadow : true,
@@ -89,9 +89,36 @@ function Dashboard(props) {
         return response
     }
 
+    /**
+     * @returns {numberOfSeconds between beginTime and endTime of the Time Frame}
+     */
+    function timeFrameCalc() {
+        let beginH = parseInt(sleepTimeFrame.beginTime.split(":")[0])
+        let beginM = parseInt(sleepTimeFrame.beginTime.split(":")[1])
+        let endH = parseInt(sleepTimeFrame.endTime.split(":")[0])
+        let endM = parseInt(sleepTimeFrame.endTime.split(":")[1])
+        console.log(beginH, beginM, endH, endM)
+        let beginD = new Date();
+        beginD.setMinutes(beginM)
+        beginD.setHours(beginH)
+        let endD = new Date();
+        endD.setMinutes(endM)
+        endD.setHours(endH)
+        let endUnixTime = endD.getTime();
+        let beginUnixTime = beginD.getTime();
+        console.log(beginUnixTime,  endUnixTime)
+        return (Math.round((endUnixTime - beginUnixTime)/1000))
+    }
+
+    /**
+     * Provides an estimate of the cost of the setup.
+     * Considers number of active cameras, time frame, sampling rate.
+     * Assumes number of zones for each camera is 2
+     */
     function calculateCost() {
         let cost = 11.16 //fixed cost from kinesis
-        sleepTimeFrame
+        let totalTimePerDayInSeconds = timeFrameCalc()
+        console.log(totalTimePerDayInSeconds)
         deviceData.map((item, index) => {
             if(
                 item !== {}
@@ -100,7 +127,8 @@ function Dashboard(props) {
                 && item["deviceID"] !== ""
                 && item["samplingRate"] !== ""
             ) {
-                cost += (60 / item["samplingRate"]) *  * 60 * 0.001 * 31 * 2 // most of the cost comes from AWS Rekognition
+                cost += (1 / item["samplingRate"]) * totalTimePerDayInSeconds * 0.001 * 31 * 2 // most of the cost comes from AWS Rekognition
+                console.log("cost : " + cost)
             }
         })
         setPrice(Math.round(cost))
@@ -221,13 +249,13 @@ function Dashboard(props) {
     const textFieldOnChange = (event) => {
         if(event.target.name === "endTime"){
             setSleepTimeFrame({
-                beginHour : sleepTimeFrame.beginHour,
-                endHour : event.target.value
+                beginTime : sleepTimeFrame.beginTime,
+                endTime : event.target.value
             })
         }else if(event.target.name === "beginTime"){
             setSleepTimeFrame({
-                beginHour : event.target.value,
-                endHour : sleepTimeFrame.endHour
+                beginTime : event.target.value,
+                endTime : sleepTimeFrame.endTime
             })
         }
         console.log("sleepTimeFrame : ", sleepTimeFrame)
