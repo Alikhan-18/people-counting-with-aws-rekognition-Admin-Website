@@ -47,7 +47,6 @@ function Dashboard(props) {
             const signedImage = await Storage.get(image.key)
             return signedImage
         }))
-        console.log("here", s3images,s3imageNames, i, j)
         setImageNames(s3imageNames)
         setImages(s3images)
 
@@ -165,7 +164,7 @@ function Dashboard(props) {
         setCoords(coords.map((item, index) => {
             if(index === i)
                 item[j-1] = [rect.x,rect.y,rect.xCur,rect.yCur]
-            console.log("here", item)
+            console.log("onRectSelected", item)
             return item
         }))
         console.log("onRectSelected : ", coords[0][0])
@@ -179,18 +178,22 @@ function Dashboard(props) {
     function updateZoneChoices() {
         let zoneChoices = []
         zoneChoices = [imageNames.length - 1].map(e => Array(MAX_ZONES))
+        console.log("updateZoneChoices",coords)
         coords.map((item, index) => {
-            item.map((it, ind) => {
-                zoneChoices[index][ind] = {
-                    X1: it[0],
-                    X2: it[2],
-                    Y1: it[1],
-                    Y2: it[3],
-                    id: uuid(),
-                    name: `zone ${ind+1}`,
-                    zoneNumber: ind+1
-                }
-            })
+            console.log("updateZoneChoices",item,index)
+            if(index < imageNames.length) {
+                item.map((it, ind) => {
+                    zoneChoices[index][ind] = {
+                        X1: it[0],
+                        X2: it[2],
+                        Y1: it[1],
+                        Y2: it[3],
+                        id: uuid(),
+                        name: `zone ${ind + 1}`,
+                        zoneNumber: ind + 1
+                    }
+                })
+            }
         })
         return zoneChoices
     }
