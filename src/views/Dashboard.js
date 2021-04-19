@@ -38,9 +38,7 @@ function Dashboard(props) {
         let s3images = await Storage.list('')
         console.log("fetchimages", s3images)
         let s3imageNames = await s3images.map(image => {
-            const arr = image.key.split(".jpg")
-            console.log(arr)
-            return arr[0]
+            return image.key.split(".jpg")[0]
         })
         // Get presigned URL for S3 images to display images in app
         s3images = await Promise.all(s3images.map(async image => {
@@ -209,7 +207,7 @@ function Dashboard(props) {
         cameraChoices = [imageNames.length - 1]
         await Promise.all(zoneChoices.map(async (item,index) => {
             let logicalName = ""
-            deviceData.map((item,index) => {
+            deviceData.map((item,ind) => {
                 console.log("updateCameraChoices", item, imageNames[index])
                 if(item["deviceID"] === imageNames[index]){
                     logicalName = item["stationName"]
@@ -241,7 +239,6 @@ function Dashboard(props) {
                 console.log(response)
             }
         }))
-        console.log(cameraChoices)
     }
 
     async function updateDB() {
