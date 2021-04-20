@@ -207,7 +207,7 @@ function Dashboard(props) {
         cameraChoices = [imageNames.length - 1]
         await Promise.all(zoneChoices.map(async (item,index) => {
             let logicalName = ""
-            deviceData.map((item,ind) => {
+            deviceData.map((item) => {
                 console.log("updateCameraChoices", item, imageNames[index])
                 if(item["deviceID"] === imageNames[index]){
                     logicalName = item["stationName"]
