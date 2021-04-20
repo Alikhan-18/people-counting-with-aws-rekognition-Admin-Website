@@ -4,7 +4,7 @@
 
 This solution consists of three major parts. The numbers shown on the diagram above specify the flow of data as it gets processed by those parts.
 
-##Image processing part
+## Image processing part
 
 1. An image of the monitored space is sent from Raspberry Pi to the “Image Cache” S3 Bucket (all images are deleted 1-2 minutes after they are sent, server side encryption enabled).
 2. The “Crop Images” lambda function runs after the image is received in the storage.
@@ -14,7 +14,7 @@ This solution consists of three major parts. The numbers shown on the diagram ab
 6. AWS Rekognition is called. It returns types of objects depicted in the image along with the counts for each object type.
 7. The “Count People” function puts the count for each zone into the “Current Counts” DynamoDB table.
 
-##Analytics Part
+## Analytics Part
 
 1. The “Count People” function also puts the count for each zone into the analytics pipeline.
 2. This data is stored in the “Data Lake” S3 Bucket in JSON format.
@@ -24,7 +24,7 @@ This solution consists of three major parts. The numbers shown on the diagram ab
 6. An HTTP request can be sent to a REST API endpoint by a client application (e.g. React.js) to retrieve the data from the “Current Counts” DynamoDB table.
 7. An HTTP request can be sent to a REST API endpoint by a client application (e.g. React.js) to retrieve the data from the “Historical Data” DynamoDB table. 
 
-##Administrator Part
+## Administrator Part
 
 1. A request to capture an image of the space from all cameras and send them to the administrator is sent from the administrator website. This is done by sending an HTTP request to a REST API endpoint from the admin website. Same endpoint can be used to update the configuration (e.g. sampling rate) for all devices.
 2. This triggers the “IoT” lambda function which contains the logic on how to deal with the request parameters.
