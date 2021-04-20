@@ -1,6 +1,6 @@
 ## High level architecture
 
-<img src="./images/diagram.png"  width="600"/>
+<img src="../images/diagram.png"  width="600"/>
 
 This solution consists of three major parts. The numbers shown on the diagram above specify the flow of data as it gets processed by those parts.
 
