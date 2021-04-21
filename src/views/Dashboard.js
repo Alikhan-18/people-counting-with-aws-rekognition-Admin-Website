@@ -175,7 +175,7 @@ function Dashboard(props) {
 
     function updateZoneChoices() {
         let zoneChoices = []
-        zoneChoices = [imageNames.length].map(e => Array(MAX_ZONES))
+        zoneChoices = [...Array(imageNames.length)].map(e => Array(MAX_ZONES))
         console.log("updateZoneChoices",coords)
         coords.map((item, index) => {
             console.log("updateZoneChoices",item,index)
@@ -204,7 +204,7 @@ function Dashboard(props) {
         console.log(width, height)
         console.log(imageNames.length)
         let cameraChoices = []
-        cameraChoices = [imageNames.length - 1]
+        cameraChoices = [...Array(imageNames.length)]
         await Promise.all(zoneChoices.map(async (item,index) => {
             let logicalName = ""
             deviceData.map((item) => {
