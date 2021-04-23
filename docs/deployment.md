@@ -6,7 +6,7 @@ Before you deploy, you must have the following in place:
 *  [Amplify CLI installed and configured](https://aws-amplify.github.io/docs/cli-toolchain/quickstart#quickstart) 
 *  [AWS CLI installed and configured](https://aws.amazon.com/cli/) 
 *  [SAM CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html)
-*  [Python 3.6 or greater](https://www.python.org/downloads/)
+*  [Python 3.8 or greater](https://www.python.org/downloads/)
 
 # Step 1: Front-end deployment
 
@@ -24,7 +24,7 @@ The **Deploy to Amplify Console** button will take you to your AWS console to de
 
 # Step 2: Back-end deployment
 
-Make sure to deploy the backend in the same account as the front-end from the previous step.
+Make sure to deploy the backend in the same account as the front-end from the previous step. The steps below assume you are using the **default** AWS profile in the AWS CLI.
 
 1. Go to the **scripts** directory and run the [deploy.sh](../scripts/deploy.sh) script.
 
