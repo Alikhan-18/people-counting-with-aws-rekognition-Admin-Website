@@ -6,6 +6,8 @@ remaining part of the instructions.
 
 ## Cloud Architecture
 
+<img src="images/diagram.png"  width="600"/>
+
 Cloud architecture diagram and its description are provided [here](./docs/cloudArchitecture.md)
 
 ## Frontend Guide
@@ -23,3 +25,7 @@ This project is distributed under the  [Apache License 2.0](https://github.com/U
 [People Counting with RaspberryPi](https://github.com/UBC-CIC/people-counting-with-aws-rekognition-RaspberryPi-IOT)
 
 [User Website](https://github.com/UBC-CIC/people-counting-with-aws-rekognition-User-Website)
+
+## Credits 
+
+This prototype was developed  by [Arman Zhakypbekov](https://github.com/armanzm)  with assistance by [Aamir Sheergar] (https://github.com/AamirL1011)  with UI enhancements.
