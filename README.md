@@ -28,4 +28,4 @@ This project is distributed under the  [Apache License 2.0](https://github.com/U
 
 ## Credits 
 
-This prototype was developed  by [Arman Zhakypbekov](https://github.com/armanzm)  with assistance by [Aamir Sheergar](https://github.com/AamirL1011).
+This prototype was developed  by UBC CIC student [Arman Zhakypbekov](https://github.com/armanzm) with assistnce from [Aamir Sheergar](https://github.com/AamirL1011) and the CIC technical team.
