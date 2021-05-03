@@ -1,6 +1,6 @@
 ## Description
 
-This solution monitors the movement into and out of designated ‘zones’ the [https://cic.ubc.ca/project/people-density-meter/](project) was intiated to focus on monitoring dining stations within a servery and counting  how many people are in each zone. This provides a measure of occupancy to help staff manage the number of people in the servery and informs students if the servery is busy in near-real-time. Current count data per station and zone along with historical average data per station and zone can be accessed via an API.
+This solution monitors the movement into and out of designated ‘zones’ the [project](https://cic.ubc.ca/project/people-density-meter/) was intiated to focus on monitoring dining stations within a servery and counting  how many people are in each zone. This provides a measure of occupancy to help staff manage the number of people in the servery and informs students if the servery is busy in near-real-time. Current count data per station and zone along with historical average data per station and zone can be accessed via an API.
 
 This repository contains instructions on how to set-up the AWS backend as well as the administrator dashboard application.
 [People Counting with RaspberryPi](https://github.com/UBC-CIC/people-counting-with-aws-rekognition-RaspberryPi-IOT) contains the 
