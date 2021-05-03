@@ -28,4 +28,4 @@ This project is distributed under the  [Apache License 2.0](https://github.com/U
 
 ## Credits 
 
-This prototype was developed  by [Arman Zhakypbekov](https://github.com/armanzm)  with assistance by [Aamir Sheergar] (https://github.com/AamirL1011)  with UI enhancements.
+This prototype was developed  by [Arman Zhakypbekov](https://github.com/armanzm)  with assistance by [Aamir Sheergar](https://github.com/AamirL1011).
