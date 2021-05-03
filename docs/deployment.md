@@ -7,6 +7,7 @@ Before you deploy, you must have the following in place:
 *  [AWS CLI installed and configured](https://aws.amazon.com/cli/) 
 *  [SAM CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html)
 *  [Python 3.8 or greater](https://www.python.org/downloads/)
+*  Use of a region that supports Rekognition this prototype has been tested in us-east-1 and us-west-2 currently Rekognition is not fully in ca-central-1 
 
 # Step 1: Front-end deployment
 
@@ -29,7 +30,6 @@ Make sure to deploy the backend in the same account as the front-end from the pr
 1. Go to the **scripts** directory and run the [deploy.sh](../scripts/deploy.sh) script.
 
 ```bash
-chmod a+x deploy.sh 
 ./deploy.sh
 ```
 
