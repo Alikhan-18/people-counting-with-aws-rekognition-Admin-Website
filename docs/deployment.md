@@ -72,3 +72,5 @@ Configuring SAM deploy
 HTTPEndpointURL : yourendpointURL
 HTTPEndpointAPIKey : yourAPIKey
 ```
+
+For API usage see this [document](api.md).  
