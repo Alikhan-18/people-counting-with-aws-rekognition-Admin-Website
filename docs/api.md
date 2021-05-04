@@ -1,7 +1,5 @@
 ## API Usage
 
-This prototype includes a minimal API at the end of the [deploy](deployment.md) you will be presented with a API endpoint and API key for usage.
-
 
 ### Get Current Counts
 
