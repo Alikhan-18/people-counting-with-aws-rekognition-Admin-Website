@@ -16,20 +16,20 @@ This solution consists of three major parts. The numbers shown on the diagram ab
 
 ## Analytics Part
 
-1. The “Count People” function also puts the count for each zone into the analytics pipeline.
-2. This data is stored in the “Data Lake” S3 Bucket in JSON format.
-3. AWS Athena queries the storage from the previous step.
-4. The query is specified in the “Query function” lambda. This function is called every 24 hours to update the average count for the entire monitored space for each hour of operation over a period of 7 days.
-5. The result of the query is stored in the “Historical Data” DynamoDB table. This contains the average counts mentioned in the previous step.
-6. An HTTP request can be sent to a REST API endpoint by a client application (e.g. React.js) to retrieve the data from the “Current Counts” DynamoDB table.
-7. An HTTP request can be sent to a REST API endpoint by a client application (e.g. React.js) to retrieve the data from the “Historical Data” DynamoDB table. 
+8. The “Count People” function also puts the count for each zone into the analytics pipeline.
+9. This data is stored in the “Data Lake” S3 Bucket in JSON format.
+10. AWS Athena queries the storage from the previous step.
+11. The query is specified in the “Query function” lambda. This function is called every 24 hours to update the average count for the entire monitored space for each hour of operation over a period of 7 days.
+12. The result of the query is stored in the “Historical Data” DynamoDB table. This contains the average counts mentioned in the previous step.
+13. An HTTP request can be sent to a REST API endpoint by a client application (e.g. React.js) to retrieve the data from the “Current Counts” DynamoDB table.
+14. An HTTP request can be sent to a REST API endpoint by a client application (e.g. React.js) to retrieve the data from the “Historical Data” DynamoDB table. 
 
 ## Administrator Part
 
-1. A request to capture an image of the space from all cameras and send them to the administrator is sent from the administrator website. This is done by sending an HTTP request to a REST API endpoint from the admin website. Same endpoint can be used to update the configuration (e.g. sampling rate) for all devices.
-2. This triggers the “IoT” lambda function which contains the logic on how to deal with the request parameters.
-3. The “IoT” lambda function calls the AWS IoT service.
-4. This service sends a request to capture and send an image of the monitored space to all of the cameras.
-5. After receiving the request, the images are sent to the “Control Images” S3 Bucket.
-6. The images (labelled with the cameraIDs) are seen by the administrator who makes the zone selections that are stored in the “Zone Selections” DynamoDB table. Each image is labelled by the admin.
-7. The zone selections are updated.
+15. A request to capture an image of the space from all cameras and send them to the administrator is sent from the administrator website. This is done by sending an HTTP request to a REST API endpoint from the admin website. Same endpoint can be used to update the configuration (e.g. sampling rate) for all devices.
+16. This triggers the “IoT” lambda function which contains the logic on how to deal with the request parameters.
+17. The “IoT” lambda function calls the AWS IoT service.
+18. This service sends a request to capture and send an image of the monitored space to all of the cameras.
+19. After receiving the request, the images are sent to the “Control Images” S3 Bucket.
+20. The images (labelled with the cameraIDs) are seen by the administrator who makes the zone selections that are stored in the “Zone Selections” DynamoDB table. Each image is labelled by the admin.
+21. The zone selections are updated.
