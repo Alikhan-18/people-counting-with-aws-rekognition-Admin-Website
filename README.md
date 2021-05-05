@@ -12,7 +12,7 @@ remaining part of the instructions.
 
 <img src="images/diagram.png"  width="600"/>
 
-Cloud architecture diagram and its description are provided [here].(docs/cloudArchitecture.md)
+Cloud architecture diagram and its description are provided [here](docs/cloudArchitecture.md).
 
 ## Frontend Guide
 
