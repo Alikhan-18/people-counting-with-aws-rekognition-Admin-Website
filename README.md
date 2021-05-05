@@ -12,18 +12,18 @@ remaining part of the instructions.
 
 <img src="images/diagram.png"  width="600"/>
 
-Cloud architecture diagram and its description are provided [here].(./docs/cloudArchitecture.md)
+Cloud architecture diagram and its description are provided [here].(docs/cloudArchitecture.md)
 
 ## Frontend Guide
 
-Details on how to use the administrator dashboard are provided [here].(./docs/frontend.md)
+Details on how to use the administrator dashboard are provided [here](docs/frontend.md).
 
 ## Deployment
-To deploy this solution into your AWS Account please follow our [Deployment Guide](./docs/deployment.md).
+To deploy this solution into your AWS Account please follow our [Deployment Guide](docs/deployment.md).
 
 ## API Usage
 
-Details on how to use the API are provided [here](./docs/api.md).
+Details on how to use the API are provided [here](docs/api.md).
 
 
 ## License
