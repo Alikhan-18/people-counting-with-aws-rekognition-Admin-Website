@@ -13,7 +13,7 @@ Before you deploy, you must have the following in place:
 
 The **Deploy to Amplify Console** button will take you to your AWS console to deploy the front-end solution.
 
-<a href="https://console.aws.amazon.com/amplify/home#/deploy?repo=https://github.com/UBC-CIC/people-counting-with-aws-rekognition-Admin-Website">
+<a href="https://console.aws.amazon.com/amplify/home#/deploy?repo=https://github.com/Alikhan-18/people-counting-with-aws-rekognition-Admin-Website">
     <img src="https://oneclick.amplifyapp.com/button.svg" alt="Deploy to Amplify Console">
 </a>
 
