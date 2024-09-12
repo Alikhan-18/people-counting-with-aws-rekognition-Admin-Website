@@ -100,23 +100,6 @@
     }
   },
   "Outputs": {
-    "Name": {
-      "Value": {
-        "Ref": "LambdaFunction"
-      }
-    },
-    "Arn": {
-      "Value": {
-        "Fn::GetAtt": [
-          "LambdaFunction",
-          "Arn"
-        ]
-      }
-    },
-    "Region": {
-      "Value": {
-        "Ref": "AWS::Region"
-      }
-    }
+    
   }
 }
