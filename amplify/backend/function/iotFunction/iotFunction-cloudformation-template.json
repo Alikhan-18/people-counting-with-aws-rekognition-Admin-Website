@@ -106,11 +106,6 @@
       "Value": {
         "Ref": "AWS::Region"
       }
-    },
-    "LambdaExecutionRole": {
-      "Value": {
-        "Ref": "IAMRoleIoT"
-      }
     }
   }
 }
