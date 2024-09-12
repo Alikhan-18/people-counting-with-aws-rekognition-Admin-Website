@@ -10,8 +10,9 @@ backend:
         - cd /tmp/python_build && tar xzf Python-3.9.6.tgz
         - cd /tmp/python_build/Python-3.9.6 && ./configure --prefix=/tmp/python3.9 --enable-optimizations
         - cd /tmp/python_build/Python-3.9.6 && make altinstall
-        - /tmp/python3.9/bin/pip3.9 install --user pipenv
         - export PATH=/tmp/python3.9/bin:$PATH
+        - /tmp/python3.9/bin/pip3.9 install --user pipenv virtualenv
+        - export PATH=$HOME/.local/bin:$PATH
         - cd $BASE_PATH
         - amplifyPush --simple
 
