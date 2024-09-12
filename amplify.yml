@@ -4,15 +4,14 @@ backend:
     build:
       commands:
         - export BASE_PATH=$(pwd)
-        - yum install -y gcc openssl-devel bzip2-devel libffi-devel python3.9-pip || true
+        - yum install -y gcc openssl-devel bzip2-devel libffi-devel || true
         - mkdir -p /tmp/python_build
         - cd /tmp/python_build && wget https://www.python.org/ftp/python/3.9.6/Python-3.9.6.tgz
         - cd /tmp/python_build && tar xzf Python-3.9.6.tgz
-        - cd /tmp/python_build/Python-3.9.6 && ./configure --enable-optimizations
+        - cd /tmp/python_build/Python-3.9.6 && ./configure --prefix=/tmp/python3.9 --enable-optimizations
         - cd /tmp/python_build/Python-3.9.6 && make altinstall
-        - /tmp/python_build/Python-3.9.6/python3.9 -m pip install --user pipenv
-        - ln -fs /usr/local/bin/python3.9 /usr/bin/python3 || true
-        - ln -fs /usr/local/bin/pip3.9 /usr/bin/pip3 || true
+        - /tmp/python3.9/bin/pip3.9 install --user pipenv
+        - export PATH=/tmp/python3.9/bin:$PATH
         - cd $BASE_PATH
         - amplifyPush --simple
 
