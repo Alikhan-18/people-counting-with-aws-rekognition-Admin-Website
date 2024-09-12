@@ -5,7 +5,7 @@ backend:
       commands:
         - export BASE_PATH=$(pwd)
         - sudo yum update -y
-        - sudo yum install -y gcc openssl-devel bzip2-devel libffi-devel python3.8
+        - sudo yum install -y gcc openssl-devel bzip2-devel libffi-devel python3.8.2
         - cd /opt && wget https://www.python.org/ftp/python/3.8.2/Python-3.8.2.tgz
         - cd /opt && tar xzf Python-3.8.2.tgz
         - cd /opt/Python-3.8.2 && ./configure --enable-optimizations
