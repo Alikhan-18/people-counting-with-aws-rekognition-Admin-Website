@@ -4,18 +4,16 @@ backend:
     build:
       commands:
         - export BASE_PATH=$(pwd)
-        - yum install -y gcc openssl-devel bzip2-devel libffi-devel || true
-        - mkdir -p /tmp/python_build
-        - cd /tmp/python_build && wget https://www.python.org/ftp/python/3.9.6/Python-3.9.6.tgz
-        - cd /tmp/python_build && tar xzf Python-3.9.6.tgz
-        - cd /tmp/python_build/Python-3.9.6 && ./configure --prefix=/tmp/python3.9 --enable-optimizations
-        - cd /tmp/python_build/Python-3.9.6 && make altinstall
-        - export PATH=/tmp/python3.9/bin:$PATH
-        - /tmp/python3.9/bin/pip3.9 install --user pipenv virtualenv
-        - export PATH=$HOME/.local/bin:$PATH
+        - yum install -y gcc openssl-devel bzip2-devel libffi-devel python3.8-pip
+        - cd /opt && wget https://www.python.org/ftp/python/3.8.2/Python-3.8.2.tgz
+        - cd /opt && tar xzf Python-3.8.2.tgz
+        - cd /opt/Python-3.8.2 && ./configure --enable-optimizations
+        - cd /opt/Python-3.8.2 && make altinstall
+        - pip3.8 install --user pipenv
+        - ln -fs /usr/local/bin/python3.8 /usr/bin/python3
+        - ln -fs /usr/local/bin/pip3.8 /usr/bin/pip3
         - cd $BASE_PATH
         - amplifyPush --simple
-
 frontend:
   phases:
     preBuild:
