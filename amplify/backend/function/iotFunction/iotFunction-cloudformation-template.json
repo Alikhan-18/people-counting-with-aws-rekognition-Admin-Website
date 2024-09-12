@@ -5,7 +5,7 @@
     "CloudWatchRule": {
       "Type": "String",
       "Default": "NONE",
-      "Description": "Schedule Expression"
+      "Description": " Schedule Expression"
     },
     "env": {
       "Type": "String"
@@ -22,31 +22,6 @@
     }
   },
   "Resources": {
-    "IAMRoleIoT": {
-      "Type": "AWS::IAM::Role",
-      "Properties": {
-        "Path": "/",
-        "AssumeRolePolicyDocument": {
-          "Version": "2012-10-17",
-          "Statement": [
-            {
-              "Effect": "Allow",
-              "Principal": {
-                "Service": "lambda.amazonaws.com"
-              },
-              "Action": "sts:AssumeRole"
-            }
-          ]
-        },
-        "MaxSessionDuration": 3600,
-        "ManagedPolicyArns": [
-          "arn:aws:iam::aws:policy/AWSIoTFullAccess",
-          "arn:aws:iam::aws:policy/AmazonDynamoDBReadOnlyAccess",
-          "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
-          "arn:aws:iam::aws:policy/AmazonSSMReadOnlyAccess"
-        ]
-      }
-    },
     "LambdaFunction": {
       "Type": "AWS::Lambda::Function",
       "Metadata": {
@@ -97,9 +72,45 @@
           "S3Key": "amplify-builds/iotFunction-3459436d323367356969-build.zip"
         }
       }
+    },
+    "IAMRoleIoT": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "Path": "/",
+        "AssumeRolePolicyDocument": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"lambda.amazonaws.com\"},\"Action\":\"sts:AssumeRole\"}]}",
+        "MaxSessionDuration": 3600,
+        "ManagedPolicyArns": [
+          "arn:aws:iam::aws:policy/AWSIoTFullAccess",
+          "arn:aws:iam::aws:policy/AmazonDynamoDBReadOnlyAccess",
+          "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+          "arn:aws:iam::aws:policy/AmazonSSMReadOnlyAccess"
+        ]
+      }
     }
   },
   "Outputs": {
-    
+    "Name": {
+      "Value": {
+        "Ref": "LambdaFunction"
+      }
+    },
+    "Arn": {
+      "Value": {
+        "Fn::GetAtt": [
+          "LambdaFunction",
+          "Arn"
+        ]
+      }
+    },
+    "Region": {
+      "Value": {
+        "Ref": "AWS::Region"
+      }
+    },
+    "LambdaExecutionRole": {
+      "Value": {
+        "Ref": "IAMRoleIoT"
+      }
+    }
   }
 }
