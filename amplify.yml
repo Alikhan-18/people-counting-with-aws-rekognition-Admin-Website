@@ -6,12 +6,12 @@ backend:
         - export BASE_PATH=$(pwd)
         - yum install -y gcc openssl-devel bzip2-devel libffi-devel || true
         - mkdir -p /tmp/python_build
-        - cd /tmp/python_build && wget https://www.python.org/ftp/python/3.9.6/Python-3.9.6.tgz
-        - cd /tmp/python_build && tar xzf Python-3.9.6.tgz
-        - cd /tmp/python_build/Python-3.9.6 && ./configure --prefix=/tmp/python3.9 --enable-optimizations
-        - cd /tmp/python_build/Python-3.9.6 && make altinstall
-        - export PATH=/tmp/python3.9/bin:$PATH
-        - /tmp/python3.9/bin/pip3.9 install --user pipenv virtualenv
+        - cd /tmp/python_build && wget https://www.python.org/ftp/python/3.8.13/Python-3.8.13.tgz
+        - cd /tmp/python_build && tar xzf Python-3.8.13.tgz
+        - cd /tmp/python_build/Python-3.8.13 && ./configure --prefix=/tmp/python3.8 --enable-optimizations
+        - cd /tmp/python_build/Python-3.8.13 && make altinstall
+        - export PATH=/tmp/python3.8/bin:$PATH
+        - /tmp/python3.8/bin/pip3.8 install --user pipenv virtualenv
         - export PATH=$HOME/.local/bin:$PATH
         - cd $BASE_PATH
         - amplifyPush --simple
