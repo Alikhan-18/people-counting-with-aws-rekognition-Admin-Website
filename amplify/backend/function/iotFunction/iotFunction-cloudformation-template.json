@@ -117,17 +117,6 @@
       "Value": {
         "Ref": "AWS::Region"
       }
-    },
-    "LambdaExecutionRole": {
-      "Value": {
-            "Fn::GetAtt": [
-                "IAMRoleIoT",
-                "Arn"
-            ]
-        },
-        "Export": {
-            "Name": "IAMRoleIoT"
-        }
-    }  
+    }
   }
 }
