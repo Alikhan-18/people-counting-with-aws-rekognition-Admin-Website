@@ -128,11 +128,6 @@
 				"LambdaFunction",
 				"Arn"
 			]
-		},
-		"Export": {
-			"Name": {
-				"Fn::Sub": "LambdaARN-${EnvName}"
-			}
 		}
 	}
   }
