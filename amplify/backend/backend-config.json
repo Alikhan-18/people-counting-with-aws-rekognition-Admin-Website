@@ -32,16 +32,7 @@
     "iotAPI": {
       "service": "API Gateway",
       "providerPlugin": "awscloudformation",
-      "dependsOn": [
-        {
-          "category": "function",
-          "resourceName": "iotFunction",
-          "attributes": [
-            "Name",
-            "Arn"
-          ]
-        }
-      ]
+      "dependsOn": []
     }
   },
   "function": {
