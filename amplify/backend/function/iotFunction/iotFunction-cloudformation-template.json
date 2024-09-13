@@ -108,11 +108,6 @@
       "Value": {
         "Ref": "LambdaFunction"
       }
-    },
-    "Region": {
-      "Value": {
-        "Ref": "AWS::Region"
-      }
     }
   }
 }
