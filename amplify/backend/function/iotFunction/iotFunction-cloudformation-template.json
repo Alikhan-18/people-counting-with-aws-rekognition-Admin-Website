@@ -102,33 +102,5 @@
         }
       }
     }
-  },
-  "Outputs": {
-    "LambdaRoleARN": {
-		"Description": "Role for Lambda execution.",
-		"Value": {
-			"Fn::GetAtt": [
-				"LambdaRole",
-				"Arn"
-			]
-		},
-		"Export": {
-			"Name": "LambdaRole"
-		}
-	},
-	"LambdaFunctionName": {
-		"Value": {
-			"Ref": "LambdaFunction"
-		}
-	},
-	"LambdaFunctionARN": {
-		"Description": "Lambda function ARN.",
-		"Value": {
-			"Fn::GetAtt": [
-				"LambdaFunction",
-				"Arn"
-			]
-		}
-	}
   }
 }
