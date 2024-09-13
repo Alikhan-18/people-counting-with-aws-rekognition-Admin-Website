@@ -116,6 +116,16 @@
           "Arn"
         ]
       }
+    },
+    "Region": {
+      "Value": {
+        "Ref": "AWS::Region"
+      }
+    },
+    "LambdaExecutionRole": {
+      "Value": {
+        "Ref": "LambdaRole"
+      }
     }
   }
 }
