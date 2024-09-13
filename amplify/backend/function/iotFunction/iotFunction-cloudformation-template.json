@@ -108,6 +108,14 @@
       "Value": {
         "Ref": "LambdaFunction"
       }
+    },
+    "Arn": {
+      "Value": {
+        "Fn::GetAtt": [
+          "LambdaFunction",
+          "Arn"
+        ]
+      }
     }
   }
 }
